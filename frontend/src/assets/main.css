@@ -1,0 +1,16 @@
+.hover-effect:hover {
+    background-color: rgb(197, 208, 245);
+}
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.colour1 {
+    /*background-color: rgb(235, 236, 208);*/
+    background-color: rgb(240, 211, 179);
+}
+.colour2 {
+    /*background-color: rgb(115, 149, 82);*/
+    background-color: rgb(190, 100, 48);
+}
