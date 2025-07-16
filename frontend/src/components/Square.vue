@@ -12,11 +12,19 @@
     };
 
     const mouseenter = (event) => {
-        event.target.style.backgroundColor = "lightblue";
+        event.target.style.height = "80%";
+        event.target.style.width = "80%";
+        event.target.parentNode.style.position = "relative"
+        event.target.parentNode.style.zIndex = "1";
+        event.target.parentNode.style.boxShadow = "0 0 1px rgb(0, 0, 0)";
+
     }
 
     const mouseleave = (event) => {
-        event.target.style.backgroundColor = "white";
+        event.target.style.height = "75%";
+        event.target.style.width = "75%";
+        event.target.parentNode.style.boxShadow = "none";
+        event.target.parentNode.style.zIndex = "auto";
     }
 
     const sqrClr = () => {
@@ -26,8 +34,8 @@
 </script>
 
 <template>
-    <div @click = "emitfn" @mouseenter="mouseenter" @mouseleave="mouseleave" style = "width: 100%; height: 100%;">
-        <img class = "center p-2" id = "img" v-if = "props.piece != undefined" :src = "`/images/${props.piece.player}${props.piece.piece[0]}.png`" style = "width: 100%; height: 100%;" :class = "sqrClr() ? 'colour1' : 'colour2'"/>
+    <div @click = "emitfn" style = "width: 100%; height: 100%"  :class = "sqrClr() ? 'colour1' : 'colour2'" class = "center" draggable = "true" @dragstart="emitfn" @drop = "emitfn" @dragover.prevent>
+        <img id = "img" v-if = "props.piece != undefined" :src = "`/images/${props.piece.player}${props.piece.piece[0]}.png`" style = "width: 75%; height: 75%;" @mouseenter="mouseenter" @mouseleave="mouseleave"/>
         <div v-else style = "width: 100%; height: 100%;" :class = "sqrClr() ? 'colour1' : 'colour2'"></div>
     </div>
 </template>

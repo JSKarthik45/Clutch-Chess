@@ -36,7 +36,7 @@
         let ele = document.getElementById(`${rank}${file}`);
         ele.style.position = "relative";
         ele.style.zIndex = 2;
-        ele.style.boxShadow = "0 0 100px rgb(0, 0, 0)";
+        ele.style.boxShadow = "0 0 5px rgb(0, 0, 0)";
     };
 
     const dehighlightSquare = (rank, file) => {
