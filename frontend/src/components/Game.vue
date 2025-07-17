@@ -131,10 +131,10 @@
 
 <template>
     <div class = "row">
-        <div class = "col-12 col-md-6">
+        <div class = "col-12 col-sm-6 p-1">
             <Board :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr"/>
         </div>
-        <div class = "col-12 col-md-6">
+        <div class = "col-12 col-sm-6">
             <Clock :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer"/>
             <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
             <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>

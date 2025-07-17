@@ -96,29 +96,31 @@
             resetFromAndTo();
         }
     };
+    import { useWindowSize } from '@vueuse/core'
+    const { width, height } = useWindowSize()
 </script>
 
 <template>
-    <div class = "container-fluid" style = "padding-right: 0px;">
-        <div class = "row">
+    <div class = "container-fluid">
+        <div v-if = "width > 992" class = "row">
             <div class = "col-1 filerankintersection"></div>
-            <div class = "col rank center" style = "height: 20px; width: 70px;" v-for = "rank in ranks">
+            <div class = "col rank center" v-for = "rank in ranks">
                 {{ rank }}
             </div>
             <div class = "col-1 filerankintersection"></div>
         </div>
         <div v-for = "file in files" class = "row">
-            <div class = "col-1 center file">
+            <div v-if = "width > 992" class = "col-1 file center">
                 {{file}}
             </div>
-            <div v-for = "rank in ranks" class = "col p-0 square " :id = "`${rank}${file}`">
+            <div v-for = "rank in ranks" class = "col p-0 square" :id = "`${rank}${file}`">
                 <Square :rank = "rank" :file = "file" :piece = "trackPiecesFromPos[`${rank}${file}`]" @clicked = "changeVals"/>
             </div>
-            <div class = "col-1 center file">
+            <div v-if = "width > 992" class = "col-1 file center">
                 {{file}}
             </div>
         </div>
-        <div class = "row">
+        <div v-if = "width > 992" class = "row">
             <div class = "col-1 filerankintersection"></div>
             <div class = "col rank center" v-for = "rank in ranks">
                 {{ rank }}
@@ -142,20 +144,27 @@
         align-items: center;
         justify-content: center;
     }
-    .rank {
-        width: 60px;
-        height: 20px;
+    @media(max-width: 575px) {
+        .square {
+            height: 7vh;
+        }
     }
-    .file {
-        width: 20px;
-        height: 73px;
-    }
-    .filerankintersection {
-        width: 20px;
-        height: 20px;
-    }
-    .square {
-        width: 70px;
-        height: 73px;
+    @media(min-width: 576px) {
+        .rank {
+            width: 10vw;
+            height: 3vh;
+        }
+        .file {
+            width: 2vw;
+            height: 11.5vh;
+        }
+        .square {
+            width: 10vw;
+            height: 11.5vh;
+        }
+        .filerankintersection {
+            width: 2vw;
+            height: 3vh;
+        }
     }
 </style>
