@@ -13,10 +13,10 @@
         <div class = "collapse navbar-collapse" id = navbarSupportedContent>
             <ul class = "navbar-nav">
                 <li class = "nav-item fw-semibold" v-for = "item in props.items">
-                    <a class = "nav-link" :href = "item.link" :class = "{activeBorder: item.active}">
+                    <RouterLink class = "nav-link" :to = "item.link" :class = "{activeBorder: item.active}">
                         <img :src = "`/images/${item.label}.svg`"/>
                         {{ item.label }}
-                    </a>
+                    </RouterLink>
                 </li>
             </ul>
         </div>
@@ -80,7 +80,7 @@
         left: 0;
         height: 100%;
         width: 100%;
-        transition: all 0.2s linear;
+        transition: all 0.5s linear;
         z-index: -1;
     }
     .nav-link:hover::before {
