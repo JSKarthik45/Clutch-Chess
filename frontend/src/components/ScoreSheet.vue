@@ -7,10 +7,10 @@
 
 <template>
     <div class = "container-fluid">
-        <div class = "text-start">
-            No. Of Moves: {{ Math.floor(currentMoveNo) - 1 }}
-        </div>
-        <div style = "height: 300px; overflow-y: auto;">
+        <h5 class = "text-center">
+            {{ Math.floor(currentMoveNo) - 1 }} Moves
+        </h5>
+        <div style = "height: 370px; overflow-y: auto;">
             <table id = "logMoves" class = "table table-striped table-bordered table-hover text-center">
                 <thead>
                     <tr>
@@ -26,7 +26,7 @@
                     </tr>
                 </thead>
                 <tr v-for = "(move, index) in movesArr">
-                    <td>
+                    <td class = "colour2">
                         {{ index + 1 }}
                     </td>
                     <td class = "colour1">
@@ -42,5 +42,10 @@
 </template>
 
 <style scoped>
-
+    thead th {
+        position: sticky;
+        top: 0;
+        background: #f1f1f1;
+        z-index: 1;
+    }
 </style>

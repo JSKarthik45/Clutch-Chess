@@ -134,11 +134,11 @@
         <div class = "col-12 col-sm-6 p-1">
             <Board :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr"/>
         </div>
-        <div class = "col-12 col-sm-6">
+        <div class = "col-12 col-sm-6 margin-top-desktop">
             <Clock :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer"/>
             <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
             <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
-            <ScoreSheet :currentMoveNo = "currentMoveNo" :movesArr = "movesArr"/>
+            <ScoreSheet :currentMoveNo = "currentMoveNo" :movesArr = "movesArr"/>           
         </div>
     </div>
 </template>
@@ -149,5 +149,15 @@
     }
     .capturedPiecesForPlayer {
         height: 310px;
+    }
+    @media(min-width: 992px) {
+        .margin-top-desktop {
+            margin-top: 90px;
+        }
+    }
+    @media(576px <= width <= 991px) {
+        .margin-top-desktop {
+            margin-top: 50px;
+        }
     }
 </style>

@@ -36,13 +36,17 @@
         let ele = document.getElementById(`${rank}${file}`);
         ele.style.position = "relative";
         ele.style.zIndex = 2;
-        ele.style.boxShadow = "0 0 5px rgb(0, 0, 0)";
+        ele.style.boxShadow = "0 0 100px rgb(0, 0, 0)";
+        ele.style.opacity = 0.8;
+        ele.style.transform = "scale(1.05)";
     };
 
     const dehighlightSquare = (rank, file) => {
         let ele = document.getElementById(`${fromLoc.value.rank}${fromLoc.value.file}`);
         ele.style.zIndex = "auto";
         ele.style.boxShadow = "none";
+        ele.style.opacity = 1;
+        ele.style.transform = "scale(1)";
     };
     
     const setFromLoc = (rank, file) => {
@@ -64,6 +68,14 @@
         }
         return true;
     };
+
+    const checkValidityOfToLoc = (rank, file) => {
+        let rf = `${rank}${file}`;
+        if(rf in props.trackPiecesFromPos && (props.trackPiecesFromPos[rf].player === props.currentPlayer)) {
+            return false;
+        }
+        return true;
+    }
 
     const movePiece = () => {
         let s = `${fromLoc.value.rank}${fromLoc.value.file}`;
@@ -89,11 +101,19 @@
             checkValidityOfFromLoc(rank, file) ? highlightSquare(rank, file) : showToast();
         }
         else {
-            setToLoc(rank, file)
-            movePiece();
-            dehighlightSquare();
-            emitfn();
-            resetFromAndTo();
+            if(checkValidityOfToLoc(rank, file)) {
+                setToLoc(rank, file)
+                movePiece();
+                dehighlightSquare(rank, file);
+                emitfn();
+                resetFromAndTo();
+                from = true;
+            }
+            else {
+                dehighlightSquare(rank, file);
+                setFromLoc(rank, file);
+                checkValidityOfFromLoc(rank, file) ? highlightSquare(rank, file) : showToast();
+            }
         }
     };
     import { useWindowSize } from '@vueuse/core'
@@ -146,7 +166,7 @@
     }
     @media(max-width: 575px) {
         .square {
-            height: 7vh;
+            height: 6.5vh;
         }
     }
     @media(min-width: 576px) {

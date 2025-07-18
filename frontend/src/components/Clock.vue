@@ -15,12 +15,12 @@
 <template>
     <div class = "container-fluid">
         <div class = "row clock gx-2 border rounded-5 my-2 p-2">
-            <div class = "col center rounded-5" :class = "{'colour1' : currentPlayer === 'W'}">
+            <div class = "col center rounded-5" :class = "{'colour1' : currentPlayer === 'W'}" style = "padding-top: 3px;">
                 <h5>
                     {{ formatTime(whiteRemTime) }}
                 </h5>
             </div>
-            <div class = "col center rounded-5" :class = "{'colour2' : currentPlayer === 'B'}">
+            <div class = "col center rounded-5" :class = "{'colour2' : currentPlayer === 'B'}" style = "padding-top: 3px;">
                 <h5>
                     {{ formatTime(blackRemTime) }}
                 </h5>
@@ -30,7 +30,16 @@
 </template>
 
 <style scoped>
-    .clock {
-        height: 70px;
+    @media(max-width: 575px) {
+        .clock {
+            height: 50px;
+            width: 88vw;
+        }
+    }
+    @media (min-width: 576px) {
+        .clock {
+            height: 70px;
+            width: 45vw;
+        }
     }
 </style>
