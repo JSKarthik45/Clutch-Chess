@@ -148,8 +148,8 @@
             <div class = "col-1 filerankintersection"></div>
         </div>
     </div>
-    <div class = "toast position-fixed bottom-0 end-0 bg-secondary p-2" id = "toast">
-        <div class = "toast-header">
+    <div class = "toast position-fixed bottom-0 end-0 bg-dark p-2" id = "toast">
+        <div class = "toast-header bg-secondary">
             <strong class = "me-auto">
                 Invalid Move!
             </strong>

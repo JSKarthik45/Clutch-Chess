@@ -1,11 +1,13 @@
 <script setup>
     import {ref} from "vue";
+    import {useRoute} from "vue-router";
     import 'bootstrap/dist/css/bootstrap.min.css';
 
     import Board from "@/components/Board.vue";
     import Clock from "@/components/Clock.vue"; 
     import ScoreSheet from "@/components/ScoreSheet.vue";
     import CapturedPieces from "@/components/CapturedPieces.vue";
+    import Controls from "@/components/Controls.vue";
 
     const ranks = ref(["a", "b", "c", "d", "e", "f", "g", "h"]);
     const files = ref([8, 7, 6, 5, 4, 3, 2, 1]);
@@ -127,6 +129,8 @@
         capturedPieces.value.push(piece);
     };
 
+    let route = useRoute();
+
 </script>
 
 <template>
@@ -135,10 +139,11 @@
             <Board :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr"/>
         </div>
         <div class = "col-12 col-sm-6 margin-top-desktop">
-            <Clock :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer"/>
+            <ScoreSheet :currentMoveNo = "currentMoveNo" :movesArr = "movesArr" :route = "route"/>   
             <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
             <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
-            <ScoreSheet :currentMoveNo = "currentMoveNo" :movesArr = "movesArr"/>           
+            <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer"/>
+            <Controls v-else/>        
         </div>
     </div>
 </template>

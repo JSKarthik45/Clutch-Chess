@@ -14,3 +14,45 @@
     background-color: rgb(115, 149, 82);
     /*background-color: rgb(190, 100, 48);*/
 }
+
+.draggable {
+  cursor: grab;
+}
+.draggable:active {
+  cursor: grabbing;
+}
+
+
+
+
+
+.button-effect {
+        position: relative;
+        border-radius: 10px;
+        z-index: 1;
+        background-color: white;
+        border: 0px;
+    }
+    .button-effect::before {
+        content: "";
+        position: absolute;
+        color: white;
+        background-color: transparent;
+        border-radius: 5px;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        transition: all 0.5s linear;
+        z-index: -1;
+    }
+    .button-effect:hover::before {
+        background-color: black;
+    }
+    .button-effect:hover {
+      color: white;
+    }
+    
+    .button-effect:hover img {
+    filter: invert(100%);
+    }

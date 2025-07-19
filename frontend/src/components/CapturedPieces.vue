@@ -10,6 +10,7 @@
         <div v-for = "piece in capturedPieces" class = "center">
             <img v-if = "piece.player === player" :src = "`/images/${piece.player}${piece.piece[0]}.png`"/>
         </div>
+        &nbsp;
     </div>
 </template>
 

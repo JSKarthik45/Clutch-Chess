@@ -2,16 +2,27 @@
     const props = defineProps({
         currentMoveNo: Number,
         movesArr: Array,
+        route: Object,
     });
 </script>
 
 <template>
-    <div class = "container-fluid">
-        <h5 class = "text-center">
+    <div class = "container-fluid text-center">
+        <h5 v-if = "movesArr.length != 0" class = "text-center">
             {{ Math.floor(currentMoveNo) - 1 }} Moves
         </h5>
+        <button v-else-if = "route.path === '/bot' || route.path === '/'" class = "text-center button-effect">
+            Game Settings <img src = "/images/edit.svg"/>
+        </button>
+        <button v-else-if = "route.path === '/play'" class = "text-center button-effect">
+            Game Settings <img src = "/images/edit.svg"/>
+        </button>
+        <button v-else-if = "route.path === '/openings'" class = "text-center button-effect">
+            Select Opening <img src = "/images/edit.svg"/>
+        </button>
+        <input type = "text" v-else-if = "route.path === '/practice'" class = "text-center" placeholder = "FEN">
         <div style = "height: 370px; overflow-y: auto;">
-            <table id = "logMoves" class = "table table-striped table-bordered table-hover text-center">
+            <table v-if = "movesArr.length != 0" id = "logMoves" class = "table table-striped table-bordered table-hover text-center">
                 <thead>
                     <tr>
                         <th>

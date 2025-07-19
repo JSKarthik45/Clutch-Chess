@@ -18,6 +18,9 @@
                         {{ item.label }}
                     </RouterLink>
                 </li>
+                <RouterLink to = "/" class = "nav-link">
+                    <img :src = "`/images/favicon.svg`"/>
+                </RouterLink>
             </ul>
         </div>
     </nav>
@@ -31,6 +34,7 @@
         backdrop-filter: blur(2px);
         border: 2px solid black;
         z-index: 100;
+        box-shadow: 0 0 10px black;
     }
     @media(max-width: 575px) {
         .navbar {
@@ -38,29 +42,31 @@
             margin-bottom: 5px;
             width: 93vw;
         }
+        img {
+            height: 30px;
+            width: 30px;
+        }
     }
     @media(min-width: 576px) {
         .navbar {
             position: fixed;
-            top: 5px;
+            top: 10px;
             left: 50vw;
             width: 49vw;
+        }
+        img {
+            height: 40px;
+            width: 40px;
         }
     }
     ul { 
         list-style-type: none;
         padding: 0px;
     }
-    img {
-        height: 40px;
-        width: 40px;
-    }
     .activeBorder {
-        border: 0.5px solid black;
+        box-shadow: inset 0 0 10px black;
         border-radius: 10px;
     }
-
-
     .nav-link {
         position: relative;
         margin: 5px;
@@ -75,7 +81,7 @@
         position: absolute;
         color: white;
         background-color: transparent;
-        border-radius: 10px;
+        border-radius: 15px;
         bottom: 0;
         left: 0;
         height: 100%;
