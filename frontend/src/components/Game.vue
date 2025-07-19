@@ -131,6 +131,21 @@
 
     let route = useRoute();
 
+    import { onMounted, onBeforeUnmount } from 'vue'
+
+    const isMobile = ref(window.innerWidth < 800) // Set breakpoint as needed
+
+    function handleResize() {
+        isMobile.value = window.innerWidth < 800
+    }
+
+    onMounted(() => {
+        window.addEventListener('resize', handleResize)
+    }) 
+    onBeforeUnmount(() => {
+        window.removeEventListener('resize', handleResize)
+    })
+
 </script>
 
 <template>
@@ -139,11 +154,18 @@
             <Board :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr"/>
         </div>
         <div class = "col-12 col-sm-6 margin-top-desktop">
+            <div v-if = "isMobile">
+                <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer"/>
+                <Controls v-else/> 
+            </div>
             <ScoreSheet :currentMoveNo = "currentMoveNo" :movesArr = "movesArr" :route = "route"/>   
             <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
             <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
-            <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer"/>
-            <Controls v-else/>        
+            <div v-if = "!isMobile">
+                <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer"/>
+                <Controls v-else/> 
+            </div>
+       
         </div>
     </div>
 </template>
@@ -162,7 +184,7 @@
     }
     @media(576px <= width <= 991px) {
         .margin-top-desktop {
-            margin-top: 50px;
+            margin-top: 55px;
         }
     }
 </style>

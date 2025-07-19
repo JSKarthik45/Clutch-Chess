@@ -72,7 +72,7 @@
         }
         .time-container {
             border-radius: 50px;
-            height: 298px;
+            height: 34vh;
         }
     }
     @media(min-width: 992px) { /* desktop */

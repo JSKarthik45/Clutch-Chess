@@ -43,9 +43,12 @@
     }
     @media (max-width: 575px) { /* Phone */
         .media {
-            border-radius: 15px;
+            border-radius: 10px;
             margin-bottom: 10px;
-            height: 68px;
+            height: 90px;
+        }
+        .col {
+            margin: 0px 10px;
         }
     }
     @media (min-width: 576px) { /* Desktop */
