@@ -92,6 +92,7 @@
 
     const showToast = () => {
         const toast = document.getElementById("toast");
+        toast.style.zIndex = 2;
         const toastObj = new bootstrap.Toast(toast);
         toastObj.show();
     };

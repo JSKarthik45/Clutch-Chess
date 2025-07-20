@@ -17,7 +17,7 @@
             duration: 2, 
             ease: "bounce",
         }, 0.5)
-    })
+    });
 </script>
 
 <template>
@@ -112,23 +112,25 @@
             <input type = "text"/>
         </div>
     </Modal>
-    <div class = "container-fluid text-center" ref = "settings">
-        <h5 v-if = "movesArr.length != 0" class = "text-center">
-            {{ Math.floor(currentMoveNo) - 1 }} Moves
-        </h5>
-        <button v-else-if = "route.path === '/bot' || route.path === '/'" class = "text-center button-effect" data-bs-toggle = "modal" data-bs-target = "#botsettings">
-            Game Settings <img src = "/images/edit.svg"/>
-        </button>
-        <button v-else-if = "route.path === '/play'" class = "text-center button-effect" data-bs-toggle = "modal" data-bs-target = "#playsettings">
-            Game Settings <img src = "/images/edit.svg"/>
-        </button>
-        <button v-else-if = "route.path === '/openings'" class = "text-center button-effect" data-bs-toggle = "modal" data-bs-target = "#selectopening">
-            Select Opening <img src = "/images/edit.svg"/>
-        </button>
-        <button v-else-if = "route.path === '/practice'" class = "text-center button-effect" data-bs-toggle = "modal" data-bs-target = "#fen">
-            FEN <img src = "/images/edit.svg"/>
-        </button>
-        <div style = "height: 370px; overflow-y: auto;" class = "scroll">
+    <div class = "container-fluid text-center">
+        <div ref = "settings">
+            <h5 v-if = "movesArr.length != 0" class = "text-center">
+                {{ Math.floor(currentMoveNo) - 1 }} Moves
+            </h5>
+            <button v-else-if = "route.path === '/bot' || route.path === '/'" class = "text-center button-effect" data-bs-toggle = "modal" data-bs-target = "#botsettings">
+                Game Settings <img src = "/images/edit.svg"/>
+            </button>
+            <button v-else-if = "route.path === '/play'" class = "text-center button-effect" data-bs-toggle = "modal" data-bs-target = "#playsettings">
+                Game Settings <img src = "/images/edit.svg"/>
+            </button>
+            <button v-else-if = "route.path === '/openings'" class = "text-center button-effect" data-bs-toggle = "modal" data-bs-target = "#selectopening">
+                Select Opening <img src = "/images/edit.svg"/>
+            </button>
+            <button v-else-if = "route.path === '/practice'" class = "text-center button-effect" data-bs-toggle = "modal" data-bs-target = "#fen">
+                FEN <img src = "/images/edit.svg"/>
+            </button>
+        </div>
+        <div style = "height: 370px; overflow-y: auto;" class = "scroll" ref = "scoresheet">
             <table v-if = "movesArr.length != 0" id = "logMoves" class = "table table-striped table-bordered table-hover text-center">
                 <thead>
                     <tr>

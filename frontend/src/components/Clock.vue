@@ -16,6 +16,7 @@
     let clock = ref(null)
 
     onMounted(() => {
+        props.t1.restart();
         props.t1.fromTo(clock.value, {
             opacity: 0,
             y: 100,
