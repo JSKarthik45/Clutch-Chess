@@ -5,6 +5,7 @@
         rank: String,
         file: Number,
         piece: Object,
+        t1: Object, 
     });
     
     const emitfn = () => {

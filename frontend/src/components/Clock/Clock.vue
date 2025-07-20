@@ -8,6 +8,7 @@
         isCurrentPlayerWhite: Boolean, 
         whiteRemTime: Number, 
         blackRemTime: Number, 
+        t1: Object, 
     });
 
     const emitFn = () => {
@@ -15,16 +16,27 @@
     }
 
     import { ref, onMounted } from "vue";
-    
-    let time = ref(null);
+
+    let clock = ref(null);
+
+    onMounted(() => {
+        props.t1.restart();
+        props.t1.fromTo(clock.value, {
+            scale: 0, 
+        }, {
+            scale: 1, 
+            duration: 1, 
+            ease: "power1.out",
+        }, 0)
+    });
 
 </script>
 
 <template>
-    <div class="center">
+    <div class="center" ref = "clock">
         <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-3 row-cols-xl-3 row-cols-xxl-3 clock-container center" id = "clock">
             <div class="col time-col">
-                <Time player = "White" :active = "isCurrentPlayerWhite" :time = "whiteRemTime" id = "White Time" @clicked = "emitFn" ref = "time"/>
+                <Time player = "White" :active = "isCurrentPlayerWhite" :time = "whiteRemTime" id = "White Time" @clicked = "emitFn"/>
             </div>
             <div class="col controls-col center">
                 <slot/>

@@ -146,24 +146,27 @@
         window.removeEventListener('resize', handleResize)
     })
 
+    const props = defineProps({
+        t1: Object, 
+    })
 </script>
 
 <template>
     <div class = "row">
         <div class = "col-12 col-sm-6 p-1">
-            <Board :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr"/>
+            <Board :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr" :t1 = "t1"/>
         </div>
         <div class = "col-12 col-sm-6 margin-top-desktop">
             <div v-if = "isMobile">
-                <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer"/>
-                <Controls v-else/> 
+                <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
+                <Controls v-else :t1 = "t1"/> 
             </div>
-            <ScoreSheet :currentMoveNo = "currentMoveNo" :movesArr = "movesArr" :route = "route"/>   
+            <ScoreSheet :currentMoveNo = "currentMoveNo" :movesArr = "movesArr" :route = "route" :t1 = "t1"/>   
             <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
             <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
             <div v-if = "!isMobile">
-                <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer"/>
-                <Controls v-else/> 
+                <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
+                <Controls v-else :t1 = "t1"/> 
             </div>
        
         </div>

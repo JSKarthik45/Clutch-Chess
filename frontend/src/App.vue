@@ -1,5 +1,5 @@
 <script setup>
-  import {ref, watch} from "vue";
+  import {ref, watch, onMounted} from "vue";
   import {useRoute} from "vue-router";
   import Navbar from "@/components/Navbar.vue";
   const items = ref([
@@ -19,15 +19,26 @@
         } else {
           i.active = false
         }
+      setTimeout(() => {
+      const bsCollapse = document.getElementById('navbarSupportedContent');
+      if (bsCollapse && bsCollapse.classList.contains("show")) {
+        import('bootstrap/js/dist/collapse').then(({ default: Collapse }) => {
+          const collapseInstance = Collapse.getOrCreateInstance(bsCollapse);
+          collapseInstance.hide();
+        });
       }
-    },
+    }, 200);
+    }}
   );
+
+  import {gsap} from "gsap";
+  let t1 = gsap.timeline();
 </script>
 
 <template>
   <div class = "container-fluid">
-    <Navbar :items = "items"/>
-    <RouterView/>
+      <Navbar :items = "items" :t1 = "t1"/>
+      <RouterView  :key="$route.fullPath" :t1 = "t1"> </RouterView>
   </div>
 </template>
 

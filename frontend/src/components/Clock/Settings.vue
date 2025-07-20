@@ -7,15 +7,28 @@
     const emitFn2 = (event) => {
         emit("incChanged", event.target.value);
     };
-
+    import {ref, onMounted} from "vue";
     const props = defineProps({
         time: Number, 
         inc: Number, 
+        t1: Object, 
     });
+    let settings = ref(null);
+    onMounted(() => {
+        props.t1.fromTo(settings.value, {
+            opacity: 0,
+            y: -100,
+        }, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power1.out",
+        }, 1)
+    })
 </script>
 
 <template>
-    <div class = "media">
+    <div class = "media" ref = "settings">
         <div class = "row">
             <div class="col center">
                 <div>

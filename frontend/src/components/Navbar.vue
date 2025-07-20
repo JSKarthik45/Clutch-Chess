@@ -1,12 +1,25 @@
 <script setup>
-    import { ref } from "vue";
+    import { ref, onMounted } from "vue";
     const props = defineProps({
         items: Array,
+        t1: Object,
     })
-    let hovered = ref(false);
+
+    let navbar = ref(null);
+    onMounted(() => {
+        props.t1.fromTo(navbar.value, {
+            opacity: 0,
+            y: -100,
+        }, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power1.out",
+        }, 0.5)
+    })
 </script>
 <template>
-    <nav class = "navbar navbar-expand-lg">   
+    <nav class = "navbar navbar-expand-lg" ref = "navbar">   
         <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
             <span class = "navbar-toggler-icon"></span>
         </button>

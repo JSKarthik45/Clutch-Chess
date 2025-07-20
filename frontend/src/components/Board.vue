@@ -9,7 +9,7 @@
         emit("pieceCaptured", piece)
     }
 
-    import { ref } from "vue";
+    import { ref, onMounted } from "vue";
     import 'bootstrap/dist/css/bootstrap.min.css';
     import Square from "@/components/Square.vue";
 
@@ -18,6 +18,7 @@
         ranks: Array,
         trackPiecesFromPos: Object,
         currentPlayer: String, 
+        t1: Object, 
     });
 
     let from = true;
@@ -118,10 +119,25 @@
     };
     import { useWindowSize } from '@vueuse/core'
     const { width, height } = useWindowSize()
+
+    let board = ref(null)
+
+    onMounted(() => {
+        props.t1.restart();
+        props.t1.fromTo(board.value, {
+            scale: 0, 
+        }, {
+            scale: 1, 
+            duration: 1,
+            ease: "power1.out",
+        }, 0
+        )
+    })
+
 </script>
 
 <template>
-    <div class = "container-fluid">
+    <div class = "container-fluid" ref = "board">
         <div v-if = "width > 992" class = "row">
             <div class = "col-1 filerankintersection"></div>
             <div class = "col rank center" v-for = "rank in ranks">
@@ -134,7 +150,7 @@
                 {{file}}
             </div>
             <div v-for = "rank in ranks" class = "col p-0 square" :id = "`${rank}${file}`">
-                <Square :rank = "rank" :file = "file" :piece = "trackPiecesFromPos[`${rank}${file}`]" @clicked = "changeVals"/>
+                <Square :rank = "rank" :file = "file" :piece = "trackPiecesFromPos[`${rank}${file}`]" @clicked = "changeVals" :t1 = "t1"/>
             </div>
             <div v-if = "width > 992" class = "col-1 file center">
                 {{file}}

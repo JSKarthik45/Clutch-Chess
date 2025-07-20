@@ -1,9 +1,25 @@
 <script setup>
+    const props = defineProps({
+        t1: Object, 
+    })
+    import {ref, onMounted} from "vue";
 
+    let controls = ref(null);
+    onMounted(() => {
+        props.t1.fromTo(controls.value, {
+            opacity: 0,
+            y: 100,
+        }, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power1.out",
+        }, 0.5)
+    });
 </script>
 
 <template>
-    <div class = "container-fluid">
+    <div class = "container-fluid" ref = "controls">
         <div class = "row controls gx-2 border rounded-5 my-2 p-2">
             <div class = "col center rounded-5 controls-effect" style = "padding-top: 3px;">
                 <img src = "/images/fastbackward.svg">

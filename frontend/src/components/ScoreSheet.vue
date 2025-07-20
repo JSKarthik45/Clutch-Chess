@@ -3,8 +3,21 @@
         currentMoveNo: Number,
         movesArr: Array,
         route: Object,
+        t1: Object, 
     });
     import Modal from "@/components/Modal.vue";
+    import {ref, onMounted} from "vue";
+
+    let settings = ref(null);
+    onMounted(() => {
+        props.t1.fromTo(settings.value, {
+            y: -200, 
+        }, {
+            y: 0, 
+            duration: 2, 
+            ease: "bounce",
+        }, 0.5)
+    })
 </script>
 
 <template>
@@ -99,7 +112,7 @@
             <input type = "text"/>
         </div>
     </Modal>
-    <div class = "container-fluid text-center">
+    <div class = "container-fluid text-center" ref = "settings">
         <h5 v-if = "movesArr.length != 0" class = "text-center">
             {{ Math.floor(currentMoveNo) - 1 }} Moves
         </h5>

@@ -128,14 +128,18 @@
 		reInitGame();
 	};
 
+	const props = defineProps({
+		t1: Object, 
+	})
+
 </script>
 
 <template>
-  	<Clock :isCurrentPlayerWhite = "isCurrentPlayerWhite" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" @changePlayer = "changePlayer" class = "margin-top-desktop">
+  	<Clock :isCurrentPlayerWhite = "isCurrentPlayerWhite" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" @changePlayer = "changePlayer" class = "margin-top-desktop" :t1 = "t1">
 		<Controls :isPaused = "isPaused" :isMaximised = "isMaximised" @maximise = "maximise" @minimise = "minimise" @reset = "reInitGame" @play = "play" @pause = "pause"/>
 	</Clock>
 	<Toast :message = "message"/>
-	<Settings @clicked = "changeSettings" :time = "startingTime / 60" :inc = "startingIncrement" @timeChanged = "updateTime" @incChanged = "updateInc" class = "settings-container"/>
+	<Settings @clicked = "changeSettings" :time = "startingTime / 60" :inc = "startingIncrement" @timeChanged = "updateTime" @incChanged = "updateInc" class = "settings-container" :t1 = "t1"/>
 </template>
 
 <style>

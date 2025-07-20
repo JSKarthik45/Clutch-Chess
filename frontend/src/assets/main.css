@@ -76,3 +76,10 @@
     .button-effect:hover img {
     filter: invert(100%);
     }
+
+
+
+.collapsing {
+  transition-duration: 1s !important; /* adjust 1s to your desired duration */
+  transition-timing-function: ease;  /* or any easing you like */
+}
