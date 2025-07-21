@@ -1,7 +1,12 @@
-# app.py
-from flask import Flask
-app = Flask(__name__)
+from flask import Flask, send_from_directory
+import os
 
-@app.route("/")
-def index():
-    return "Hello World!"
+app = Flask(__name__, static_folder='../frontend/dist')
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_vue_app(path):
+    static_file_path = os.path.join(app.static_folder, path)
+    if path != "" and os.path.exists(static_file_path):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, 'index.html')
