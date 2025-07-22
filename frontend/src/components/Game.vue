@@ -1,5 +1,5 @@
 <script setup>
-    import {ref} from "vue";
+    import {ref, watch} from "vue";
     import {useRoute} from "vue-router";
     import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -8,10 +8,16 @@
     import ScoreSheet from "@/components/ScoreSheet.vue";
     import CapturedPieces from "@/components/CapturedPieces.vue";
     import Controls from "@/components/Controls.vue";
+    import Modal from "@/components/Modal.vue";
+    import Settings from "@/components/Settings.vue";
 
     const ranks = ref(["a", "b", "c", "d", "e", "f", "g", "h"]);
     const files = ref([8, 7, 6, 5, 4, 3, 2, 1]);
-
+    
+    const flip = () => {
+        ranks.value = ranks.value.reverse();
+        files.value = files.value.reverse();
+    };
     const players = ref({
         "W": 1,
         "B" : 8,
@@ -68,6 +74,7 @@
     let whiteRemTime = ref(180);
     let blackRemTime = ref(180);
     let IntervalId = null;
+    let increment = ref(0);
 
     let movesArr = ref([]);
 
@@ -89,14 +96,26 @@
             }
             movesArr.value.push(moveObj);
             currentPlayer.value = "B";
+            if(movesArr.value.length != 1) {
+                whiteRemTime.value += increment.value;
+            }
             blackTimer();
         }
         else {
-            movesArr.value[movesArr.value.length - 1].B = move;
+            if (movesArr.value.length === 0) {
+                // Defensive fallback: no previous move, create a new one or throw error
+                movesArr.value.push({ W: "", B: move });
+            } else {
+                movesArr.value[movesArr.value.length -1].B = move;
+            }
             currentPlayer.value = "W";
+            blackRemTime.value += increment.value;
             whiteTimer();
         }
         currentMoveNo.value += 0.5;
+        for(let i of movesArr.value) {
+            console.log(i)
+        }
     };
 
     const whiteTimer = () => {
@@ -149,9 +168,106 @@
     const props = defineProps({
         t1: Object, 
     })
+
+    const handleBot = (obj) => {
+        whiteRemTime.value = obj.time;
+        blackRemTime.value = obj.time;
+        increment.value = obj.increment;
+        if(ranks.value[0] === "a" && obj.colour === "B") {
+            flip();
+        }
+        if(ranks.value[0] === "h" && obj.colour === "W") {
+            flip();
+        }
+    };
+
+    let roomNo = ref();
+    const handlePlay = (obj) => {
+        whiteRemTime.value = obj.time;
+        blackRemTime.value = obj.time;
+        increment.value = obj.increment;
+        if(ranks.value[0] === "a" && obj.colour === "B") {
+            flip();
+        }
+        if(ranks.value[0] === "h" && obj.colour === "W") {
+            flip();
+        }
+        roomNo.value = obj.roomNo;
+    };
+
+    const handleOpenings = (obj) => {
+
+    };
+
+    let fen = ref("")
+    const handlePractice = (obj) => {
+        fen.value = obj.fen;
+        if (obj.fen && obj.fen.trim() !== '') {
+            applyFEN(obj.fen);
+        }
+    };
+
+
+
+    const parseFEN = (fenString) => {
+        if (!fenString) return {};
+        
+        const piecePlacement = fenString.split(' ')[0];
+        const ranks = piecePlacement.split('/');
+        const newTrackPiecesFromPos = {};
+        
+        const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+        
+        for (let rankIndex = 0; rankIndex < 8; rankIndex++) {
+            const rankStr = ranks[rankIndex];
+            let fileIndex = 0;
+            
+            for (const char of rankStr) {
+                if (char >= '1' && char <= '8') {
+                    fileIndex += parseInt(char);
+                } 
+                else {
+                    const file = 8 - rankIndex;
+                    const rank = files[fileIndex];
+                    const square = `${rank}${file}`;
+                    
+                    const player = char === char.toUpperCase() ? 'W' : 'B';
+                    let pieceType = char.toUpperCase();
+                    
+                    let piece = pieceType;
+                    if (pieceType === 'P') {
+                        piece = `P${fileIndex + 1}`;
+                    } else if (pieceType === 'R') {
+                        piece = fileIndex < 4 ? 'R1' : 'R2';
+                    } else if (pieceType === 'N') {
+                        piece = fileIndex < 4 ? 'N1' : 'N2';
+                    } else if (pieceType === 'B') {
+                        piece = fileIndex < 4 ? 'B1' : 'B2';
+                    }
+                    
+                    newTrackPiecesFromPos[square] = {
+                        player: player,
+                        piece: piece
+                    };
+                    
+                    fileIndex++;
+                }
+            }
+        }
+        return newTrackPiecesFromPos;
+    };
+    const applyFEN = (fenString) => {
+        trackPiecesFromPos.value = parseFEN(fenString);
+        movesArr.value = [];
+        currentMoveNo.value = 1;
+        currentPlayer.value = fenString.split(" ")[1].toUpperCase();
+        capturedPieces.value = [];
+    };
+
 </script>
 
 <template>
+    <Modal :route = "route" @root = "handleBot" @bot = "handleBot" @play = "handlePlay" @openings = "handleOpenings" @practice = "handlePractice"/>
     <div class = "row">
         <div class = "col-12 col-sm-6 p-1">
             <Board :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr" :t1 = "t1"/>
@@ -160,11 +276,14 @@
             <div v-if = "isMobile">
                 <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
                 <Controls v-else :t1 = "t1"/> 
+                <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
+                <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
             </div>
-            <ScoreSheet :currentMoveNo = "currentMoveNo" :movesArr = "movesArr" :route = "route" :t1 = "t1"/>   
-            <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
-            <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
+            <ScoreSheet v-if = "movesArr.length != 0" :currentMoveNo = "currentMoveNo" :movesArr = "movesArr"/>   
+            <Settings v-else :movesArr = "movesArr" :route = "route" :t1 = "t1"/>
             <div v-if = "!isMobile">
+                <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
+                <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
                 <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
                 <Controls v-else :t1 = "t1"/> 
             </div>
