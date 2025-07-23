@@ -3,6 +3,12 @@
     import {useRoute} from "vue-router";
     import 'bootstrap/dist/css/bootstrap.min.css';
 
+    import * as Ably from 'ably';
+
+    const ably = new Ably.Realtime('UK-xHQ.fz_ucg:QxVb5bu7tx7JZeS8aPZBhcHvollNc-vIQWKsFeUErj4');
+    let channel = null;
+
+
     import Board from "@/components/Board.vue";
     import Clock from "@/components/Clock.vue"; 
     import ScoreSheet from "@/components/ScoreSheet.vue";
@@ -77,7 +83,7 @@
     let increment = ref(0);
 
     let movesArr = ref([]);
-    const logAndUpdate = (rank, file, capturedStatus, fromRankForPawn) => {
+    const logAndUpdate = (rank, file, capturedStatus, fromRankForPawn, fromFile) => {
         const toPos = `${rank}${file}`;
         let piece = trackPiecesFromPos.value[toPos].piece[0];
         let move = "";
@@ -113,8 +119,26 @@
         }
         currentMoveNo.value += 0.5;
         if(route.path === "/bot") {
-            //botMove();
+            botMove();
         }
+        channel.publish('move', {
+        // Handle move, e.g., update the chess board based on message.data
+            
+            str1: fromRankForPawn,
+            str2: fromFile,
+            str3: rank, 
+            str4: file,  
+        });
+        /*channel.publish('move', {
+        // Handle move, e.g., update the chess board based on message.data
+            str1: rank,
+            str2: file, 
+        });
+        channel.subscribe('move', (message) => {
+            const {str1, str2} = message.data;
+            boardFn.value.changeVals(str1, str2);
+            console.log("recieved")
+        })*/
     };
 
     const whiteTimer = () => {
@@ -192,6 +216,15 @@
             flip();
         }
         roomNo.value = obj.roomNo;
+        channel = ably.channels.get('chat-room-' + roomNo.value);
+        channel.subscribe('move', (message) => {
+            const {str1, str2, str3, str4} = message.data;
+                if (boardFn.value && boardFn.value.changeVals) {
+                boardFn.value.changeVals(str1, str2);
+                boardFn.value.changeVals(str3, str4);
+                }
+            
+        })
     };
 
     const handleOpenings = (obj) => {
@@ -311,7 +344,7 @@
         return `${placement} ${sideToMove} ${rest}`;
     };
 
-    /*const botMove = () => {
+    const botMove = () => {
         if((ranks.value[0] === "a" && currentPlayer.value === "B") || (ranks.value[0] === "h" && currentPlayer.value === "W")) {
             fetch(`https://stockfish.online/api/s/v2.php?fen=${boardToFEN()}&depth=10`)
             .then(response => {
@@ -336,7 +369,7 @@
                 console.error("Fetch error:", error);
             });
         } 
-    }*/
+    }
     
     let boardFn = ref();
         const callChangeVals = (...args) => {
@@ -346,6 +379,11 @@
     console.warn('boardFn or changeVals not ready');
   }
 };
+
+
+
+
+
 </script>
 
 <template>

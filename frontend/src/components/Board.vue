@@ -2,7 +2,7 @@
     const emit = defineEmits(['pieceMoved', 'pieceCaptured']);
     import * as bootstrap from 'bootstrap';
     const emitfn = () => {
-        emit("pieceMoved", toLoc.value.rank, toLoc.value.file, capturedStatus, fromLoc.value.rank);
+        emit("pieceMoved", toLoc.value.rank, toLoc.value.file, capturedStatus, fromLoc.value.rank, fromLoc.value.file);
     };
 
     const emitfn2 = (piece) => {
@@ -15,7 +15,6 @@
 
     const changeVals = (rank, file) => {
         if (from) {
-            console.log(rank, file)
             setFromLoc(rank, file);
             checkValidityOfFromLoc(rank, file) ? highlightSquare(rank, file) : showToast();
         }
