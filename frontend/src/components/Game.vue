@@ -77,7 +77,6 @@
     let increment = ref(0);
 
     let movesArr = ref([]);
-
     const logAndUpdate = (rank, file, capturedStatus, fromRankForPawn) => {
         const toPos = `${rank}${file}`;
         let piece = trackPiecesFromPos.value[toPos].piece[0];
@@ -113,8 +112,8 @@
             whiteTimer();
         }
         currentMoveNo.value += 0.5;
-        for(let i of movesArr.value) {
-            console.log(i)
+        if(route.path === "/bot") {
+            //botMove();
         }
     };
 
@@ -264,17 +263,106 @@
         capturedPieces.value = [];
     };
 
+    const boardToFEN = () => {
+  // Board coordinates in chess order (a-file left, rank-8 top)
+        const filesArr = ['a','b','c','d','e','f','g','h'];
+
+        const rankStrings = [];                // will collect eight rank substrings
+        for (let rank = 8; rank >= 1; rank--) { // FEN goes 8-to-1
+            let rankStr = '';
+            let empty = 0;                       // counter for consecutive empty squares
+
+            for (let f = 0; f < 8; f++) {
+            const square = `${filesArr[f]}${rank}`;
+            const squareInfo = trackPiecesFromPos.value[square];
+
+            if (squareInfo) {                  // there is a piece on this square
+                if (empty) {                     // flush any empty-square run
+                rankStr += empty;
+                empty = 0;
+                }
+
+                // First letter of internal piece ID → K,Q,R,B,N,P
+                let pieceLetter = squareInfo.piece[0].toUpperCase();
+
+                // Lowercase for Black pieces, uppercase for White
+                if (squareInfo.player === 'B') pieceLetter = pieceLetter.toLowerCase();
+
+                rankStr += pieceLetter;
+            } else {                           // empty square
+                empty++;
+            }
+            }
+            if (empty) rankStr += empty;         // flush trailing empties
+            rankStrings.push(rankStr);
+        }
+
+        // Piece-placement field (ranks joined by ‘/’)
+        const placement = rankStrings.join('/');
+
+        // Active colour:  w / b
+        const sideToMove = currentPlayer.value === 'W' ? 'w' : 'b';
+
+        // Castling rights, en-passant square, half-move clock, full-move number
+        // -  Keep them at their “empty/default” values as requested
+        const rest = '- - 0 ' + Math.ceil(currentMoveNo.value);
+
+        // Full FEN
+        return `${placement} ${sideToMove} ${rest}`;
+    };
+
+    /*const botMove = () => {
+        if((ranks.value[0] === "a" && currentPlayer.value === "B") || (ranks.value[0] === "h" && currentPlayer.value === "W")) {
+            fetch(`https://stockfish.online/api/s/v2.php?fen=${boardToFEN()}&depth=10`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("HTTP error! Status: " + response.status);
+                }
+                return response.json(); // or .text() if the API does not return JSON
+            })
+            .then(data => {
+                let fromTo = data.bestmove.split(" ")[1]
+                let newtrack = trackPiecesFromPos.value[`${fromTo[0]}${fromTo[1]}`];
+                //delete trackPiecesFromPos.value[`${fromTo[0]}${fromTo[1]}`];
+                //trackPiecesFromPos.value[`${fromTo[2]}${fromTo[3]}`] = newtrack;
+                 if (boardFn.value && boardFn.value.changeVals) {
+                    boardFn.value.changeVals(fromTo[0],fromTo[1]);
+        boardFn.value.changeVals(fromTo[2],fromTo[3]);
+    } else {
+        console.warn("Board ref or method not ready");
+    }
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
+            });
+        } 
+    }*/
+    
+    let boardFn = ref();
+        const callChangeVals = (...args) => {
+  if (boardFn.value && boardFn.value.changeVals) {
+    boardFn.value.changeVals(...args);
+  } else {
+    console.warn('boardFn or changeVals not ready');
+  }
+};
 </script>
 
 <template>
     <Modal :route = "route" @root = "handleBot" @bot = "handleBot" @play = "handlePlay" @openings = "handleOpenings" @practice = "handlePractice"/>
     <div class = "row">
         <div class = "col-12 col-sm-6 p-1">
-            <Board :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr" :t1 = "t1"/>
+            <Board ref = "boardFn" :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr" :t1 = "t1"/>
         </div>
         <div class = "col-12 col-sm-6 margin-top-desktop">
             <div v-if = "isMobile">
                 <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
+                <div v-else-if = "route.path === '/practice'" class = "fen center">
+                    <h5>
+                        Current FEN: 
+                        <input type = "text" :value = "boardToFEN()" disabled/>
+                    </h5>
+                </div>
                 <Controls v-else :t1 = "t1"/> 
                 <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
                 <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
@@ -285,6 +373,12 @@
                 <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
                 <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
                 <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
+                <div v-else-if = "route.path === '/practice'" class = "fen center">
+                    <h5>
+                        Current FEN: 
+                        <input type = "text" :value = "boardToFEN()" disabled/>
+                    </h5>
+                </div>
                 <Controls v-else :t1 = "t1"/> 
             </div>
        
@@ -293,6 +387,21 @@
 </template>
 
 <style scoped>
+     @media(max-width: 575px) {
+        .fen {
+            height: 50px;
+            width: 88vw;
+        }
+    }
+    @media (min-width: 576px) {
+        .fen {
+            height: 70px;
+            width: 45vw;
+        }
+    }
+
+
+
     .capturedPieces {
         width: 40px;
     }

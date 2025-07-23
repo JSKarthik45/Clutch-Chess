@@ -13,6 +13,31 @@
     import 'bootstrap/dist/css/bootstrap.min.css';
     import Square from "@/components/Square.vue";
 
+    const changeVals = (rank, file) => {
+        if (from) {
+            console.log(rank, file)
+            setFromLoc(rank, file);
+            checkValidityOfFromLoc(rank, file) ? highlightSquare(rank, file) : showToast();
+        }
+        else {
+            if(checkValidityOfToLoc(rank, file)) {
+                setToLoc(rank, file)
+                movePiece();
+                dehighlightSquare(rank, file);
+                emitfn();
+                resetFromAndTo();
+                from = true;
+            }
+            else {
+                dehighlightSquare(rank, file);
+                setFromLoc(rank, file);
+                checkValidityOfFromLoc(rank, file) ? highlightSquare(rank, file) : showToast();
+            }
+        }
+    };
+    defineExpose({ changeVals });
+
+
     const props = defineProps({
         files: Array, 
         ranks: Array,
@@ -96,28 +121,7 @@
         const toastObj = new bootstrap.Toast(toast);
         toastObj.show();
     };
-
-    const changeVals = (rank, file) => {
-        if (from) {
-            setFromLoc(rank, file);
-            checkValidityOfFromLoc(rank, file) ? highlightSquare(rank, file) : showToast();
-        }
-        else {
-            if(checkValidityOfToLoc(rank, file)) {
-                setToLoc(rank, file)
-                movePiece();
-                dehighlightSquare(rank, file);
-                emitfn();
-                resetFromAndTo();
-                from = true;
-            }
-            else {
-                dehighlightSquare(rank, file);
-                setFromLoc(rank, file);
-                checkValidityOfFromLoc(rank, file) ? highlightSquare(rank, file) : showToast();
-            }
-        }
-    };
+    
     import { useWindowSize } from '@vueuse/core'
     const { width, height } = useWindowSize()
 
