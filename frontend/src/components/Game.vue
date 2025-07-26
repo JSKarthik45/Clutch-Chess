@@ -2,12 +2,9 @@
     import {ref, watch} from "vue";
     import {useRoute} from "vue-router";
     import 'bootstrap/dist/css/bootstrap.min.css';
+    import * as bootstrap from 'bootstrap';
 
     import * as Ably from 'ably';
-
-    const ably = new Ably.Realtime('UK-xHQ.fz_ucg:QxVb5bu7tx7JZeS8aPZBhcHvollNc-vIQWKsFeUErj4');
-    let channel = null;
-
 
     import Board from "@/components/Board.vue";
     import Clock from "@/components/Clock.vue"; 
@@ -82,6 +79,13 @@
     let IntervalId = null;
     let increment = ref(0);
 
+    let ably = null;
+    let channel = null;
+
+
+
+    let isRemoteMove = false;
+
     let movesArr = ref([]);
     const logAndUpdate = (rank, file, capturedStatus, fromRankForPawn, fromFile) => {
         const toPos = `${rank}${file}`;
@@ -118,17 +122,27 @@
             whiteTimer();
         }
         currentMoveNo.value += 0.5;
-        if(route.path === "/bot") {
-            botMove();
+        if(route.path === "/bot" || route.path === "/") {
+            if(currentMoveNo.value === 1.5) {
+                showToast();
+                botMove();
+            }
+            else {
+               botMove(); 
+            }
         }
-        channel.publish('move', {
-        // Handle move, e.g., update the chess board based on message.data
-            
-            str1: fromRankForPawn,
-            str2: fromFile,
-            str3: rank, 
-            str4: file,  
-        });
+        if(route.path === "/play" && channel)
+        if (isRemoteMove) {
+            return; // Avoid echo loop
+        }
+            console.log(connected.value);
+            channel.publish('move', {
+            // Handle move, e.g., update the chess board based on message.data
+                str1: fromRankForPawn,
+                str2: fromFile,
+                str3: rank, 
+                str4: file,  
+            });
         /*channel.publish('move', {
         // Handle move, e.g., update the chess board based on message.data
             str1: rank,
@@ -202,8 +216,13 @@
         if(ranks.value[0] === "h" && obj.colour === "W") {
             flip();
         }
+        if(obj.colour === "B" && currentPlayer.value === "W") {
+            showToast();
+            botMove();
+        }
     };
 
+    let connected = ref([]);
     let roomNo = ref();
     const handlePlay = (obj) => {
         whiteRemTime.value = obj.time;
@@ -215,16 +234,40 @@
         if(ranks.value[0] === "h" && obj.colour === "W") {
             flip();
         }
+        ably = new Ably.Realtime(
+            {key: 'UK-xHQ.fz_ucg:QxVb5bu7tx7JZeS8aPZBhcHvollNc-vIQWKsFeUErj4', 
+            echoMessages: false, 
+            clientId: `${obj.colour}`});
         roomNo.value = obj.roomNo;
         channel = ably.channels.get('chat-room-' + roomNo.value);
+        channel.presence.enter();
         channel.subscribe('move', (message) => {
             const {str1, str2, str3, str4} = message.data;
+            if(message.clientId != ably.auth.clientId) {
+                console.log(message.clientId, ably.auth.clientId)
+                isRemoteMove = true;
                 if (boardFn.value && boardFn.value.changeVals) {
-                boardFn.value.changeVals(str1, str2);
-                boardFn.value.changeVals(str3, str4);
+                    boardFn.value.changeVals(str1, str2);
+                    boardFn.value.changeVals(str3, str4);
                 }
-            
-        })
+                setTimeout(() => {
+            isRemoteMove = false;
+        }, 50);
+            }
+        });
+        channel.presence.subscribe(['enter', 'leave'], (member) => {
+            channel.presence.get().then((members) => {
+                connected.value.length = 0;
+                console.log("Number of clients in channel:", members.length);
+                connected.value.push(members.length);
+                for(member of members) {
+                    console.log(member.clientId, "is connected");
+                    connected.value.push(member.clientId);
+                }
+            })
+
+        });
+
     };
 
     const handleOpenings = (obj) => {
@@ -346,8 +389,8 @@
 
     const botMove = () => {
         if((ranks.value[0] === "a" && currentPlayer.value === "B") || (ranks.value[0] === "h" && currentPlayer.value === "W")) {
-            fetch(`https://stockfish.online/api/s/v2.php?fen=${boardToFEN()}&depth=10`)
-            .then(response => {
+            let fetchPromise = fetch(`https://stockfish.online/api/s/v2.php?fen=${boardToFEN()}&depth=10`);
+            fetchPromise.then(response => {
                 if (!response.ok) {
                     throw new Error("HTTP error! Status: " + response.status);
                 }
@@ -361,6 +404,7 @@
                  if (boardFn.value && boardFn.value.changeVals) {
                     boardFn.value.changeVals(fromTo[0],fromTo[1]);
         boardFn.value.changeVals(fromTo[2],fromTo[3]);
+        hideToast();
     } else {
         console.warn("Board ref or method not ready");
     }
@@ -372,17 +416,29 @@
     }
     
     let boardFn = ref();
-        const callChangeVals = (...args) => {
-  if (boardFn.value && boardFn.value.changeVals) {
-    boardFn.value.changeVals(...args);
-  } else {
-    console.warn('boardFn or changeVals not ready');
-  }
-};
 
 
 
+const showToast = () => {
+        const toast = document.getElementById("gametoast");
+        toast.style.zIndex = 2;
+        const toastObj = new bootstrap.Toast(toast);
+        toastObj.show();
+    };
 
+    const hideToast = () => {
+        const toast = document.getElementById("gametoast");
+        toast.style.zIndex = 0;
+        const toastObj = new bootstrap.Toast(toast);
+        toastObj.hide();
+    }
+
+
+window.addEventListener('beforeunload', (event) => {
+    if(channel) {
+        channel.presence.leave(); // Fire-and-forget (Ably will try to send it)
+    }
+});
 
 </script>
 
@@ -395,10 +451,12 @@
         <div class = "col-12 col-sm-6 margin-top-desktop">
             <div v-if = "isMobile">
                 <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
-                <div v-else-if = "route.path === '/practice'" class = "fen center">
+                <div v-else-if = "route.path === '/practice'" class = "fen center mt-2">
                     <h5>
-                        Current FEN: 
-                        <input type = "text" :value = "boardToFEN()" disabled/>
+                        <div class = "text-center">
+                            Current FEN
+                        </div>
+                        <input type = "text" :value = "boardToFEN()" disabled class = "form-control"/>
                     </h5>
                 </div>
                 <Controls v-else :t1 = "t1"/> 
@@ -413,13 +471,23 @@
                 <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
                 <div v-else-if = "route.path === '/practice'" class = "fen center">
                     <h5>
-                        Current FEN: 
-                        <input type = "text" :value = "boardToFEN()" disabled/>
+                        <div class = "text-center">
+                            Current FEN
+                        </div>
+                        <input type = "text" :value = "boardToFEN()" disabled class = "form-control"/>
                     </h5>
                 </div>
                 <Controls v-else :t1 = "t1"/> 
             </div>
        
+        </div>
+    </div>
+    <div class = "toast position-fixed bottom-0 end-0 bg-dark p-2" id = "gametoast">
+        <div class = "toast-header bg-secondary">
+            <strong class = "me-auto">
+                Connecting Bot (Stockfish)
+            </strong>
+            <button type = "button" class = "btn-close" data-bs-dismiss = "toast"></button>
         </div>
     </div>
 </template>

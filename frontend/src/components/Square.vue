@@ -36,10 +36,22 @@
 
 <template>
     <div @click = "emitfn" style = "width: 100%; height: 100%;"  :class = "sqrClr() ? 'colour1' : 'colour2'" class = "center draggable" draggable = "true" @dragstart="emitfn" @drop = "emitfn" @dragover.prevent>
-        <img id = "img" v-if = "props.piece != undefined" :src = "`/images/${props.piece.player}${props.piece.piece[0]}.png`" style = "width: 75%; height: 75%;" @mouseenter="mouseenter" @mouseleave="mouseleave"/>
+        <img id = "img" v-if = "props.piece != undefined" :src = "`/images/${props.piece.player}${props.piece.piece[0]}.png`" @mouseenter="mouseenter" @mouseleave="mouseleave"/>
         <div v-else style = "width: 100%; height: 100%;" :class = "sqrClr() ? 'colour1' : 'colour2'" draggable = "false">&nbsp;</div>
     </div>
 </template>
 
 <style scoped>
+    @media(max-width: 575px) {
+        #img {
+            height: 90%;
+            width: 90%;
+        }
+    }
+    @media(min-width: 576px) {
+        #img {
+            height: 75%;
+            width: 75%;
+        }
+    }
 </style>

@@ -3,14 +3,15 @@
         route: Object, 
     });
     let title = {
-        "/": ["Game Settings", {"colour": "W", "time": 180, "increment": 0}], 
-        "/bot": ["Game Settings", {"colour": "W", "time": 180, "increment": 0}], 
+        "/": ["Game Settings (Stockfish)", {"colour": "W", "time": 180, "increment": 0}], 
+        "/bot": ["Game Settings (Stockfish)", {"colour": "W", "time": 180, "increment": 0}], 
         "/play": ["Game Settings", {"colour": "W", "time": 180, "increment": 0, "roomNo": ""}], 
         "/openings": ["Select Opening", {}], 
         "/practice": ["FEN", {"fen": ""}],
     }
 
-    import {computed} from "vue";
+import { Modal } from "bootstrap";
+    import {computed, onMounted} from "vue";
     const modalId = computed(() => {
         return (props.route.path?.slice(1)) || 'root';
     });
@@ -22,6 +23,14 @@
     const emitFn = (event) => {
         emit(modalId.value, returnObj.value)
     }
+
+    onMounted(() => {
+        let modal = document.getElementById(modalId.value);
+        let modalObj = new Modal(modal);
+        setTimeout(() => {
+            modalObj.show();
+        }, 2000);
+    })
 
 </script>
 <template>
@@ -75,12 +84,12 @@
                             </h5>
                             &nbsp;
                             <div class = "d-inline">
-                                <input type = "radio" name = "playcolour" id = "playcolour1" class = "form-check-input" checked>
+                                <input type = "radio" name = "playcolour" id = "playcolour1" class = "form-check-input" checked value = "W" v-model= "returnObj['colour']">
                                 <label for = "playcolour1" class = "form-check-label ms-1">
                                     White
                                 </label>
                                 &nbsp;
-                                <input type = "radio" name = "playcolour" id = "playcolour2" class = "form-check-input">
+                                <input type = "radio" name = "playcolour" id = "playcolour2" class = "form-check-input" value = "B" v-model= "returnObj['colour']">
                                 <label for = "playcolour2" class = "form-check-label ms-1">
                                     Black
                                 </label>

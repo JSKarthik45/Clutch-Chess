@@ -42,7 +42,7 @@
         ranks: Array,
         trackPiecesFromPos: Object,
         currentPlayer: String, 
-        t1: Object, 
+        t1: Object,  
     });
 
     let from = true;
