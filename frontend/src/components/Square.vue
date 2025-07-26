@@ -1,4 +1,6 @@
 <script setup>
+import { isMemoSame } from 'vue';
+
     const emit = defineEmits(['clicked']);
 
     const props = defineProps({
@@ -6,6 +8,7 @@
         file: Number,
         piece: Object,
         t1: Object, 
+        isMobile: Boolean, 
     });
     
     const emitfn = () => {
@@ -13,8 +16,13 @@
     };
 
     const mouseenter = (event) => {
-        event.target.style.height = "80%";
-        event.target.style.width = "80%";
+        if(props.isMobile) {
+            event.target.style.height = "95%";
+            event.target.style.width = "95%";
+        } else {
+            event.target.style.height = "80%";
+            event.target.style.width = "80%";
+        }
         event.target.parentNode.style.position = "relative"
         event.target.parentNode.style.zIndex = "1";
         event.target.parentNode.style.boxShadow = "0 0 1px rgb(0, 0, 0)";
@@ -22,8 +30,13 @@
     }
 
     const mouseleave = (event) => {
-        event.target.style.height = "75%";
-        event.target.style.width = "75%";
+        if(props.isMobile) {
+            event.target.style.height = "90%";
+            event.target.style.width = "90%";
+        } else {
+            event.target.style.height = "75%";
+            event.target.style.width = "75%";   
+        }
         event.target.parentNode.style.boxShadow = "none";
         event.target.parentNode.style.zIndex = "auto";
     }

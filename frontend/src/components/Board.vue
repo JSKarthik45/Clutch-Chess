@@ -43,6 +43,7 @@
         trackPiecesFromPos: Object,
         currentPlayer: String, 
         t1: Object,  
+        isMobile: Boolean, 
     });
 
     let from = true;
@@ -154,7 +155,7 @@
                 {{file}}
             </div>
             <div v-for = "rank in ranks" class = "col p-0 square" :id = "`${rank}${file}`">
-                <Square :rank = "rank" :file = "file" :piece = "trackPiecesFromPos[`${rank}${file}`]" @clicked = "changeVals" :t1 = "t1"/>
+                <Square :rank = "rank" :file = "file" :piece = "trackPiecesFromPos[`${rank}${file}`]" @clicked = "changeVals" :t1 = "t1" :isMobile = "isMobile"/>
             </div>
             <div v-if = "width > 992" class = "col-1 file center">
                 {{file}}

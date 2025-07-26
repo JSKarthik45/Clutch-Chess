@@ -189,7 +189,7 @@
 
     import { onMounted, onBeforeUnmount } from 'vue'
 
-    const isMobile = ref(window.innerWidth < 800) // Set breakpoint as needed
+    let isMobile = ref(window.innerWidth < 800) // Set breakpoint as needed
 
     function handleResize() {
         isMobile.value = window.innerWidth < 800
@@ -446,7 +446,7 @@ window.addEventListener('beforeunload', (event) => {
     <Modal :route = "route" @root = "handleBot" @bot = "handleBot" @play = "handlePlay" @openings = "handleOpenings" @practice = "handlePractice"/>
     <div class = "row">
         <div class = "col-12 col-sm-6 p-1">
-            <Board ref = "boardFn" :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr" :t1 = "t1"/>
+            <Board ref = "boardFn" :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr" :t1 = "t1" :isMobile = "isMobile"/>
         </div>
         <div class = "col-12 col-sm-6 margin-top-desktop">
             <div v-if = "isMobile">
