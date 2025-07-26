@@ -20,8 +20,8 @@
 </script>
 <template>
     <nav class = "navbar navbar-expand-lg" ref = "navbar">   
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-            <span class = "navbar-toggler-icon"></span>
+        <button class="navbar-toggler border-0 shadow-none w-100" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+            <span class = "navbar-toggler-icon" style = "margin-left: 80vw;"></span>
         </button>
         <div class = "collapse navbar-collapse" id = navbarSupportedContent>
             <ul class = "navbar-nav">
