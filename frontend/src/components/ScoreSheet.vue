@@ -7,7 +7,7 @@
 
 <template>
     <div class = "container-fluid text-center">
-        <div style = "height: 390px; margin-top: 10px; overflow-y: auto;" class = "scroll" ref = "scoresheet">
+        <div style = "height: 61vh; margin-top: 10px; overflow-y: auto;" class = "scroll" ref = "scoresheet">
             <h5 v-if = "movesArr.length != 0" class = "text-center">
                 {{ Math.floor(currentMoveNo) - 1 }} Moves
             </h5>

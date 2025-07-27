@@ -501,7 +501,7 @@ window.addEventListener('beforeunload', (event) => {
     }
     @media (min-width: 576px) {
         .fen {
-            height: 70px;
+            height: 80px;
             width: 45vw;
         }
     }

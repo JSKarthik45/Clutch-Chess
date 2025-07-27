@@ -19,7 +19,7 @@
 </script>
 
 <template>
-    <div class = "container-fluid text-center" style = "height: 390px; margin-top: 10px; margin-bottom: 10px;">
+    <div class = "container-fluid text-center" style = "height: 62vh; margin-top: 10px; margin-bottom: 10px;">
         <div ref = "settings">
             <h5 v-if = "movesArr.length != 0" class = "text-center">
                 {{ Math.floor(currentMoveNo) - 1 }} Moves
