@@ -1,5 +1,5 @@
 <script setup>
-    import {ref, watch} from "vue";
+    import {ref, watch, onUnmounted} from "vue";
     import {useRoute} from "vue-router";
     import 'bootstrap/dist/css/bootstrap.min.css';
     import * as bootstrap from 'bootstrap';
@@ -82,6 +82,7 @@
     let ably = null;
     let channel = null;
 
+    let isLoading = ref(false);
 
 
     let isRemoteMove = false;
@@ -124,6 +125,7 @@
         currentMoveNo.value += 0.5;
         if(route.path === "/bot" || route.path === "/") {
             if(currentMoveNo.value === 1.5) {
+                isLoading.value = true;
                 showToast();
                 botMove();
             }
@@ -131,11 +133,10 @@
                botMove(); 
             }
         }
-        if(route.path === "/play" && channel)
+        if(route.path === "/play" && channel) {
         if (isRemoteMove) {
             return; // Avoid echo loop
         }
-            console.log(connected.value);
             channel.publish('move', {
             // Handle move, e.g., update the chess board based on message.data
                 str1: fromRankForPawn,
@@ -143,6 +144,7 @@
                 str3: rank, 
                 str4: file,  
             });
+        }
         /*channel.publish('move', {
         // Handle move, e.g., update the chess board based on message.data
             str1: rank,
@@ -218,6 +220,7 @@
         }
         if(obj.colour === "B" && currentPlayer.value === "W") {
             showToast();
+            isLoading.value = true;
             botMove();
         }
     };
@@ -258,11 +261,39 @@
         channel.presence.subscribe(['enter', 'leave'], (member) => {
             channel.presence.get().then((members) => {
                 connected.value.length = 0;
-                console.log("Number of clients in channel:", members.length);
                 connected.value.push(members.length);
                 for(member of members) {
-                    console.log(member.clientId, "is connected");
                     connected.value.push(member.clientId);
+                }
+                console.log(connected.value);
+                if (connected.value[0] === 1) {
+                    isLoading.value = true;
+                    showToastConnect();
+                } 
+                else if (connected.value[0] >= 2) {
+                    let istherew = false;
+                    let isthereb = false;
+                    for(member of members) {
+                        console.log(member.clientId)
+                        if (member.clientId === "W") {
+                            istherew = true;
+                        }
+                        else if (member.clientId === "B") {
+                            isthereb = true;
+                        }
+                    }
+                    if((istherew === true) && (isthereb === true)) {
+                        isLoading.value = false;
+                        hideToastConnect();
+                        showToastConnected();
+                        setTimeout(()=>{
+                            hideToastConnected();
+                        }, 2000);
+                    }
+                    else {
+                        isLoading.value = true;
+                        showToastConnect();
+                    }
                 }
             })
 
@@ -404,6 +435,8 @@
                  if (boardFn.value && boardFn.value.changeVals) {
                     boardFn.value.changeVals(fromTo[0],fromTo[1]);
         boardFn.value.changeVals(fromTo[2],fromTo[3]);
+        isLoading.value = false;
+        console.log(isLoading.value)
         hideToast();
     } else {
         console.warn("Board ref or method not ready");
@@ -417,7 +450,32 @@
     
     let boardFn = ref();
 
+const showToastConnect = () => {
+        const toast = document.getElementById("connecttoast");
+        toast.style.zIndex = 2;
+        const toastObj = new bootstrap.Toast(toast, { autohide: false });
+        toastObj.show();
+    };
 
+    const hideToastConnect = () => {
+        const toast = document.getElementById("connecttoast");
+        toast.style.zIndex = 0;
+        const toastObj = new bootstrap.Toast(toast);
+        toastObj.hide();
+    }
+    const showToastConnected = () => {
+        const toast = document.getElementById("connectedtoast");
+        toast.style.zIndex = 2;
+        const toastObj = new bootstrap.Toast(toast, { autohide: false });
+        toastObj.show();
+    };
+
+    const hideToastConnected = () => {
+        const toast = document.getElementById("connectedtoast");
+        toast.style.zIndex = 0;
+        const toastObj = new bootstrap.Toast(toast);
+        toastObj.hide();
+    }
 
 const showToast = () => {
         const toast = document.getElementById("gametoast");
@@ -443,6 +501,13 @@ window.addEventListener('beforeunload', (event) => {
 </script>
 
 <template>
+    <div v-if="isLoading" class = "loading-overlay">
+        <div class = "spinner-container">
+  <div class="spinner-grow text-dark" role="status" style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  </div>
+</div>
     <Modal :route = "route" @root = "handleBot" @bot = "handleBot" @play = "handlePlay" @openings = "handleOpenings" @practice = "handlePractice"/>
     <div class = "row">
         <div class = "col-12 col-sm-6 p-1">
@@ -490,6 +555,22 @@ window.addEventListener('beforeunload', (event) => {
             <button type = "button" class = "btn-close" data-bs-dismiss = "toast"></button>
         </div>
     </div>
+    <div class = "toast position-fixed bottom-0 end-0 bg-dark p-2" id = "connecttoast">
+        <div class = "toast-header bg-secondary">
+            <strong class = "me-auto">
+                Waiting For Another Player To Join Room {{ roomNo }}
+            </strong>
+            <button type = "button" class = "btn-close" data-bs-dismiss = "toast"></button>
+        </div>
+    </div>
+    <div class = "toast position-fixed bottom-0 end-0 bg-dark p-2" id = "connectedtoast">
+        <div class = "toast-header bg-secondary">
+            <strong class = "me-auto">
+                Connected!
+            </strong>
+            <button type = "button" class = "btn-close" data-bs-dismiss = "toast"></button>
+        </div>
+    </div>
 </template>
 
 <style scoped>
@@ -524,4 +605,24 @@ window.addEventListener('beforeunload', (event) => {
             margin-top: 55px;
         }
     }
+    .loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); /* dimmed background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  pointer-events: all;
+}
+
+/* Separate container for spinner to avoid background dimming spinner itself */
+.spinner-container {
+  background: transparent; /* no dim on spinner itself */
+  z-index: 10000; /* above overlay, if needed */
+}
+
 </style>

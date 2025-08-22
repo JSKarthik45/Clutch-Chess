@@ -23,7 +23,7 @@
         <button class="navbar-toggler border-0 shadow-none w-100" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
             <span class = "navbar-toggler-icon" style = "margin-left: 77vw;"></span>
         </button>
-        <div class = "collapse navbar-collapse" id = navbarSupportedContent>
+        <div class = "collapse navbar-collapse" id = "navbarSupportedContent">
             <ul class = "navbar-nav">
                 <li class = "nav-item fw-semibold" v-for = "item in props.items">
                     <RouterLink class = "nav-link" :to = "item.link" :class = "{activeBorder: item.active}">
@@ -46,8 +46,9 @@
         background-color: rgba(255, 255, 255, 0.5);
         backdrop-filter: blur(2px);
         border: 2px solid black;
-        z-index: 100;
+        z-index: 10000;
         box-shadow: 0 0 10px black;
+        pointer-events: auto;
     }
     @media(max-width: 575px) {
         .navbar {
@@ -60,6 +61,22 @@
             height: 30px;
             width: 30px;
         }
+        .navbar-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap;   /* Allow wrapping to next line on overflow */
+    gap: 10px;
+  }
+  .nav-item {
+    flex: 0 1 auto;  /* Allow items to shrink if needed */
+    margin-left: 5px;
+  }
+  .nav-link {
+    /* add these lines or override */
+    display: flex;
+    align-items: center;
+    padding: 3px 6px;
+  }
     }
     @media(min-width: 576px) {
         .navbar {
@@ -71,6 +88,10 @@
         img {
             height: 40px;
             width: 40px;
+        }
+        .navbar-nav{
+            margin-left: auto;
+            margin-right: auto;
         }
     }
     ul { 

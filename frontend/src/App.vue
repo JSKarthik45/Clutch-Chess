@@ -1,5 +1,5 @@
 <script setup>
-  import {ref, watch, onMounted} from "vue";
+  import {ref, watch, computed, onMounted} from "vue";
   import {useRoute} from "vue-router";
   import Navbar from "@/components/Navbar.vue";
   const items = ref([
@@ -9,6 +9,9 @@
     { label: "Practice", link: "/practice", active: false },
     { label: "Clock", link: "/clock", active: false },
   ]);
+  const modalId = computed(() => {
+        return (props.route.path?.slice(1)) || 'root';
+    });
   let route = useRoute();
   watch(
     () => route.path,
@@ -43,5 +46,4 @@
 </template>
 
 <style scoped>
-
 </style>

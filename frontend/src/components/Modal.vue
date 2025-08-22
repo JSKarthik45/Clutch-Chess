@@ -11,7 +11,7 @@
     }
 
 import { Modal } from "bootstrap";
-    import {computed, onMounted} from "vue";
+    import {computed, onMounted, onBeforeUnmount} from "vue";
     const modalId = computed(() => {
         return (props.route.path?.slice(1)) || 'root';
     });
@@ -29,8 +29,24 @@ import { Modal } from "bootstrap";
         let modalObj = new Modal(modal);
         setTimeout(() => {
             modalObj.show();
-        }, 2000);
+        }, 1000);
     })
+
+onBeforeUnmount(() => {
+    const modalBackdrops = document.querySelectorAll('.modal-backdrop');
+  modalBackdrops.forEach((backdrop) => backdrop.remove());
+
+  // Remove modal-open class and padding-right style from body
+  document.body.classList.remove('modal-open');
+  document.body.style.removeProperty('padding-right');
+  const modalElement = document.getElementById(modalId.value); // Your modal id
+  if (modalElement) {
+    const modalInstance = Modal.getInstance(modalElement);
+    if (modalInstance) {
+      modalInstance.hide();
+    }
+  }
+});
 
 </script>
 <template>
@@ -143,5 +159,44 @@ import { Modal } from "bootstrap";
 </template>
 
 <style scoped>
+    @media(min-width: 575px) {
+    .modal-dialog {
+  position: absolute;
+  top: 20vh;
+  right: 10px;
+}
+.modal.fade .modal-dialog {
+  transform: translateX(50px);
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
 
+.modal.fade.show .modal-dialog {
+  transform: translateX(0);
+  opacity: 1;
+}
+    }
+
+
+    @media (max-width: 575px) {
+  .modal-dialog {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+    right: 0;
+  margin-left: auto;
+    margin-right: auto;
+    width: 90%
+}
+.modal.fade .modal-dialog {
+  transform: translateY(50px);
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.modal.fade.show .modal-dialog {
+  transform: translateY(0);
+  opacity: 1;
+}
+    }
 </style>
