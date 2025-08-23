@@ -81,7 +81,7 @@
     @media(min-width: 576px) {
         .navbar {
             position: fixed;
-            top: 10px;
+            top: 15px;
             left: 50vw;
             width: 49vw;
         }

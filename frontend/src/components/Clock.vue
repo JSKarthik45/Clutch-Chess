@@ -30,7 +30,7 @@
 </script>
 
 <template>
-    <div class = "container-fluid" ref = "clock" >
+    <div class = "container-fluid deskFixed" ref = "clock">
         <div class = "row clock gx-2 border rounded-5 my-2 p-2">
             <div class = "col center rounded-5" :class = "{'colour1' : currentPlayer === 'W'}" style = "padding-top: 3px;">
                 <h5>
@@ -55,8 +55,13 @@
     }
     @media (min-width: 576px) {
         .clock {
-            height: 70px;
+            height: 10vh;
             width: 45vw;
+        }
+        .deskFixed {
+            position: fixed; 
+            bottom: 15px;
+            width: 48%;
         }
     }
 </style>

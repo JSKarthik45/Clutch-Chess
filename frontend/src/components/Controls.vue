@@ -20,7 +20,7 @@
 </script>
 
 <template>
-    <div class = "container-fluid" ref = "controls">
+    <div class = "container-fluid deskFixed" ref = "controls">
         <div class = "row controls gx-2 border rounded-5 my-2 p-2">
             <div class = "col center rounded-5 controls-effect" style = "padding-top: 3px;">
                 <img src = "/images/fastbackward.svg">
@@ -57,6 +57,11 @@
         img {
             height: 30px;
             width: 30px;
+        }
+        .deskFixed {
+            position: fixed; 
+            bottom: 15px;
+            width: 48%;
         }
     }
     .controls-effect {

@@ -3,8 +3,8 @@
         route: Object, 
     });
     let title = {
-        "/": ["Game Settings (Stockfish)", {"colour": "W", "time": 180, "increment": 0}], 
-        "/bot": ["Game Settings (Stockfish)", {"colour": "W", "time": 180, "increment": 0}], 
+        "/": ["Game Settings (Stockfish)", {"colour": "W", "time": 180, "increment": 0, "level": "I"}], 
+        "/bot": ["Game Settings (Stockfish)", {"colour": "W", "time": 180, "increment": 0, "level": "I"}], 
         "/play": ["Game Settings", {"colour": "W", "time": 180, "increment": 0, "roomNo": ""}], 
         "/openings": ["Select Opening", {}], 
         "/practice": ["FEN", {"fen": ""}],
@@ -91,6 +91,29 @@ onBeforeUnmount(() => {
                                 Increment
                             </h5>
                             <input type = "number" placeholder = "In Seconds" v-model= "returnObj['increment']"/>
+                        </div>
+                        <br/>
+                        <div class = "text-center">
+                            <h5 class = "d-inline">
+                                Bot Level
+                            </h5>
+                            &nbsp;
+                            <div class = "d-inline">
+                                <input type = "radio" name = "level" id = "level1" class = "form-check-input" checked value = "I" v-model= "returnObj['level']">
+                                <label for = "level1" class = "form-check-label ms-1">
+                                    Intermediate
+                                </label>
+                                &nbsp;
+                                <input type = "radio" name = "level" id = "level2" class = "form-check-input" value = "A" v-model= "returnObj['level']">
+                                <label for = "level2" class = "form-check-label ms-1">
+                                    Advanced
+                                </label>
+                                &nbsp;
+                                <input type = "radio" name = "level" id = "level3" class = "form-check-input" value = "E" v-model= "returnObj['level']">
+                                <label for = "level3" class = "form-check-label ms-1">
+                                    Expert
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div v-else-if = "props.route.path === '/play'">

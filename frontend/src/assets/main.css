@@ -27,13 +27,13 @@
 }
 
 .scroll::-webkit-scrollbar-track {
-  background: rgb(242, 243, 222);
+  background: rgb(217, 240, 216);
   border-radius: 8px;
 }
 
 /* The handle (thumb you drag) */
 .scroll::-webkit-scrollbar-thumb {
-  background: rgb(79, 102, 56);
+  background: rgb(170, 201, 139);
   border-radius: 8px;
 }
 

@@ -6,12 +6,14 @@
 </script>
 
 <template>
-    <div class = "container-fluid text-center">
+    <div class = "container-fluid text-center" style = "height: 62vh;">
         <div style = "height: 61vh; margin-top: 10px; overflow-y: auto;" class = "scroll" ref = "scoresheet">
-            <h5 v-if = "movesArr.length != 0" class = "text-center">
-                {{ Math.floor(currentMoveNo) - 1 }} Moves
-            </h5>
-            <table v-if = "movesArr.length != 0" id = "logMoves" class = "table table-striped table-bordered table-hover text-center">
+            <table style = "table-layout: fixed;" v-if = "movesArr.length != 0" id = "logMoves" class = "table table-striped table-bordered table-hover text-center">
+                <colgroup>
+                    <col style="width: 14%;">
+                    <col style="width: 43%;">
+                    <col style="width: 43%;">
+                </colgroup>
                 <thead>
                     <tr>
                         <th>

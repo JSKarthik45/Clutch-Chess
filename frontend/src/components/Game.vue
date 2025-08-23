@@ -13,6 +13,7 @@
     import Controls from "@/components/Controls.vue";
     import Modal from "@/components/Modal.vue";
     import Settings from "@/components/Settings.vue";
+    import Fen from "@/components/Fen.vue";
 
     const ranks = ref(["a", "b", "c", "d", "e", "f", "g", "h"]);
     const files = ref([8, 7, 6, 5, 4, 3, 2, 1]);
@@ -78,6 +79,7 @@
     let blackRemTime = ref(180);
     let IntervalId = null;
     let increment = ref(0);
+    let level = ref(10);
 
     let ably = null;
     let channel = null;
@@ -212,6 +214,15 @@
         whiteRemTime.value = obj.time;
         blackRemTime.value = obj.time;
         increment.value = obj.increment;
+        if(obj.level === "I") {
+            level.value = 10;
+        }
+        else if(obj.level === "A") {
+            level.value = 12;
+        }
+        else {
+            level.value = 14;
+        }
         if(ranks.value[0] === "a" && obj.colour === "B") {
             flip();
         }
@@ -228,8 +239,8 @@
     let connected = ref([]);
     let roomNo = ref();
     const handlePlay = (obj) => {
-        whiteRemTime.value = obj.time;
-        blackRemTime.value = obj.time;
+        whiteRemTime.value = obj.time * 60;
+        blackRemTime.value = obj.time * 60;
         increment.value = obj.increment;
         if(ranks.value[0] === "a" && obj.colour === "B") {
             flip();
@@ -420,7 +431,7 @@
 
     const botMove = () => {
         if((ranks.value[0] === "a" && currentPlayer.value === "B") || (ranks.value[0] === "h" && currentPlayer.value === "W")) {
-            let fetchPromise = fetch(`https://stockfish.online/api/s/v2.php?fen=${boardToFEN()}&depth=10`);
+            let fetchPromise = fetch(`https://stockfish.online/api/s/v2.php?fen=${boardToFEN()}&depth=${level.value}`);
             fetchPromise.then(response => {
                 if (!response.ok) {
                     throw new Error("HTTP error! Status: " + response.status);
@@ -436,7 +447,6 @@
                     boardFn.value.changeVals(fromTo[0],fromTo[1]);
         boardFn.value.changeVals(fromTo[2],fromTo[3]);
         isLoading.value = false;
-        console.log(isLoading.value)
         hideToast();
     } else {
         console.warn("Board ref or method not ready");
@@ -497,7 +507,6 @@ window.addEventListener('beforeunload', (event) => {
         channel.presence.leave(); // Fire-and-forget (Ably will try to send it)
     }
 });
-
 </script>
 
 <template>
@@ -516,14 +525,7 @@ window.addEventListener('beforeunload', (event) => {
         <div class = "col-12 col-sm-6 margin-top-desktop">
             <div v-if = "isMobile">
                 <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
-                <div v-else-if = "route.path === '/practice'" class = "fen center mt-2">
-                    <h5>
-                        <div class = "text-center">
-                            Current FEN
-                        </div>
-                        <input type = "text" :value = "boardToFEN()" disabled class = "form-control"/>
-                    </h5>
-                </div>
+                <Fen v-else-if = "route.path === '/practice'" :fen = "boardToFEN()" :t1 = "t1"/>
                 <Controls v-else :t1 = "t1"/> 
                 <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
                 <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
@@ -534,14 +536,7 @@ window.addEventListener('beforeunload', (event) => {
                 <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
                 <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
                 <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
-                <div v-else-if = "route.path === '/practice'" class = "fen center">
-                    <h5>
-                        <div class = "text-center">
-                            Current FEN
-                        </div>
-                        <input type = "text" :value = "boardToFEN()" disabled class = "form-control"/>
-                    </h5>
-                </div>
+                <Fen v-else-if = "route.path === '/practice'" :fen = "boardToFEN()" :t1 = "t1"/>
                 <Controls v-else :t1 = "t1"/> 
             </div>
        
@@ -574,18 +569,6 @@ window.addEventListener('beforeunload', (event) => {
 </template>
 
 <style scoped>
-     @media(max-width: 575px) {
-        .fen {
-            height: 50px;
-            width: 88vw;
-        }
-    }
-    @media (min-width: 576px) {
-        .fen {
-            height: 80px;
-            width: 45vw;
-        }
-    }
 
 
 
