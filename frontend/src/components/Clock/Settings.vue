@@ -66,7 +66,7 @@
     }
     @media (min-width: 576px) { /* Desktop */
         .media {
-            margin-top: 12px;
+            margin-top: 15px;
             border-radius: 15px;
             height: 65px;
         }

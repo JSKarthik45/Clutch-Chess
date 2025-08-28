@@ -3,9 +3,9 @@
         route: Object, 
     });
     let title = {
-        "/": ["Game Settings (Stockfish)", {"colour": "W", "time": 180, "increment": 0, "level": "I"}], 
-        "/bot": ["Game Settings (Stockfish)", {"colour": "W", "time": 180, "increment": 0, "level": "I"}], 
-        "/play": ["Game Settings", {"colour": "W", "time": 180, "increment": 0, "roomNo": ""}], 
+        "/": ["Game Settings (Stockfish)", {"colour": "W", "time": 3, "increment": 0, "level": "I"}], 
+        "/bot": ["Game Settings (Stockfish)", {"colour": "W", "time": 3, "increment": 0, "level": "I"}], 
+        "/play": ["Game Settings", {"colour": "W", "time": 3, "increment": 0, "roomNo": "", "action": ""}], 
         "/openings": ["Select Opening", {}], 
         "/practice": ["FEN", {"fen": ""}],
     }
@@ -20,7 +20,19 @@ import { Modal } from "bootstrap";
     })
 
     const emit = defineEmits(['bot', 'play', 'opening', 'practice', "root"]);
-    const emitFn = (event) => {
+    const emitFn = (action = '') => {
+        if (props.route.path === '/play') {
+            if (action === 'create') {
+                const generateRoomNo = () => {
+                    return Math.floor(100000 + Math.random() * 900000).toString();
+                };
+                // Just generate once here, uniqueness check done in parent
+                returnObj.value.roomNo = generateRoomNo();
+                returnObj.value.action = 'create';
+            } else if (action === 'join') {
+                returnObj.value.action = 'join';
+            }
+        }
         emit(modalId.value, returnObj.value)
     }
 
@@ -50,7 +62,7 @@ onBeforeUnmount(() => {
 
 </script>
 <template>
-    <div class = "modal fade" :id = "modalId">
+    <div class = "modal fade" :id = "modalId" v-if = "props.route.path != '/play'">
         <div class = "modal-dialog">
             <div class = "modal-content px-2">
                 <div class = "modal-header">
@@ -67,7 +79,7 @@ onBeforeUnmount(() => {
                             </h5>
                             &nbsp;
                             <div class = "d-inline">
-                                <input type = "radio" name = "colour" id = "colour1" class = "form-check-input" checked value = "W" v-model= "returnObj['colour']">
+                                <input type = "radio" name = "colour" id = "colour1" class = "form-check-input" value = "W" v-model= "returnObj['colour']" checked>
                                 <label for = "colour1" class = "form-check-label ms-1">
                                     White
                                 </label>
@@ -116,46 +128,6 @@ onBeforeUnmount(() => {
                             </div>
                         </div>
                     </div>
-                    <div v-else-if = "props.route.path === '/play'">
-                        <div class = "text-center">
-                            <h5 class = "d-inline">
-                                Colour
-                            </h5>
-                            &nbsp;
-                            <div class = "d-inline">
-                                <input type = "radio" name = "playcolour" id = "playcolour1" class = "form-check-input" checked value = "W" v-model= "returnObj['colour']">
-                                <label for = "playcolour1" class = "form-check-label ms-1">
-                                    White
-                                </label>
-                                &nbsp;
-                                <input type = "radio" name = "playcolour" id = "playcolour2" class = "form-check-input" value = "B" v-model= "returnObj['colour']">
-                                <label for = "playcolour2" class = "form-check-label ms-1">
-                                    Black
-                                </label>
-                            </div>
-                        </div>
-                        <br/>
-                        <div class = "text-center">
-                            <h5 class = "d-inline">
-                                Time 
-                            </h5>
-                            <input type = "number" placeholder = "In Minutes" v-model= "returnObj['time']"/>
-                        </div>
-                        <br/>
-                        <div class = "text-center">
-                            <h5 class = "d-inline">
-                                Increment
-                            </h5>
-                            <input type = "number" placeholder = "In Seconds" v-model= "returnObj['increment']"/>
-                        </div>
-                        <br/>
-                        <div class = "text-center">
-                            <h5 class = "d-inline">
-                                Room No.
-                            </h5>
-                            <input type = "number" v-model= "returnObj['roomNo']"/>
-                        </div>
-                    </div>
                     <div v-else-if = "props.route.path === '/openings'">
 
                     </div>
@@ -179,6 +151,111 @@ onBeforeUnmount(() => {
             </div>
         </div>
     </div>
+    <div class = "modal fade" :id = "modalId" v-else>
+        <div class = "modal-dialog">
+            <div class = "modal-content px-2">
+                <div class = "modal-header">
+                    <h3 class="modal-title fs-5">
+                        Actions
+                    </h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class = "modal-body">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createRoom">
+                        Create Room
+                    </button>
+                    &nbsp;
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#joinRoom">
+                        Join Room
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class = "modal fade" id = "createRoom">
+        <div class = "modal-dialog">
+            <div class = "modal-content px-2">
+                <div class = "modal-header">
+                    <h3 class="modal-title fs-5">
+                        Room Settings
+                    </h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class = "modal-body">
+                    <div class = "text-center">
+                        <h5 class = "d-inline">
+                            Colour
+                        </h5>
+                        &nbsp;
+                        <div class = "d-inline">
+                            <input type = "radio" name = "colour" id = "colour1" class = "form-check-input" checked value = "W" v-model= "returnObj['colour']">
+                            <label for = "colour1" class = "form-check-label ms-1">
+                                White
+                            </label>
+                            &nbsp;
+                            <input type = "radio" name = "colour" id = "colour2" class = "form-check-input" value = "B" v-model= "returnObj['colour']">
+                            <label for = "colour2" class = "form-check-label ms-1">
+                                Black
+                            </label>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class = "text-center">
+                        <h5 class = "d-inline">
+                            Time 
+                        </h5>
+                        <input type = "number" placeholder = "In Minutes" v-model= "returnObj['time']"/>
+                    </div>
+                    <br/>
+                    <div class = "text-center">
+                        <h5 class = "d-inline">
+                            Increment
+                        </h5>
+                        <input type = "number" placeholder = "In Seconds" v-model= "returnObj['increment']"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary" @click = "emitFn('create')" data-bs-dismiss="modal">
+                        Create
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class = "modal fade" id = "joinRoom">
+        <div class = "modal-dialog">
+            <div class = "modal-content px-2">
+                <div class = "modal-header">
+                    <h3 class="modal-title fs-5">
+                        Join Room
+                    </h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class = "modal-body">
+                    <div class = "text-center">
+                        <h5 class = "d-inline">
+                            Room No.
+                        </h5>
+                        <input type = "text" v-model= "returnObj['roomNo']"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary" @click = "emitFn('join')" data-bs-dismiss="modal">
+                        Join
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <style scoped>

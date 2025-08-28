@@ -155,7 +155,6 @@
         channel.subscribe('move', (message) => {
             const {str1, str2} = message.data;
             boardFn.value.changeVals(str1, str2);
-            console.log("recieved")
         })*/
     };
 
@@ -211,8 +210,8 @@
     })
 
     const handleBot = (obj) => {
-        whiteRemTime.value = obj.time;
-        blackRemTime.value = obj.time;
+        whiteRemTime.value = obj.time * 60;
+        blackRemTime.value = obj.time * 60;
         increment.value = obj.increment;
         if(obj.level === "I") {
             level.value = 10;
@@ -238,10 +237,21 @@
 
     let connected = ref([]);
     let roomNo = ref();
-    const handlePlay = (obj) => {
-        whiteRemTime.value = obj.time * 60;
-        blackRemTime.value = obj.time * 60;
-        increment.value = obj.increment;
+    let createdRooms = ref([]);
+    /*const handlePlay = (obj) => {
+        if(obj.action === "join") {
+            let channeltoconnect = ably.channels.get('chat-room-' + obj.roomNo);
+            channeltoconnect.presence.get().then((members) => {
+                for(member of members) {
+                    console.log(member);
+                }
+            });
+        }
+        else {
+            whiteRemTime.value = obj.time * 60;
+            blackRemTime.value = obj.time * 60;
+            increment.value = obj.increment;
+        }
         if(ranks.value[0] === "a" && obj.colour === "B") {
             flip();
         }
@@ -258,7 +268,6 @@
         channel.subscribe('move', (message) => {
             const {str1, str2, str3, str4} = message.data;
             if(message.clientId != ably.auth.clientId) {
-                console.log(message.clientId, ably.auth.clientId)
                 isRemoteMove = true;
                 if (boardFn.value && boardFn.value.changeVals) {
                     boardFn.value.changeVals(str1, str2);
@@ -276,7 +285,6 @@
                 for(member of members) {
                     connected.value.push(member.clientId);
                 }
-                console.log(connected.value);
                 if (connected.value[0] === 1) {
                     isLoading.value = true;
                     showToastConnect();
@@ -285,7 +293,6 @@
                     let istherew = false;
                     let isthereb = false;
                     for(member of members) {
-                        console.log(member.clientId)
                         if (member.clientId === "W") {
                             istherew = true;
                         }
@@ -310,7 +317,171 @@
 
         });
 
-    };
+    };*/
+    
+    
+    const handlePlay = (obj) => {
+    // For joiners, first check if room is available
+    if(obj.action === "join") {
+        // Check room capacity before joining
+        const tempAbly = new Ably.Realtime({
+            key: 'UK-xHQ.fz_ucg:QxVb5bu7tx7JZeS8aPZBhcHvollNc-vIQWKsFeUErj4'
+        });
+        const tempChannel = tempAbly.channels.get('chat-room-' + obj.roomNo);
+        
+        tempChannel.presence.get().then((members) => {
+            if(members.length >= 2) {
+                alert("Room is full! Cannot join.");
+                tempAbly.close();
+                return;
+            }
+            
+            // Room has space, proceed with joining
+            proceedWithJoining(obj, members);
+            tempAbly.close();
+        }).catch(() => {
+            alert("Room not found!");
+        });
+        
+        return; // Exit early for joiners until room check is complete
+    }
+    
+    // For room creators, proceed normally
+    whiteRemTime.value = obj.time * 60;
+    blackRemTime.value = obj.time * 60;
+    increment.value = obj.increment;
+    
+    initializeRoom(obj);
+};
+
+const proceedWithJoining = (obj, existingMembers) => {
+    // Determine creator's color from existing members
+    let creatorColour = null;
+    for(const member of existingMembers) {
+        if(member.clientId === "W" || member.clientId === "B") {
+            creatorColour = member.clientId;
+            break;
+        }
+    }
+    
+    // Assign opposite color to joiner
+    obj.colour = creatorColour === "W" ? "B" : "W";
+    
+    if(ranks.value[0] === "a" && obj.colour === "B") {
+        flip();
+    }
+    if(ranks.value[0] === "h" && obj.colour === "W") {
+        flip();
+    }
+    
+    initializeRoom(obj);
+    
+    // Request room settings after joining
+    setTimeout(() => {
+        if(channel) {
+            channel.publish('request-settings', {});
+        }
+    }, 500);
+};
+
+const initializeRoom = (obj) => {
+    // Initialize Ably connection
+    ably = new Ably.Realtime({
+        key: 'UK-xHQ.fz_ucg:QxVb5bu7tx7JZeS8aPZBhcHvollNc-vIQWKsFeUErj4', 
+        echoMessages: false, 
+        clientId: `${obj.colour}`
+    });
+    
+    roomNo.value = obj.roomNo;
+    channel = ably.channels.get('chat-room-' + roomNo.value);
+    channel.presence.enter();
+    
+    setupChannelSubscriptions(obj);
+};
+
+const setupChannelSubscriptions = (obj) => {
+    // Handle settings requests (for room creators)
+    channel.subscribe('request-settings', (message) => {
+        if(obj.action !== "join") { // Only room creator responds
+            channel.publish('room-settings', {
+                time: obj.time,
+                increment: obj.increment
+            });
+        }
+    });
+    
+    // Handle room settings (for joiners)
+    channel.subscribe('room-settings', (message) => {
+        if(obj.action === "join") { // Only joiners apply settings
+            const settings = message.data;
+            whiteRemTime.value = settings.time * 60;
+            blackRemTime.value = settings.time * 60;
+            increment.value = settings.increment;
+        }
+    });
+    
+    // Move subscription
+    channel.subscribe('move', (message) => {
+        const {str1, str2, str3, str4} = message.data;
+        if(message.clientId != ably.auth.clientId) {
+            isRemoteMove = true;
+            if (boardFn.value && boardFn.value.changeVals) {
+                boardFn.value.changeVals(str1, str2);
+                boardFn.value.changeVals(str3, str4);
+            }
+            setTimeout(() => {
+                isRemoteMove = false;
+            }, 50);
+        }
+    });
+    
+    // Presence subscription with room capacity management
+    channel.presence.subscribe(['enter', 'leave'], (member) => {
+        channel.presence.get().then((members) => {
+            connected.value.length = 0;
+            connected.value.push(members.length);
+            
+            // Block new joins if room is full (2 players)
+            if(members.length > 2) {
+                alert("Room does not exist! Please check the room number.");
+                return;
+            }
+            
+            for(member of members) {
+                connected.value.push(member.clientId);
+            }
+            
+            if (connected.value[0] === 1) {
+                isLoading.value = true;
+                showToastConnect();
+            } 
+            else if (connected.value[0] >= 2) {
+                let istherew = false;
+                let isthereb = false;
+                for(member of members) {
+                    if (member.clientId === "W") {
+                        istherew = true;
+                    }
+                    else if (member.clientId === "B") {
+                        isthereb = true;
+                    }
+                }
+                if((istherew === true) && (isthereb === true)) {
+                    isLoading.value = false;
+                    hideToastConnect();
+                    showToastConnected();
+                    setTimeout(()=>{
+                        hideToastConnected();
+                    }, 2000);
+                }
+                else {
+                    isLoading.value = true;
+                    showToastConnect();
+                }
+            }
+        });
+    });
+};
 
     const handleOpenings = (obj) => {
 

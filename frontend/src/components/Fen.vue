@@ -25,8 +25,8 @@
             <div class = "text-center">
                 Current FEN
             </div>
-            
-            <input type = "text" :value = "fen" class = "form-control"/>
+            &nbsp;
+            <input type = "text" :value = "fen" class = "form-control" style = "width: 70%"/>
         </h5>
 </template>
 

@@ -14,7 +14,6 @@
     background-color: rgb(115, 149, 82);
     /*background-color: rgb(190, 100, 48);*/
 }
-
 .draggable {
   cursor: grab;
 }
