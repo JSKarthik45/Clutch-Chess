@@ -50,6 +50,8 @@
     let fromLoc = ref();
     let toLoc = ref();
 
+    let tohighlight = ref();
+
     let capturedStatus = false;
 
     const resetFromAndTo = () => {
@@ -81,8 +83,41 @@
     };
 
     const setToLoc = (rank, file) => {
+    // Clear previous move highlighting
+        if(tohighlight.value) {
+            let prevFromElem = document.getElementById(`${tohighlight.value.fromRank}${tohighlight.value.fromFile}`);
+            let prevToElem = document.getElementById(`${tohighlight.value.toRank}${tohighlight.value.toFile}`);
+            
+            if(prevFromElem && prevFromElem.querySelector('div')) {
+                prevFromElem.querySelector('div').style.removeProperty('background-color');
+            }
+            if(prevToElem && prevToElem.querySelector('div')) {
+                prevToElem.querySelector('div').style.removeProperty('background-color');
+            }
+        }
+        
         toLoc.value = {rank: rank, file: file};
+        
+        // Store both from and to for highlighting
+        tohighlight.value = {
+            fromRank: fromLoc.value.rank,
+            fromFile: fromLoc.value.file,
+            toRank: rank,
+            toFile: file
+        };
+        
         from = true;
+        
+        // Highlight both from and to squares with blue background
+        let fromElem = document.getElementById(`${fromLoc.value.rank}${fromLoc.value.file}`);
+        let toElem = document.getElementById(`${rank}${file}`);
+        
+        if(fromElem && fromElem.querySelector('div')) {
+            fromElem.querySelector('div').style.setProperty('background-color', 'rgb(70, 115, 140)', 'important');
+        }
+        if(toElem && toElem.querySelector('div')) {
+            toElem.querySelector('div').style.setProperty('background-color', 'rgb(70, 115, 140)', 'important');
+        }
     };
 
     const checkValidityOfFromLoc = (rank, file) => {

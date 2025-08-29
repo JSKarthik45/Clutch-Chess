@@ -50,7 +50,7 @@ import { isMemoSame } from 'vue';
 <template>
     <div @click = "emitfn" style = "width: 100%; height: 100%;"  :class = "sqrClr() ? 'colour1' : 'colour2'" class = "center draggable" draggable = "true" @dragstart="emitfn" @drop = "emitfn" @dragover.prevent>
         <img id = "img" v-if = "props.piece != undefined" :src = "`/images/${props.piece.player}${props.piece.piece[0]}.png`" @mouseenter="mouseenter" @mouseleave="mouseleave"/>
-        <div v-else style = "width: 100%; height: 100%;" :class = "sqrClr() ? 'colour1' : 'colour2'" draggable = "false">&nbsp;</div>
+        <div v-else style = "width: 100%; height: 100%;" draggable = "false">&nbsp;</div>
     </div>
 </template>
 
