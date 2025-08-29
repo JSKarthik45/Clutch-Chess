@@ -62,7 +62,7 @@ onBeforeUnmount(() => {
 
 </script>
 <template>
-    <div class = "modal fade" :id = "modalId" v-if = "props.route.path != '/play'">
+    <div class = "modal fade" :id = "modalId" v-if = "props.route.path != '/play' && props.route.path != '/'">
         <div class = "modal-dialog">
             <div class = "modal-content px-2">
                 <div class = "modal-header">
@@ -72,7 +72,7 @@ onBeforeUnmount(() => {
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class = "modal-body">
-                    <div v-if = "props.route.path === '/bot' || props.route.path === '/'">
+                    <div v-if = "props.route.path === '/bot'">
                         <div class = "text-center">
                             <h5 class = "d-inline">
                                 Colour
@@ -151,7 +151,7 @@ onBeforeUnmount(() => {
             </div>
         </div>
     </div>
-    <div class = "modal fade" :id = "modalId" v-else>
+    <div class = "modal fade" :id = "modalId" v-else-if = "props.route.path === '/play'">
         <div class = "modal-dialog">
             <div class = "modal-content px-2">
                 <div class = "modal-header">
@@ -168,6 +168,20 @@ onBeforeUnmount(() => {
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#joinRoom">
                         Join Room
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class = "modal fade" :id = "modalId" v-else-if = "props.route.path === '/'">
+        <div class = "modal-dialog">
+            <div class = "modal-content px-2">
+                <div class = "modal-header">
+                    <h3 class="modal-title fs-5">
+                        ClutChess
+                    </h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
             </div>
         </div>

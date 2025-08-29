@@ -3,9 +3,9 @@
   import {useRoute} from "vue-router";
   import Navbar from "@/components/Navbar.vue";
   const items = ref([
-    { label: "Bot", link: "/bot", active: true },
+    { label: "Bot", link: "/bot", active: false },
     { label: "Friend", link: "/play", active: false },
-    { label: "Openings", link: "/openings", active: false },
+    /*{ label: "Openings", link: "/openings", active: false },*/
     { label: "Practice", link: "/practice", active: false },
     { label: "Clock", link: "/clock", active: false },
   ]);

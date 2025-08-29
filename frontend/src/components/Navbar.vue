@@ -31,8 +31,8 @@
                         {{ item.label }}
                     </RouterLink>
                 </li>
-                <RouterLink to = "/" class = "nav-link">
-                    <img :src = "`/images/favicon.svg`"/>
+                <RouterLink class = "nav-link" to = "/">
+                    <img :src = "`/images/ClutChess.svg`"/>
                 </RouterLink>
             </ul>
         </div>

@@ -14,6 +14,7 @@
     import Modal from "@/components/Modal.vue";
     import Settings from "@/components/Settings.vue";
     import Fen from "@/components/Fen.vue";
+    import About from "@/components/About.vue";
 
     const ranks = ref(["a", "b", "c", "d", "e", "f", "g", "h"]);
     const files = ref([8, 7, 6, 5, 4, 3, 2, 1]);
@@ -125,7 +126,7 @@
             whiteTimer();
         }
         currentMoveNo.value += 0.5;
-        if(route.path === "/bot" || route.path === "/") {
+        if(route.path === "/bot") {
             if(currentMoveNo.value === 1.5) {
                 isLoading.value = true;
                 showToast();
@@ -694,21 +695,31 @@ window.addEventListener('beforeunload', (event) => {
             <Board ref = "boardFn" :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr" :t1 = "t1" :isMobile = "isMobile"/>
         </div>
         <div class = "col-12 col-sm-6 margin-top-desktop">
-            <div v-if = "isMobile">
-                <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
-                <Fen v-else-if = "route.path === '/practice'" :fen = "boardToFEN()" :t1 = "t1"/>
-                <Controls v-else :t1 = "t1"/> 
-                <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
-                <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
+            <div v-if = "route.path != '/'">
+                <div v-if = "isMobile">
+                    <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
+                    <Fen v-else-if = "route.path === '/practice'" :fen = "boardToFEN()" :t1 = "t1"/>
+                    <!--<Controls v-else :t1 = "t1"/>-->
+                    <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
+                    <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
+                </div>
+                <ScoreSheet v-if = "movesArr.length != 0" :currentMoveNo = "currentMoveNo" :movesArr = "movesArr"/>   
+                <Settings v-else :movesArr = "movesArr" :route = "route" :t1 = "t1"/>
+                <div v-if = "!isMobile">
+                    <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
+                    <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
+                    <Clock v-if = "route.path === '/bot' || route.path === '/play'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
+                    <Fen v-else-if = "route.path === '/practice'" :fen = "boardToFEN()" :t1 = "t1"/>
+                    <!--<Controls v-else :t1 = "t1"/>-->
+                </div>
             </div>
-            <ScoreSheet v-if = "movesArr.length != 0" :currentMoveNo = "currentMoveNo" :movesArr = "movesArr"/>   
-            <Settings v-else :movesArr = "movesArr" :route = "route" :t1 = "t1"/>
-            <div v-if = "!isMobile">
-                <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
-                <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
-                <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
-                <Fen v-else-if = "route.path === '/practice'" :fen = "boardToFEN()" :t1 = "t1"/>
-                <Controls v-else :t1 = "t1"/> 
+            <div v-else>
+                <div v-if = "isMobile">
+                    <About/>
+                </div>
+                <div v-if = "!isMobile">
+                    <About/>
+                </div>
             </div>
        
         </div>
