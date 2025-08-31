@@ -715,10 +715,10 @@ window.addEventListener('beforeunload', (event) => {
             </div>
             <div v-else>
                 <div v-if = "isMobile">
-                    <About/>
+                    <About :t1 = "t1"/>
                 </div>
                 <div v-if = "!isMobile">
-                    <About/>
+                    <About :t1 = "t1"/>
                 </div>
             </div>
        

@@ -2,10 +2,10 @@
   import {ref, watch, computed, onMounted} from "vue";
   import {useRoute} from "vue-router";
   import Navbar from "@/components/Navbar.vue";
+  import Collapse from 'bootstrap/js/dist/collapse';
   const items = ref([
     { label: "Bot", link: "/bot", active: false },
     { label: "Friend", link: "/play", active: false },
-    /*{ label: "Openings", link: "/openings", active: false },*/
     { label: "Practice", link: "/practice", active: false },
     { label: "Clock", link: "/clock", active: false },
   ]);
@@ -14,34 +14,52 @@
     });
   let route = useRoute();
   watch(
-    () => route.path,
-    (newPath) => {
-      for (let i of items.value) {
-        if (i.link === newPath) {
-          i.active = true
-        } else {
-          i.active = false
-        }
-      setTimeout(() => {
-      const bsCollapse = document.getElementById('navbarSupportedContent');
-      if (bsCollapse && bsCollapse.classList.contains("show")) {
-        import('bootstrap/js/dist/collapse').then(({ default: Collapse }) => {
-          const collapseInstance = Collapse.getOrCreateInstance(bsCollapse);
-          collapseInstance.hide();
-        });
+  () => route.path,
+  (newPath) => {
+    for (let i of items.value) {
+      i.active = (i.link === newPath);
+    }
+
+    const bsCollapse = document.getElementById('navbarSupportedContent');
+    if (!bsCollapse) return;
+
+    import('bootstrap/js/dist/collapse').then(({ default: Collapse }) => {
+      const collapseInstance = Collapse.getOrCreateInstance(bsCollapse);
+
+      if (newPath === '/') {
+        // On root, show (open) the navbar
+        collapseInstance.show();
+      } else {
+        // On other routes, hide (collapse) the navbar
+        collapseInstance.hide();
       }
-    }, 200);
-    }}
-  );
+    });
+  }
+);
+onMounted(() => {
+  const bsCollapse = document.getElementById('navbarSupportedContent');
+  if (!bsCollapse) return;
+  const collapseInstance = Collapse.getOrCreateInstance(bsCollapse);
+
+  if (route.path === '/') {
+    collapseInstance.show();
+  } else {
+    collapseInstance.hide();
+  }
+});
 
   import {gsap} from "gsap";
   let t1 = gsap.timeline();
 </script>
 
 <template>
-  <div class = "container-fluid">
+  <div>
+    <div>
       <Navbar :items = "items" :t1 = "t1"/>
+    </div>
+    <div class = "container-fluid">
       <RouterView  :key="$route.fullPath" :t1 = "t1"> </RouterView>
+    </div>
   </div>
 </template>
 

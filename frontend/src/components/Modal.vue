@@ -3,20 +3,20 @@
         route: Object, 
     });
     let title = {
-        "/": ["Game Settings (Stockfish)", {"colour": "W", "time": 3, "increment": 0, "level": "I"}], 
         "/bot": ["Game Settings (Stockfish)", {"colour": "W", "time": 3, "increment": 0, "level": "I"}], 
         "/play": ["Game Settings", {"colour": "W", "time": 3, "increment": 0, "roomNo": "", "action": ""}], 
-        "/openings": ["Select Opening", {}], 
         "/practice": ["FEN", {"fen": ""}],
     }
 
 import { Modal } from "bootstrap";
     import {computed, onMounted, onBeforeUnmount} from "vue";
     const modalId = computed(() => {
-        return (props.route.path?.slice(1)) || 'root';
-    });
+  // Return null or empty string if root to avoid DOM element query
+  if (props.route.path === '/') return null; 
+  return props.route.path?.slice(1) || '';
+});
     const returnObj = computed(() => {
-        return title[props.route.path][1];
+        return title[props.route.path]?.[1] || {};
     })
 
     const emit = defineEmits(['bot', 'play', 'opening', 'practice', "root"]);
@@ -37,27 +37,28 @@ import { Modal } from "bootstrap";
     }
 
     onMounted(() => {
-        let modal = document.getElementById(modalId.value);
-        let modalObj = new Modal(modal);
-        setTimeout(() => {
-            modalObj.show();
-        }, 1000);
-    })
+  if (!modalId.value) return;
+  let modal = document.getElementById(modalId.value);
+  if (!modal) return;
+  let modalObj = new Modal(modal);
+  setTimeout(() => {
+    modalObj.show();
+  }, 1000);
+});
 
 onBeforeUnmount(() => {
-    const modalBackdrops = document.querySelectorAll('.modal-backdrop');
-  modalBackdrops.forEach((backdrop) => backdrop.remove());
-
-  // Remove modal-open class and padding-right style from body
-  document.body.classList.remove('modal-open');
-  document.body.style.removeProperty('padding-right');
-  const modalElement = document.getElementById(modalId.value); // Your modal id
+  const modalElement = document.getElementById(modalId.value);
   if (modalElement) {
     const modalInstance = Modal.getInstance(modalElement);
     if (modalInstance) {
-      modalInstance.hide();
+      modalInstance.hide();  // Properly hides modal and removes backdrop
     }
   }
+  // Remove leftover backdrops just in case
+  document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+  // Remove modal-open class and padding on body
+  document.body.classList.remove('modal-open');
+  document.body.style.removeProperty('padding-right');
 });
 
 </script>
@@ -79,12 +80,12 @@ onBeforeUnmount(() => {
                             </h5>
                             &nbsp;
                             <div class = "d-inline">
-                                <input type = "radio" name = "colour" id = "colour1" class = "form-check-input" value = "W" v-model= "returnObj['colour']" checked>
+                                <input type = "radio" name = "colour" id = "colour1" class = "form-check-input" value = "W" v-model = "returnObj['colour']">
                                 <label for = "colour1" class = "form-check-label ms-1">
                                     White
                                 </label>
                                 &nbsp;
-                                <input type = "radio" name = "colour" id = "colour2" class = "form-check-input" value = "B" v-model= "returnObj['colour']">
+                                <input type = "radio" name = "colour" id = "colour2" class = "form-check-input" value = "B" v-model = "returnObj['colour']">
                                 <label for = "colour2" class = "form-check-label ms-1">
                                     Black
                                 </label>
@@ -111,7 +112,7 @@ onBeforeUnmount(() => {
                             </h5>
                             &nbsp;
                             <div class = "d-inline">
-                                <input type = "radio" name = "level" id = "level1" class = "form-check-input" checked value = "I" v-model= "returnObj['level']">
+                                <input type = "radio" name = "level" id = "level1" class = "form-check-input" value = "I" v-model= "returnObj['level']">
                                 <label for = "level1" class = "form-check-label ms-1">
                                     Intermediate
                                 </label>
@@ -127,9 +128,6 @@ onBeforeUnmount(() => {
                                 </label>
                             </div>
                         </div>
-                    </div>
-                    <div v-else-if = "props.route.path === '/openings'">
-
                     </div>
                     <div v-else-if = "props.route.path === '/practice'">
                         <div class = "text-center">
@@ -151,7 +149,7 @@ onBeforeUnmount(() => {
             </div>
         </div>
     </div>
-    <div class = "modal fade" :id = "modalId" v-else-if = "props.route.path === '/play'">
+    <div class = "modal fade" :id = "modalId" v-if = "props.route.path === '/play'">
         <div class = "modal-dialog">
             <div class = "modal-content px-2">
                 <div class = "modal-header">
@@ -173,18 +171,7 @@ onBeforeUnmount(() => {
         </div>
     </div>
 
-
-    <div class = "modal fade" :id = "modalId" v-else-if = "props.route.path === '/'">
-        <div class = "modal-dialog">
-            <div class = "modal-content px-2">
-                <div class = "modal-header">
-                    <h3 class="modal-title fs-5">
-                        ClutChess
-                    </h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-            </div>
-        </div>
+    <div v-if = "props.route.path === '/'">
     </div>
 
     <div class = "modal fade" id = "createRoom">

@@ -21,7 +21,16 @@
 <template>
     <nav class = "navbar navbar-expand-lg" ref = "navbar">   
         <button class="navbar-toggler border-0 shadow-none w-100" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-            <span class = "navbar-toggler-icon" style = "margin-left: 77vw;"></span>
+            <div class = "center">
+                <RouterLink class = "nav-link" to = "/">
+                    <img :src = "`/images/ClutChess.svg`"/>
+                </RouterLink>
+                <h1 style = "display: inline;">
+                    ClutChess
+                </h1>
+                &nbsp;
+                <span class = "navbar-toggler-icon"></span>
+            </div>
         </button>
         <div class = "collapse navbar-collapse" id = "navbarSupportedContent">
             <ul class = "navbar-nav">
@@ -31,15 +40,26 @@
                         {{ item.label }}
                     </RouterLink>
                 </li>
-                <RouterLink class = "nav-link" to = "/">
-                    <img :src = "`/images/ClutChess.svg`"/>
-                </RouterLink>
+                <RouterLink 
+    to="/" 
+    class="desktop-logo d-none d-sm-flex align-items-center nav-link"
+  >
+    <img src="/images/ClutChess.svg" alt="ClutChess Logo" style="height:40px; width:40px;" />
+  </RouterLink>
             </ul>
         </div>
     </nav>
 </template>
 
 <style scoped>
+@media(min-width: 576px) {
+  .desktop-logo {
+    display: flex !important;
+  }
+}
+
+@media(max-width: 575px) {
+}
     .navbar {
         padding: 0px;
         border-radius: 20px;
@@ -52,10 +72,9 @@
     }
     @media(max-width: 575px) {
         .navbar {
-            margin-top: 10px;
-            margin-bottom: 5px;
-            width: 93vw;
+            width: auto;
             border-radius: 0px;
+            margin-bottom: 5px;
         }
         img {
             height: 30px;
@@ -65,7 +84,7 @@
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: wrap;   /* Allow wrapping to next line on overflow */
-    gap: 10px;
+    gap: 1px;
   }
   .nav-item {
     flex: 0 1 auto;  /* Allow items to shrink if needed */

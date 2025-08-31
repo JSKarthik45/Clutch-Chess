@@ -10,7 +10,6 @@ import ClockContainer from "@/components/Clock/ClockContainer.vue";
 const routes = [
     { path: '/bot', component: Game },
     { path: '/play', component: Game },
-    { path: '/openings', component: Game },
     { path: '/practice', component: Game },
     { path: '/clock', component: ClockContainer },
     { path: '', component: Game },
