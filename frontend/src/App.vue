@@ -13,29 +13,23 @@
         return (props.route.path?.slice(1)) || 'root';
     });
   let route = useRoute();
-  watch(
-  () => route.path,
-  (newPath) => {
-    for (let i of items.value) {
-      i.active = (i.link === newPath);
-    }
-
-    const bsCollapse = document.getElementById('navbarSupportedContent');
-    if (!bsCollapse) return;
-
-    import('bootstrap/js/dist/collapse').then(({ default: Collapse }) => {
-      const collapseInstance = Collapse.getOrCreateInstance(bsCollapse);
-
-      if (newPath === '/') {
-        // On root, show (open) the navbar
-        collapseInstance.show();
-      } else {
-        // On other routes, hide (collapse) the navbar
-        collapseInstance.hide();
-      }
-    });
+  watch(() => route.path, (newPath) => {
+  for (let i of items.value) {
+    i.active = (i.link === newPath);
   }
-);
+
+  // get collapse element safely
+  const bsCollapse = document.getElementById('navbarSupportedContent');
+  if (!bsCollapse) return;
+
+  const collapseInstance = Collapse.getOrCreateInstance(bsCollapse);
+
+  if (newPath === '/') {
+    collapseInstance.show();
+  } else {
+    collapseInstance.hide();
+  }
+});
 onMounted(() => {
   const bsCollapse = document.getElementById('navbarSupportedContent');
   if (!bsCollapse) return;
@@ -47,7 +41,6 @@ onMounted(() => {
     collapseInstance.hide();
   }
 });
-
   import {gsap} from "gsap";
   let t1 = gsap.timeline();
 </script>

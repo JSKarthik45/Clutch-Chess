@@ -33,7 +33,7 @@
             </div>
         </button>
         <div class = "collapse navbar-collapse" id = "navbarSupportedContent">
-            <ul class = "navbar-nav">
+            <ul class = "navbar-nav center">
                 <li class = "nav-item fw-semibold" v-for = "item in props.items">
                     <RouterLink class = "nav-link" :to = "item.link" :class = "{activeBorder: item.active}">
                         <img :src = "`/images/${item.label}.svg`"/>
@@ -77,8 +77,8 @@
             margin-bottom: 5px;
         }
         img {
-            height: 30px;
-            width: 30px;
+            height: 20px;
+            width: 20px;
         }
         .navbar-nav {
     display: flex !important;
@@ -88,7 +88,6 @@
   }
   .nav-item {
     flex: 0 1 auto;  /* Allow items to shrink if needed */
-    margin-left: 5px;
   }
   .nav-link {
     /* add these lines or override */
