@@ -3,7 +3,7 @@
         route: Object, 
     });
     let title = {
-        "/bot": ["Game Settings (Stockfish)", {"colour": "W", "time": 3, "increment": 0, "level": "I"}], 
+        "/bot": ["Game Settings", {"colour": "W", "time": 3, "increment": 0, "level": "I"}], 
         "/play": ["Game Settings", {"colour": "W", "time": 3, "increment": 0, "roomNo": "", "action": ""}], 
         "/practice": ["FEN", {"fen": ""}],
     }
@@ -67,74 +67,98 @@ onBeforeUnmount(() => {
         <div class = "modal-dialog">
             <div class = "modal-content px-2">
                 <div class = "modal-header">
-                    <h3 class="modal-title fs-5">
+                    <h5 class="modal-title fs-5">
                         {{ title[props.route.path][0] }}
-                    </h3>
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class = "modal-body">
                     <div v-if = "props.route.path === '/bot'">
                         <div class = "text-center">
-                            <h5 class = "d-inline">
-                                Colour
-                            </h5>
-                            &nbsp;
-                            <div class = "d-inline">
-                                <input type = "radio" name = "colour" id = "colour1" class = "form-check-input" value = "W" v-model = "returnObj['colour']">
-                                <label for = "colour1" class = "form-check-label ms-1">
-                                    White
-                                </label>
-                                &nbsp;
-                                <input type = "radio" name = "colour" id = "colour2" class = "form-check-input" value = "B" v-model = "returnObj['colour']">
-                                <label for = "colour2" class = "form-check-label ms-1">
-                                    Black
-                                </label>
+                            <div class = "row">
+                                <div class="col-4">
+                                    <div class = "input">
+                                        Colour
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class = "d-inline">
+                                        <input type = "radio" name = "colour" id = "colour1" class = "form-check-input" value = "W" v-model = "returnObj['colour']">
+                                        <label for = "colour1" class = "form-check-label ms-1">
+                                            White
+                                        </label>
+                                        &nbsp;
+                                        <input type = "radio" name = "colour" id = "colour2" class = "form-check-input" value = "B" v-model = "returnObj['colour']">
+                                        <label for = "colour2" class = "form-check-label ms-1">
+                                            Black
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <br/>
-                        <div class = "text-center">
-                            <h5 class = "d-inline">
-                                Time 
-                            </h5>
-                            <input type = "number" placeholder = "In Minutes" v-model= "returnObj['time']"/>
-                        </div>
-                        <br/>
-                        <div class = "text-center">
-                            <h5 class = "d-inline">
-                                Increment
-                            </h5>
-                            <input type = "number" placeholder = "In Seconds" v-model= "returnObj['increment']"/>
-                        </div>
-                        <br/>
-                        <div class = "text-center">
-                            <h5 class = "d-inline">
-                                Bot Level
-                            </h5>
-                            &nbsp;
-                            <div class = "d-inline">
-                                <input type = "radio" name = "level" id = "level1" class = "form-check-input" value = "I" v-model= "returnObj['level']">
-                                <label for = "level1" class = "form-check-label ms-1">
-                                    Intermediate
-                                </label>
-                                &nbsp;
-                                <input type = "radio" name = "level" id = "level2" class = "form-check-input" value = "A" v-model= "returnObj['level']">
-                                <label for = "level2" class = "form-check-label ms-1">
-                                    Advanced
-                                </label>
-                                &nbsp;
-                                <input type = "radio" name = "level" id = "level3" class = "form-check-input" value = "E" v-model= "returnObj['level']">
-                                <label for = "level3" class = "form-check-label ms-1">
-                                    Expert
-                                </label>
+                            <br/>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class = "input">
+                                        Time 
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="d-inline">
+                                        <input type="number" placeholder="In Minutes" v-model="returnObj['time']" class="form-control form-control-sm text-center" />
+                                    </div> 
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class = "input">
+                                        Increment
+                                    </div>
+                                </div>
+                                <div class="col">
+                                        <input type = "number" placeholder = "In Seconds" v-model= "returnObj['increment']" class = "form-control form-control-sm text-center"/>          
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class = "input">
+                                        Bot Level
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class = "d-inline">
+                                        <input type = "radio" name = "level" id = "level1" class = "form-check-input" value = "I" v-model= "returnObj['level']">
+                                        <label for = "level1" class = "form-check-label ms-1">
+                                            Intermediate
+                                        </label>
+                                        <br/>
+                                        <input type = "radio" name = "level" id = "level2" class = "form-check-input" value = "A" v-model= "returnObj['level']">
+                                        <label for = "level2" class = "form-check-label ms-1">
+                                            Advanced
+                                        </label>
+                                        &nbsp;
+                                        <input type = "radio" name = "level" id = "level3" class = "form-check-input" value = "E" v-model= "returnObj['level']">
+                                        <label for = "level3" class = "form-check-label ms-1">
+                                            Expert
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div v-else-if = "props.route.path === '/practice'">
                         <div class = "text-center">
-                            <h5 class = "d-inline">
-                                Enter FEN
-                            </h5>
-                            <input type = "text" v-model= "returnObj['fen']"/>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="input">
+                                        Enter FEN
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <input type = "text" v-model= "returnObj['fen']" class = "form-control form-control-sm text-center"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -178,42 +202,57 @@ onBeforeUnmount(() => {
         <div class = "modal-dialog">
             <div class = "modal-content px-2">
                 <div class = "modal-header">
-                    <h3 class="modal-title fs-5">
+                    <h5 class="modal-title fs-5">
                         Room Settings
-                    </h3>
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class = "modal-body">
                     <div class = "text-center">
-                        <h5 class = "d-inline">
-                            Colour
-                        </h5>
-                        &nbsp;
-                        <div class = "d-inline">
-                            <input type = "radio" name = "colour" id = "colour1" class = "form-check-input" checked value = "W" v-model= "returnObj['colour']">
-                            <label for = "colour1" class = "form-check-label ms-1">
-                                White
-                            </label>
-                            &nbsp;
-                            <input type = "radio" name = "colour" id = "colour2" class = "form-check-input" value = "B" v-model= "returnObj['colour']">
-                            <label for = "colour2" class = "form-check-label ms-1">
-                                Black
-                            </label>
+                        <div class = "row">
+                            <div class="col-4">
+                                <div class = "input">
+                                    Colour
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class = "d-inline">
+                                    <input type = "radio" name = "colour" id = "colour1" class = "form-check-input" value = "W" v-model = "returnObj['colour']">
+                                    <label for = "colour1" class = "form-check-label ms-1">
+                                        White
+                                    </label>
+                                    &nbsp;
+                                    <input type = "radio" name = "colour" id = "colour2" class = "form-check-input" value = "B" v-model = "returnObj['colour']">
+                                    <label for = "colour2" class = "form-check-label ms-1">
+                                        Black
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <br/>
-                    <div class = "text-center">
-                        <h5 class = "d-inline">
-                            Time 
-                        </h5>
-                        <input type = "number" placeholder = "In Minutes" v-model= "returnObj['time']"/>
-                    </div>
-                    <br/>
-                    <div class = "text-center">
-                        <h5 class = "d-inline">
-                            Increment
-                        </h5>
-                        <input type = "number" placeholder = "In Seconds" v-model= "returnObj['increment']"/>
+                        <br/>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class = "input">
+                                    Time 
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="d-inline">
+                                    <input type="number" placeholder="In Minutes" v-model="returnObj['time']" class="form-control form-control-sm text-center" />
+                                </div> 
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class = "input">
+                                    Increment
+                                </div>
+                            </div>
+                            <div class="col">
+                                <input type = "number" placeholder = "In Seconds" v-model= "returnObj['increment']" class = "form-control form-control-sm text-center"/>          
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -232,17 +271,23 @@ onBeforeUnmount(() => {
         <div class = "modal-dialog">
             <div class = "modal-content px-2">
                 <div class = "modal-header">
-                    <h3 class="modal-title fs-5">
+                    <h5 class="modal-title fs-5">
                         Join Room
-                    </h3>
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class = "modal-body">
                     <div class = "text-center">
-                        <h5 class = "d-inline">
-                            Room No.
-                        </h5>
-                        <input type = "text" v-model= "returnObj['roomNo']"/>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class = "input">
+                                    Room No.
+                                </div>
+                            </div>
+                            <div class="col">
+                                <input type = "text" v-model= "returnObj['roomNo']" class = "form-control form-control-sm text-center"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -261,6 +306,10 @@ onBeforeUnmount(() => {
 
 <style scoped>
     @media(min-width: 575px) {
+        .input {
+            font-size: medium;
+            font-weight: 500;
+        }
     .modal-dialog {
   position: absolute;
   top: 20vh;

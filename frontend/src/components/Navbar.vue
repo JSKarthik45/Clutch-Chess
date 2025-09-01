@@ -23,11 +23,12 @@
         <button class="navbar-toggler border-0 shadow-none w-100" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
             <div class = "center">
                 <RouterLink class = "nav-link" to = "/">
-                    <img :src = "`/images/ClutChess.svg`"/>
+                    <img :src = "`/images/ClutChess.svg`" style = "width: 28px; height: 28px;"/>
+                    &nbsp;
+                    <h1 style = "display: inline;" class = "center">
+                        ClutChess
+                    </h1>
                 </RouterLink>
-                <h1 style = "display: inline;">
-                    ClutChess
-                </h1>
                 &nbsp;
                 <span class = "navbar-toggler-icon"></span>
             </div>
