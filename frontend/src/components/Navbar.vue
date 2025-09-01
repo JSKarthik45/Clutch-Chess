@@ -21,16 +21,15 @@
 <template>
     <nav class = "navbar navbar-expand-lg" ref = "navbar">   
         <button class="navbar-toggler border-0 shadow-none w-100" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-            <div class = "center">
-                <RouterLink class = "nav-link" to = "/">
-                    <img :src = "`/images/ClutChess.svg`" style = "width: 28px; height: 28px;"/>
-                    &nbsp;
-                    <h1 style = "display: inline;" class = "center">
+            <div class = "center"  style = "width: 100%; height: 40px;">
+                <RouterLink class = "" to = "/" style = "text-decoration: none;">
+                    <img :src = "`/images/ClutChess.svg`" style = "width: 30px; height: 30px;"/>
+                    <h1 style = "display: inline; color: black;" class = "center">
                         ClutChess
                     </h1>
                 </RouterLink>
                 &nbsp;
-                <span class = "navbar-toggler-icon"></span>
+                <span class = "navbar-toggler-icon" style = "width: 30px; height: 30px;"></span>
             </div>
         </button>
         <div class = "collapse navbar-collapse" id = "navbarSupportedContent">
@@ -78,14 +77,14 @@
             margin-bottom: 5px;
         }
         img {
-            height: 20px;
-            width: 20px;
+            height: 30px;
+            width: 30px;
         }
         .navbar-nav {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: wrap;   /* Allow wrapping to next line on overflow */
-    gap: 1px;
+    column-gap: 10px;
   }
   .nav-item {
     flex: 0 1 auto;  /* Allow items to shrink if needed */
@@ -94,7 +93,7 @@
     /* add these lines or override */
     display: flex;
     align-items: center;
-    padding: 3px 6px;
+    padding: 3px 12px;
   }
     }
     @media(min-width: 576px) {
