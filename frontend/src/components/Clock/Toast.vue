@@ -16,4 +16,7 @@
 </template>
 
 <style scoped>
+#toast {
+    z-index: 10000;
+}
 </style>

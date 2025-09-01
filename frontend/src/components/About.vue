@@ -89,7 +89,6 @@
         .contain {
             height: 100vh; 
             margin: 0px;
-            border: 2px solid black;
         }
     }
     @media(min-width: 576px) {
