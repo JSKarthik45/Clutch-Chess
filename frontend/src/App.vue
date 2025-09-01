@@ -46,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div style = "overflow-x: scroll;">
     <div>
       <Navbar :items = "items" :t1 = "t1"/>
     </div>

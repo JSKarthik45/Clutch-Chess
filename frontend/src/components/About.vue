@@ -55,7 +55,7 @@
 </script>
 
 <template>
-    <div style = "height: 80vh; display: flex; justify-content: center;" class = "dynamic-gradient mt-2 me-3 rounded-3 pt-4" id = "cont">
+    <div style = "display: flex; justify-content: center;" class = "contain dynamic-gradient mt-2 me-3 rounded-3 pt-4" id = "cont">
         <div class = "widthcont">
             <h2 class = "text-center" id = "heading">
                 ClutChess
@@ -86,10 +86,18 @@
         .widthcont {
             width: 100%;
         }
+        .contain {
+            height: 100vh; 
+            margin: 0px;
+            border: 2px solid black;
+        }
     }
     @media(min-width: 576px) {
         .widthcont {
             width: 80%;
+        }
+        .contain {
+            height: 80vh; 
         }
     }
     @keyframes gradientShift {
