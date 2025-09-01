@@ -24,7 +24,7 @@
             duration: 1,
             ease: "power1.out",
             stagger: 0.01, 
-        }, 1);
+        }, 1.5);
         props.t1.fromTo(headingsplit.chars, {
             opacity: 0,
             x: -100,
@@ -44,18 +44,39 @@
             duration: 1, 
             ease: "power1.out",
         }, 0);
+        props.t1.fromTo("#feedback", {
+            opacity: 0,
+        }, {
+            opacity: 1,
+            duration: 1,
+            ease: "power1.out",
+        }, 3);
     });
 </script>
 
 <template>
-    <div style = "height: 80vh; display: flex; justify-content: center;" class = "dynamic-gradient mt-2 me-3 rounded-3 p-2" id = "cont">
+    <div style = "height: 80vh; display: flex; justify-content: center;" class = "dynamic-gradient mt-2 me-3 rounded-3 pt-4" id = "cont">
         <div class = "widthcont">
             <h2 class = "text-center" id = "heading">
                 ClutChess
             </h2>
-            <h4 id = "content">
-                Clutchess is a modern chess platform designed for enthusiasts of all levels. Play against the powerful Stockfish bot, challenge other players online, or hone your skills with our chess clock features and practice positions using FEN notation. Discover daily puzzles to sharpen your tactics and strategic thinking, making every session fresh and engaging. Whether training, competing, or exploring new scenarios, Clutchess offers all the tools needed for an immersive chess experience.
-            </h4>
+            <h5 id = "content" style="text-align: justify;">
+                Clutchess is a chess software designed for enthusiasts to practice and improve their skills. Easily import any board position using FEN to continue your practice from that exact setup. Enjoy fast and seamless connections by joining the same room number to play with other players. When you're alone, challenge yourself by playing against the bot.            
+            </h5>
+            <br/>
+            <div id = "feedback">
+                <p style="text-align: justify;">
+                    Please help us improve the web application by sharing your feedback, reporting any bugs you encounter, or suggesting new features that could be valuable and improve your experience.            
+                </p>
+                <input type = "text" class = "form-control"/>
+                <br/>
+                <p style="text-align: justify;">
+                    You are welcome to contribute to this open source project by following the link to get to the
+                    <a href = "https://github.com/JSKarthik45/ClutChess" style = "background-color: white;" class = "px-1 rounded-2">
+                        github repository
+                    </a>
+                </p>
+            </div>
         </div>
     </div>
 </template>
@@ -86,10 +107,10 @@
     .dynamic-gradient {
         background: linear-gradient(
             270deg,
-            rgb(235, 236, 208),      /* your first color */
-            rgb(115, 149, 82),       /* green shade 1 */
-            rgb(150, 180, 100),      /* green shade 2 */
-            rgb(180, 210, 140),      /* green shade 3 */
+            rgb(235, 236, 208),
+            rgb(150, 180, 100),
+            rgb(180, 210, 140),  
+            rgb(115, 149, 82),
             rgb(120, 160, 70)
         );
         background-size: 1400% 1400%;  /* expanded size for slower/higher variation */
