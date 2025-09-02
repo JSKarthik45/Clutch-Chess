@@ -112,7 +112,9 @@
             if(movesArr.value.length != 1) {
                 whiteRemTime.value += increment.value;
             }
-            blackTimer();
+            if(route.path === "/bot" || route.path === "/play") {
+                blackTimer();
+            }
         }
         else {
             if (movesArr.value.length === 0) {
@@ -123,7 +125,9 @@
             }
             currentPlayer.value = "W";
             blackRemTime.value += increment.value;
-            whiteTimer();
+            if(route.path === "/bot" || route.path === "/play") {
+                whiteTimer();
+            }
         }
         currentMoveNo.value += 0.5;
         if(route.path === "/bot") {
@@ -692,7 +696,7 @@ window.addEventListener('beforeunload', (event) => {
     <Modal :route = "route" @root = "handleBot" @bot = "handleBot" @play = "handlePlay" @openings = "handleOpenings" @practice = "handlePractice"/>
     <div class = "row">
         <div class = "col-12 col-sm-6 p-1">
-            <Board ref = "boardFn" :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr" :t1 = "t1" :isMobile = "isMobile"/>
+            <Board ref = "boardFn" :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr" :t1 = "t1" :isMobile = "isMobile" :fen = "boardToFEN()"/>
         </div>
         <div class = "col-12 col-sm-6 margin-top-desktop">
             <div v-if = "route.path != '/'">

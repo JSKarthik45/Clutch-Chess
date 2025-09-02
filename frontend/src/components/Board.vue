@@ -44,7 +44,11 @@
         currentPlayer: String, 
         t1: Object,  
         isMobile: Boolean, 
+        fen: String, 
     });
+
+    import { Chess } from "chess.js";
+
 
     let from = true;
     let fromLoc = ref();
@@ -130,13 +134,36 @@
         return true;
     };
 
+    let chess = null;
+    let moves = null;
+    let p = null;
+    let move = "";
+    let toPos = "";
+    let piece = "";
     const checkValidityOfToLoc = (rank, file) => {
-        let rf = `${rank}${file}`;
-        if(rf in props.trackPiecesFromPos && (props.trackPiecesFromPos[rf].player === props.currentPlayer)) {
-            return false;
-        }
-        return true;
+    const rf = `${rank}${file}`;
+    if (!fromLoc.value) return false;
+
+    const chess = new Chess(props.fen);
+    const originSquare = `${fromLoc.value.rank}${fromLoc.value.file}`;
+
+    // Get all valid moves for the piece at originSquare
+    const moves = chess.moves({ square: originSquare });
+
+    // Prevent moving to a square occupied by own piece
+    if (rf in props.trackPiecesFromPos && props.trackPiecesFromPos[rf].player === props.currentPlayer) {
+        return false;
     }
+
+    // Check if moving to 'rf' square is a valid move by looking for moves that end at rf
+    const validMove = moves.some(move => {
+        // move is in SAN, so we parse the destination of the move (last 2 chars usually)
+        // A better method: use chess.js method to get move in UCI or SAN format with verbose
+        return move.endsWith(rf);
+    });
+
+    return validMove;
+};
 
     const movePiece = () => {
         let s = `${fromLoc.value.rank}${fromLoc.value.file}`;
