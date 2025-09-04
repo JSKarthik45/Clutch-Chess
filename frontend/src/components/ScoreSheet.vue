@@ -10,9 +10,9 @@
         <div style = "height: 61vh; margin-top: 10px; overflow-y: auto;" class = "scroll" ref = "scoresheet">
             <table style = "table-layout: fixed;" v-if = "movesArr.length != 0" id = "logMoves" class = "table table-striped table-bordered table-hover text-center">
                 <colgroup>
-                    <col style="width: 14%;">
-                    <col style="width: 43%;">
-                    <col style="width: 43%;">
+                    <col>
+                    <col>
+                    <col>
                 </colgroup>
                 <thead>
                     <tr>
@@ -50,4 +50,23 @@
         background: #f1f1f1;
         z-index: 1;
     }
+    /* Default desktop widths */
+#logMoves col:nth-child(1) {
+  width: 14%;
+}
+#logMoves col:nth-child(2),
+#logMoves col:nth-child(3) {
+  width: 43%;
+}
+
+/* Mobile widths */
+@media (max-width: 575px) {
+  #logMoves col:nth-child(1) {
+    width: 30%;
+  }
+  #logMoves col:nth-child(2),
+  #logMoves col:nth-child(3) {
+    width: 35%;
+  }
+}
 </style>

@@ -59,6 +59,7 @@ onBeforeUnmount(() => {
   // Remove modal-open class and padding on body
   document.body.classList.remove('modal-open');
   document.body.style.removeProperty('padding-right');
+  document.body.style.overflow = "";
 });
 
 </script>

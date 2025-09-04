@@ -15,6 +15,7 @@ const isNavOpen = ref(true);
 let route = useRoute();
 
 watch(() => route.path, (newPath) => {
+  document.body.style.overflow = "";
   for (let i of items.value) {
     i.active = (i.link === newPath);
   }

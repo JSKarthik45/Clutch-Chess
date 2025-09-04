@@ -7,6 +7,8 @@
     let split;
     let headingsplit;
 
+    import Navbar from "@/components/Navbar.vue";
+
     onMounted(() => {
         split = SplitText.create("#content", { 
             type: "words",
@@ -55,7 +57,7 @@
 </script>
 
 <template>
-    <div style = "display: flex; justify-content: center;" class = "contain dynamic-gradient mt-2 me-3 rounded-3 pt-4" id = "cont">
+    <div style = "display: flex; justify-content: center;" class = "center contain dynamic-gradient mt-2 me-3 rounded-3 pt-4" id = "cont">
         <div class = "widthcont">
             <h2 class = "text-center" id = "heading">
                 ClutChess
@@ -64,19 +66,24 @@
                 Clutchess is a chess software designed for enthusiasts to practice and improve their skills. Easily import any board position using FEN to continue your practice from that exact setup. Enjoy fast and seamless connections by joining the same room number to play with other players. When you're alone, challenge yourself by playing against the bot.            
             </h5>
             <br/>
-            <div id = "feedback">
-                <p style="text-align: justify;">
-                    Please help us improve the web application by sharing your feedback, reporting any bugs you encounter, or suggesting new features that could be valuable and improve your experience.            
-                </p>
-                <input type = "text" class = "form-control"/>
+        </div>
+    </div>
+    <div style = "display: flex; justify-content: center;" class = "center contain dynamic-gradient mt-2 me-3 rounded-3 pt-4" id = "cont">
+        <div class = "widthcont">
+            <h5 class = "text-center" id = "heading">
+                User History
+            </h5>
+            <p id = "content" style="text-align: justify;">
+                Number Of Games Played Against Bot: 
                 <br/>
-                <p style="text-align: justify;">
-                    You are welcome to contribute to this open source project by following the link to get to the
-                    <a href = "https://github.com/JSKarthik45/ClutChess" style = "background-color: white;" class = "px-1 rounded-2">
-                        github repository
-                    </a>
-                </p>
-            </div>
+                Number Of Games Won Against Bot: 
+                <br/>
+                Number Of Games Played Against Friends: 
+                <br/>
+                Number Of Games Won Against Friends: 
+                <br/>
+            </p>
+            <br/>
         </div>
     </div>
 </template>
@@ -87,7 +94,7 @@
             width: 100%;
         }
         .contain {
-            height: 100vh; 
+            height: auto; 
             margin: 0px;
         }
     }
@@ -96,7 +103,7 @@
             width: 80%;
         }
         .contain {
-            height: 80vh; 
+            height: auto; 
         }
     }
     @keyframes gradientShift {
