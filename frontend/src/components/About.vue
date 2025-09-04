@@ -57,7 +57,7 @@
 </script>
 
 <template>
-    <div style = "display: flex; justify-content: center;" class = "center contain dynamic-gradient mt-2 me-3 rounded-3 pt-4" id = "cont">
+    <div style = "display: flex; justify-content: center;" class = "contain dynamic-gradient mt-2 me-3 rounded-3 pt-4" id = "cont">
         <div class = "widthcont">
             <h2 class = "text-center" id = "heading">
                 ClutChess
@@ -66,10 +66,6 @@
                 Clutchess is a chess software designed for enthusiasts to practice and improve their skills. Easily import any board position using FEN to continue your practice from that exact setup. Enjoy fast and seamless connections by joining the same room number to play with other players. When you're alone, challenge yourself by playing against the bot.            
             </h5>
             <br/>
-        </div>
-    </div>
-    <div style = "display: flex; justify-content: center;" class = "center contain dynamic-gradient mt-2 me-3 rounded-3 pt-4" id = "cont">
-        <div class = "widthcont">
             <h5 class = "text-center" id = "heading">
                 User History
             </h5>
@@ -83,7 +79,6 @@
                 Number Of Games Won Against Friends: 
                 <br/>
             </p>
-            <br/>
         </div>
     </div>
 </template>
@@ -94,7 +89,7 @@
             width: 100%;
         }
         .contain {
-            height: auto; 
+            height: 100vh; 
             margin: 0px;
         }
     }
@@ -103,7 +98,7 @@
             width: 80%;
         }
         .contain {
-            height: auto; 
+            height: 80vh; 
         }
     }
     @keyframes gradientShift {
