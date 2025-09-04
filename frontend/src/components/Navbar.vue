@@ -1,11 +1,14 @@
 <script setup>
     import { ref, onMounted } from "vue";
+
     const props = defineProps({
         items: Array,
         t1: Object,
+        isNavOpen: Boolean,
     })
 
     let navbar = ref(null);
+
     onMounted(() => {
         props.t1.fromTo(navbar.value, {
             opacity: 0,
@@ -21,7 +24,7 @@
 <template>
     <nav class = "navbar navbar-expand-lg" ref = "navbar">   
         <button class="navbar-toggler border-0 shadow-none w-100" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-            <div class = "center"  style = "width: 100%; height: 40px;">
+            <div class = "center" >
                 <RouterLink class = "" to = "/" style = "text-decoration: none;">
                     <img :src = "`/images/ClutChess.svg`" style = "width: 30px; height: 30px;"/>
                     <h1 style = "display: inline; color: black;" class = "center">
@@ -30,9 +33,9 @@
                 </RouterLink>
                 &nbsp;
                 <span class = "navbar-toggler-icon" style = "width: 30px; height: 30px;"></span>
-            </div>
+            </div>    
         </button>
-        <div class = "collapse navbar-collapse" id = "navbarSupportedContent">
+        <div :class="['collapse', 'navbar-collapse', { show: props.isNavOpen }]" id="navbarSupportedContent">
             <ul class = "navbar-nav center">
                 <li class = "nav-item fw-semibold" v-for = "item in props.items">
                     <RouterLink class = "nav-link" :to = "item.link" :class = "{activeBorder: item.active}">

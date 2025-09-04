@@ -168,9 +168,14 @@
         IntervalId = setInterval(() => {
             whiteRemTime.value -= 1;
             if(whiteRemTime.value <= 0) {
-                alert("White Runs Out Of Time! Black Wins!!!");
+                showToastWinnerBlack();
                 clearInterval(IntervalId);
-                location.reload();
+                isLoading.value = true;
+                setTimeout(()=>{
+                    hideToastWinnerBlack();
+                    isLoading.value = false;
+                    location.reload();
+                }, 2000);
             }
         }, 1000);
     };
@@ -180,9 +185,14 @@
         IntervalId = setInterval(() => {
             blackRemTime.value -= 1;
             if(blackRemTime.value <= 0) {
-                alert("Black Runs Out Of Time! White Wins!!!");
+                showToastWinnerWhite();
                 clearInterval(IntervalId);
-                location.reload();
+                isLoading.value = true;
+                setTimeout(()=>{
+                    hideToastWinnerWhite();
+                    isLoading.value = false;
+                    location.reload();
+                }, 2000);
             }
         }, 1000);
     };
@@ -635,7 +645,30 @@ const setupChannelSubscriptions = (obj) => {
     }
     
     let boardFn = ref();
-
+      const showToastWinnerWhite = () => {
+        const toast = document.getElementById("whitewinnertoast");
+        toast.style.zIndex = 2;
+        const toastObj = new bootstrap.Toast(toast, { autohide: false });
+        toastObj.show();
+    };  
+    const hideToastWinnerWhite = () => {
+        const toast = document.getElementById("whitewinnertoast");
+        toast.style.zIndex = 0;
+        const toastObj = new bootstrap.Toast(toast);
+        toastObj.hide();
+    }
+    const showToastWinnerBlack = () => {
+        const toast = document.getElementById("blackwinnertoast");
+        toast.style.zIndex = 2;
+        const toastObj = new bootstrap.Toast(toast, { autohide: false });
+        toastObj.show();
+    };  
+    const hideToastWinnerBlack = () => {
+        const toast = document.getElementById("blackwinnertoast");
+        toast.style.zIndex = 0;
+        const toastObj = new bootstrap.Toast(toast);
+        toastObj.hide();
+    }
 const showToastConnect = () => {
         const toast = document.getElementById("connecttoast");
         toast.style.zIndex = 2;
@@ -748,6 +781,22 @@ window.addEventListener('beforeunload', (event) => {
         <div class = "toast-header bg-secondary">
             <strong class = "me-auto">
                 Connected!
+            </strong>
+            <button type = "button" class = "btn-close" data-bs-dismiss = "toast"></button>
+        </div>
+    </div>
+    <div class = "toast position-fixed bottom-0 end-0 bg-dark p-2" id = "whitewinnertoast">
+        <div class = "toast-header bg-secondary">
+            <strong class = "me-auto">
+                White Wins!
+            </strong>
+            <button type = "button" class = "btn-close" data-bs-dismiss = "toast"></button>
+        </div>
+    </div>
+    <div class = "toast position-fixed bottom-0 end-0 bg-dark p-2" id = "blackwinnertoast">
+        <div class = "toast-header bg-secondary">
+            <strong class = "me-auto">
+                Black Wins!
             </strong>
             <button type = "button" class = "btn-close" data-bs-dismiss = "toast"></button>
         </div>
