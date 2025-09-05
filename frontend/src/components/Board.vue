@@ -29,6 +29,7 @@
             }
             else {
                 dehighlightSquare(rank, file);
+                clearValidMoveHighlights();
                 setFromLoc(rank, file);
                 checkValidityOfFromLoc(rank, file) ? highlightSquare(rank, file) : showToast();
             }
