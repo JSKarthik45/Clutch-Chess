@@ -80,12 +80,42 @@
         ele.style.opacity = 1;
         ele.style.transform = "scale(1)";
     };
+    let movess = [];
+    const highlightValidMoves = () => {
+    if (!fromLoc.value) return;
     
+    const chess = new Chess(props.fen);
+    const originSquare = `${fromLoc.value.rank}${fromLoc.value.file}`;
+    
+    // Get all valid moves for the selected piece
+    movess = chess.moves({ square: originSquare });
+    
+    movess.forEach(move => {
+        const destSquare = move.slice(-2); // Get destination square
+        const elem = document.getElementById(destSquare);
+        if (elem && elem.querySelector('div')) {
+            elem.querySelector('div').style.setProperty('background-color', 'rgba(70, 115, 140, 0.6)', 'important');
+        }
+    });
+};
+
+// Add function to clear valid move highlights
+const clearValidMoveHighlights = () => {
+    movess.forEach(move => {
+        const destSquare = move.slice(-2);
+        const elem = document.getElementById(destSquare);
+        if (elem && elem.querySelector('div')) {
+            elem.querySelector('div').style.removeProperty('background-color');
+        }
+    });
+};
+
     const setFromLoc = (rank, file) => {
         fromLoc.value = {rank: rank, file: file};
         from = false;
+        highlightValidMoves();
     };
-
+    
     const setToLoc = (rank, file) => {
     // Clear previous move highlighting
         if(tohighlight.value) {
@@ -99,7 +129,6 @@
                 prevToElem.querySelector('div').style.removeProperty('background-color');
             }
         }
-        
         toLoc.value = {rank: rank, file: file};
         
         // Store both from and to for highlighting
@@ -115,18 +144,22 @@
         // Highlight both from and to squares with blue background
         let fromElem = document.getElementById(`${fromLoc.value.rank}${fromLoc.value.file}`);
         let toElem = document.getElementById(`${rank}${file}`);
-        
+        clearValidMoveHighlights();
         if(fromElem && fromElem.querySelector('div')) {
             fromElem.querySelector('div').style.setProperty('background-color', 'rgb(70, 115, 140)', 'important');
         }
         if(toElem && toElem.querySelector('div')) {
             toElem.querySelector('div').style.setProperty('background-color', 'rgb(70, 115, 140)', 'important');
         }
+
+        
+
     };
 
     const checkValidityOfFromLoc = (rank, file) => {
         let rf = `${rank}${file}`;
         if(!(rf in props.trackPiecesFromPos) || ((rf in props.trackPiecesFromPos) && (props.trackPiecesFromPos[rf].player != props.currentPlayer))) {
+            console.log(props.trackPiecesFromPos[rf].player, props.currentPlayer);
             fromLoc.value = undefined;
             from = true;
             return false;

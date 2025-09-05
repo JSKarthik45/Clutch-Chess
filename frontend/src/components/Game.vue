@@ -367,6 +367,12 @@
     increment.value = obj.increment;
     
     initializeRoom(obj);
+    if(ranks.value[0] === "a" && obj.colour === "B") {
+        flip();
+    }
+    if(ranks.value[0] === "h" && obj.colour === "W") {
+        flip();
+    }
 };
 
 const proceedWithJoining = (obj, existingMembers) => {
