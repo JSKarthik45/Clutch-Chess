@@ -28,7 +28,7 @@
                 <RouterLink class = "" to = "/" style = "text-decoration: none;">
                     <img :src = "`/images/ClutChess.svg`" style = "width: 30px; height: 30px;"/>
                     <h1 style = "display: inline; color: black;" class = "center">
-                        ClutChess
+                        CLUTCHESS
                     </h1>
                 </RouterLink>
                 &nbsp;

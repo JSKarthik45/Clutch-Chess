@@ -5,7 +5,9 @@
         t1: Object, 
     })
     let split;
+    let split2
     let headingsplit;
+    let headingsplit2
 
     import Navbar from "@/components/Navbar.vue";
 
@@ -13,7 +15,13 @@
         split = SplitText.create("#content", { 
             type: "words",
         });
+        split2 = SplitText.create("#content2", { 
+            type: "words",
+        });
         headingsplit = SplitText.create("#heading", {
+            type: "chars"
+        })
+        headingsplit2 = SplitText.create("#heading2", {
             type: "chars"
         })
         props.t1.restart();
@@ -27,6 +35,16 @@
             ease: "power1.out",
             stagger: 0.01, 
         }, 1.5);
+        props.t1.fromTo(split2.words, {
+            opacity: 0,
+            y: 100,
+        }, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power1.out",
+            stagger: 0.01, 
+        }, 2.5);
         props.t1.fromTo(headingsplit.chars, {
             opacity: 0,
             x: -100,
@@ -37,6 +55,16 @@
             ease: "power1.out",
             stagger: 0.02, 
         }, 1);
+        props.t1.fromTo(headingsplit2.chars, {
+            opacity: 0,
+            x: -100,
+        }, {
+            x: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power1.out",
+            stagger: 0.02, 
+        }, 2.5);
         props.t1.fromTo("#cont", {
             opacity: 0,
             scale: 0, 
@@ -54,29 +82,29 @@
             ease: "power1.out",
         }, 3);
     });
+    let nooffriend = ref(localStorage.getItem("friend") || 0);
+    let noofbot = ref(localStorage.getItem("bot") || 0);
 </script>
 
 <template>
     <div style = "display: flex; justify-content: center;" class = "contain dynamic-gradient mt-2 me-3 rounded-3 pt-4" id = "cont">
         <div class = "widthcont">
             <h2 class = "text-center" id = "heading">
-                ClutChess
+                CLUTCHESS
             </h2>
             <h5 id = "content" style="text-align: justify;">
                 Clutchess is a chess software designed for enthusiasts to practice and improve their skills. Easily import any board position using FEN to continue your practice from that exact setup. Enjoy fast and seamless connections by joining the same room number to play with other players. When you're alone, challenge yourself by playing against the bot.            
             </h5>
             <br/>
-            <h5 class = "text-center" id = "heading">
+            <h5 class = "text-center" id = "heading2">
                 User History
             </h5>
-            <p id = "content" style="text-align: justify;">
-                Number Of Games Played Against Bot: 
+            <p id = "content2" style="text-align: justify;">
+                Total Number of Games Played: {{ parseInt(nooffriend) + parseInt(noofbot) }}
                 <br/>
-                Number Of Games Won Against Bot: 
+                Number Of Games Played Against Bot: {{ noofbot }}
                 <br/>
-                Number Of Games Played Against Friends: 
-                <br/>
-                Number Of Games Won Against Friends: 
+                Number Of Games Played Against Friends: {{ nooffriend }}
                 <br/>
             </p>
         </div>

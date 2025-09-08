@@ -248,6 +248,7 @@
             isLoading.value = true;
             botMove();
         }
+        localStorage.setItem("bot", (localStorage.getItem("bot") || 0) + 1);
     };
 
     let connected = ref([]);
@@ -353,6 +354,7 @@
             
             // Room has space, proceed with joining
             proceedWithJoining(obj, members);
+            localStorage.setItem("friend", (localStorage.getItem("friend") || 0) + 1);
             tempAbly.close();
         }).catch(() => {
             alert("Room not found!");
