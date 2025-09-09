@@ -135,6 +135,7 @@
                 isLoading.value = true;
                 showToast();
                 botMove();
+                localStorage.setItem("bot", Number(localStorage.getItem("bot") || 0) + 1);
             }
             else {
                botMove(); 
@@ -143,6 +144,9 @@
         if(route.path === "/play" && channel) {
         if (isRemoteMove) {
             return; // Avoid echo loop
+        }
+        if(currentMoveNo.value === 1.5) {
+            localStorage.setItem("friend", Number(localStorage.getItem("friend") || 0) + 1);
         }
             channel.publish('move', {
             // Handle move, e.g., update the chess board based on message.data
@@ -248,7 +252,6 @@
             isLoading.value = true;
             botMove();
         }
-        localStorage.setItem("bot", (localStorage.getItem("bot") || 0) + 1);
     };
 
     let connected = ref([]);
@@ -354,7 +357,6 @@
             
             // Room has space, proceed with joining
             proceedWithJoining(obj, members);
-            localStorage.setItem("friend", (localStorage.getItem("friend") || 0) + 1);
             tempAbly.close();
         }).catch(() => {
             alert("Room not found!");

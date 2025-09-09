@@ -22,7 +22,7 @@
             type: "chars"
         })
         headingsplit2 = SplitText.create("#heading2", {
-            type: "chars"
+            type: "words"
         })
         props.t1.restart();
         props.t1.fromTo(split.words, {
@@ -55,7 +55,7 @@
             ease: "power1.out",
             stagger: 0.02, 
         }, 1);
-        props.t1.fromTo(headingsplit2.chars, {
+        props.t1.fromTo(headingsplit2.words, {
             opacity: 0,
             x: -100,
         }, {
@@ -87,7 +87,7 @@
 </script>
 
 <template>
-    <div style = "display: flex; justify-content: center;" class = "contain dynamic-gradient mt-2 me-3 rounded-3 pt-4" id = "cont">
+    <div style = "display: flex; justify-content: center;" class = "contain mt-2 me-3 rounded-3 pt-4" id = "cont">
         <div class = "widthcont">
             <h2 class = "text-center" id = "heading">
                 CLUTCHESS

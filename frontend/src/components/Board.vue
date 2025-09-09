@@ -87,11 +87,19 @@
     
     const chess = new Chess(props.fen);
     const originSquare = `${fromLoc.value.rank}${fromLoc.value.file}`;
-    
+    if(kinghighlighted) {
+        for(let i in getAllKingsPos()) {
+            let kingsquare = document.getElementById(getAllKingsPos()[i]);
+            kingsquare.querySelector('div').style.removeProperty('background-color');
+            kinghighlighted = false;
+        }
+    }
     // Get all valid moves for the selected piece
     movess = chess.moves({ square: originSquare });
-    
     movess.forEach(move => {
+        if(move.slice(-1) === "+" || move.slice(-1) === "#") {
+            move = move.slice(0, -1); // Remove check or checkmate indicator
+        }
         const destSquare = move.slice(-2); // Get destination square
         const elem = document.getElementById(destSquare);
         if (elem && elem.querySelector('div')) {
@@ -99,10 +107,37 @@
         }
     });
 };
+let kinghighlighted = false;
+const getKingsPos = () => {
+    for(let pos in props.trackPiecesFromPos) {
+        if(props.trackPiecesFromPos[pos].piece === 'K' && props.trackPiecesFromPos[pos].player != props.currentPlayer) {
+            kinghighlighted = true;
+            return pos;
+        }
+    }
+}
+const getAllKingsPos = () => {
+    let array = []
+    for(let pos in props.trackPiecesFromPos) {
+        if(props.trackPiecesFromPos[pos].piece === 'K') {
+            array.push(pos);
+        }
+    }
+    return array;
+}
 
 // Add function to clear valid move highlights
-const clearValidMoveHighlights = () => {
+const clearValidMoveHighlights = (rank, file) => {
     movess.forEach(move => {
+        if(move.slice(-1) === "+" || move.slice(-1) === "#") {
+            move = move.slice(0, -1); // Remove check or checkmate indicator
+            if(move.slice(-2) === `${rank}${file}`) {
+                let kingsquare = document.getElementById(getKingsPos());
+                if(kingsquare && kingsquare.querySelector('div')) {
+                    kingsquare.querySelector('div').style.setProperty('background-color', 'rgb(179, 59, 46)', 'important');
+                }
+            }
+        }
         const destSquare = move.slice(-2);
         const elem = document.getElementById(destSquare);
         if (elem && elem.querySelector('div')) {
@@ -145,7 +180,7 @@ const clearValidMoveHighlights = () => {
         // Highlight both from and to squares with blue background
         let fromElem = document.getElementById(`${fromLoc.value.rank}${fromLoc.value.file}`);
         let toElem = document.getElementById(`${rank}${file}`);
-        clearValidMoveHighlights();
+        clearValidMoveHighlights(rank, file);
         if(fromElem && fromElem.querySelector('div')) {
             fromElem.querySelector('div').style.setProperty('background-color', 'rgb(70, 115, 140)', 'important');
         }
@@ -160,7 +195,6 @@ const clearValidMoveHighlights = () => {
     const checkValidityOfFromLoc = (rank, file) => {
         let rf = `${rank}${file}`;
         if(!(rf in props.trackPiecesFromPos) || ((rf in props.trackPiecesFromPos) && (props.trackPiecesFromPos[rf].player != props.currentPlayer))) {
-            console.log(props.trackPiecesFromPos[rf].player, props.currentPlayer);
             fromLoc.value = undefined;
             from = true;
             return false;
@@ -177,26 +211,21 @@ const clearValidMoveHighlights = () => {
     const checkValidityOfToLoc = (rank, file) => {
     const rf = `${rank}${file}`;
     if (!fromLoc.value) return false;
-
-    const chess = new Chess(props.fen);
-    const originSquare = `${fromLoc.value.rank}${fromLoc.value.file}`;
-
-    // Get all valid moves for the piece at originSquare
-    const moves = chess.moves({ square: originSquare });
-
     // Prevent moving to a square occupied by own piece
     if (rf in props.trackPiecesFromPos && props.trackPiecesFromPos[rf].player === props.currentPlayer) {
         return false;
     }
-
-    // Check if moving to 'rf' square is a valid move by looking for moves that end at rf
-    const validMove = moves.some(move => {
-        // move is in SAN, so we parse the destination of the move (last 2 chars usually)
-        // A better method: use chess.js method to get move in UCI or SAN format with verbose
-        return move.endsWith(rf);
-    });
-
-    return validMove;
+    for (const move of movess) {
+    let moveStr = move;
+    if(moveStr.slice(-1) === "+" || moveStr.slice(-1) === "#") {
+      moveStr = moveStr.slice(0, -1); // Remove check or checkmate indicator
+    }
+    const destSquare = moveStr.slice(-2);
+    if (destSquare === rf) {
+      return true; // valid move found, return true early
+    }
+  }
+  return false;
 };
 
     const movePiece = () => {

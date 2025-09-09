@@ -19,7 +19,9 @@
 
 	let isPaused = ref(false);
 	let isMaximised = ref(false);
-
+let timeoutId = null;
+let originalWhiteTime = ref(whiteRemTime.value);
+let originalBlackTime = ref(blackRemTime.value);
 	const reInitGame = () => {
 		isCurrentPlayerWhite.value = false;
 		noOfMoves.value = startingNoOfMoves.value;
@@ -29,6 +31,9 @@
 		isPaused.value = false;
 		startTime = 0;
 		showToast("Reset");
+		clearTimeout(timeoutId);
+		originalWhiteTime.value = whiteRemTime.value;
+		originalBlackTime.value = blackRemTime.value;
 	}
 
     const maximise = () => {
@@ -51,12 +56,17 @@
 		isCurrentPlayerWhite.value = undefined;
 		isPaused.value = true;
 		showToast("Paused");
+		document.getElementById("White Time").style.pointerEvents = "none";
+		console.log(document.getElementById("White Time"));
+		document.getElementById("Black Time").style.pointerEvents = "none";
 	};
 
 	const play = () => {
 		isPaused.value = false;
 		isCurrentPlayerWhite.value = isCurrentPlayerWhiteWhenPaused;
 		showToast("Resumed");
+		document.getElementById("White Time").style.pointerEvents = "auto";
+		document.getElementById("Black Time").style.pointerEvents = "auto";
 	}
 	
 	let startTime = 0;
@@ -64,8 +74,22 @@
 	let timeElapsed = 0;
 
 	watch(isCurrentPlayerWhite, () => {
-        noOfMoves.value != 0 ? startTime = new Date(Date.now()) : startTime = 0;
-    });
+    // Clear existing timeout
+    if (timeoutId) clearTimeout(timeoutId);
+    
+    if (noOfMoves.value != 0) {
+        startTime = new Date(Date.now());
+        // Store original times
+        originalWhiteTime.value = whiteRemTime.value;
+        originalBlackTime.value = blackRemTime.value;
+        // Start ticking
+        if (isCurrentPlayerWhite.value !== undefined && !isPaused.value) {
+            timeoutId = setTimeout(tickTime, 1000);
+        }
+    } else {
+        startTime = 0;
+    }
+});
 	let inc;
 	const changePlayer = (isWhite) => {
 		endTime = new Date(Date.now());
@@ -78,18 +102,26 @@
 			inc = 0;
 		}  
 		if(isWhite) {
-			whiteRemTime.value -= timeElapsed;
-			whiteRemTime.value += inc;
+			whiteRemTime.value = originalWhiteTime.value - timeElapsed + inc;
 			isCurrentPlayerWhite.value = false;
 		}
 		else {
-			blackRemTime.value -= timeElapsed;
-			blackRemTime.value += inc;
+			blackRemTime.value = originalBlackTime.value - timeElapsed + inc;
 			isCurrentPlayerWhite.value = true;
 			noOfMoves.value += 1;
 		}
 	};
-
+const tickTime = () => {
+    if (isCurrentPlayerWhite.value === true) {
+        whiteRemTime.value -= 1;
+    } else if (isCurrentPlayerWhite.value === false) {
+        blackRemTime.value -= 1;
+    }
+    
+    if (isCurrentPlayerWhite.value !== undefined && !isPaused.value) {
+        timeoutId = setTimeout(tickTime, 1000);
+    }
+};
 	let message = ref("");
 	const showToast = (m) => {
 		message.value = m;
@@ -135,7 +167,7 @@
 </script>
 
 <template>
-	<div style = "width: 100%; height: 100%;">
+	<div style = "width: 100%; height: 100%; border: 2px solid transparent;">
 		<Clock :isCurrentPlayerWhite = "isCurrentPlayerWhite" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" @changePlayer = "changePlayer" class = "margin-top-desktop" :t1 = "t1">
 			<Controls :isPaused = "isPaused" :isMaximised = "isMaximised" @maximise = "maximise" @minimise = "minimise" @reset = "reInitGame" @play = "play" @pause = "pause"/>
 		</Clock>
