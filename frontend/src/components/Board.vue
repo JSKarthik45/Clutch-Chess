@@ -236,12 +236,7 @@ const clearValidMoveHighlights = (rank, file) => {
         if(moveStr.slice(-2) === "=R" || moveStr.slice(-2) === "=N" || moveStr.slice(-2) === "=B" || moveStr.slice(-2) === "=Q") {
             moveStr = moveStr.slice(0, -2);
             prom = true;
-            const choice = window.prompt("Promote to (R, N, B, Q)", "Q").toUpperCase();
-            if (["R", "N", "B", "Q"].includes(choice)) {
-                promPiece = choice;
-            } else {
-                promPiece = "Q"; // default to Queen
-            }
+            promPiece = "Q";
         }
         const destSquare = moveStr.slice(-2);
         if (destSquare === rf) {
@@ -250,8 +245,17 @@ const clearValidMoveHighlights = (rank, file) => {
                 win = props.currentPlayer === 'W' ? 'White' : 'Black';
             }
             possiblecheckmate = false;
+            if(prom == true) {
+                const choice = window.prompt("Promote to (R, N, B, Q)", "Q").toUpperCase();
+                if (["R", "N", "B"].includes(choice)) {
+                    promPiece = choice;
+                } else {
+                    promPiece = "Q"; // default to Queen
+                }
+            }
             return true; // valid move found, return true early
         }
+        prom = false;
   }
   return false;
 };
