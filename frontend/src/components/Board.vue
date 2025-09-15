@@ -50,6 +50,8 @@
 
     import { Chess } from "chess.js";
 
+    let prom = false;
+    let promPiece = "Q";
 
     let from = true;
     let fromLoc = ref();
@@ -104,6 +106,8 @@
         const elem = document.getElementById(destSquare);
         if (elem && elem.querySelector('div')) {
             elem.querySelector('div').style.setProperty('background-color', 'rgba(70, 115, 140, 0.6)', 'important');
+            elem.querySelector('div').style.boxShadow = "0 0 1px rgb(0, 0, 0)";
+            elem.querySelector('div').style.zIndex = 100000000;
         }
     });
 };
@@ -142,6 +146,8 @@ const clearValidMoveHighlights = (rank, file) => {
         const elem = document.getElementById(destSquare);
         if (elem && elem.querySelector('div')) {
             elem.querySelector('div').style.removeProperty('background-color');
+            elem.querySelector('div').style.removeProperty('box-shadow');
+            elem.querySelector('div').style.removeProperty('z-index');
         }
     });
 };
@@ -202,6 +208,10 @@ const clearValidMoveHighlights = (rank, file) => {
         return true;
     };
 
+    let gameover = false;
+    let possiblecheckmate = false;
+    let win = "W";
+
     let chess = null;
     let moves = null;
     let p = null;
@@ -216,14 +226,32 @@ const clearValidMoveHighlights = (rank, file) => {
         return false;
     }
     for (const move of movess) {
-    let moveStr = move;
-    if(moveStr.slice(-1) === "+" || moveStr.slice(-1) === "#") {
-      moveStr = moveStr.slice(0, -1); // Remove check or checkmate indicator
-    }
-    const destSquare = moveStr.slice(-2);
-    if (destSquare === rf) {
-      return true; // valid move found, return true early
-    }
+        let moveStr = move;
+        if(moveStr.slice(-1) === "+" || moveStr.slice(-1) === "#") {
+            if(moveStr.slice(-1) === "#") {
+                possiblecheckmate = true;
+            }
+            moveStr = moveStr.slice(0, -1); // Remove check or checkmate indicator
+        }
+        if(moveStr.slice(-2) === "=R" || moveStr.slice(-2) === "=N" || moveStr.slice(-2) === "=B" || moveStr.slice(-2) === "=Q") {
+            moveStr = moveStr.slice(0, -2);
+            prom = true;
+            const choice = window.prompt("Promote to (R, N, B, Q)", "Q");
+            if (["R", "N", "B", "Q"].includes(choice)) {
+                promPiece = choice.toUpperCase();
+            } else {
+                promPiece = "Q"; // default to Queen
+            }
+        }
+        const destSquare = moveStr.slice(-2);
+        if (destSquare === rf) {
+            if(possiblecheckmate) {
+                gameover = true;
+                win = props.currentPlayer === 'W' ? 'White' : 'Black';
+            }
+            possiblecheckmate = false;
+            return true; // valid move found, return true early
+        }
   }
   return false;
 };
@@ -238,10 +266,30 @@ const clearValidMoveHighlights = (rank, file) => {
         }
         delete props.trackPiecesFromPos[s];
         props.trackPiecesFromPos[news] = piece;
+        if(prom) {
+            props.trackPiecesFromPos[news].piece = promPiece;
+            prom = false;
+        }
+        if(gameover) {
+            setTimeout(() => {
+                alert(`Game Over! ${win} Wins!`);
+            }, 1000);
+            showToastGameOver();
+            setTimeout(() => {
+                window.location.reload();
+            }, 1001);
+        }
+        gameover = false;
     }
 
     const showToast = () => {
         const toast = document.getElementById("toast");
+        toast.style.zIndex = 2;
+        const toastObj = new bootstrap.Toast(toast);
+        toastObj.show();
+    };
+    const showToastGameOver = () => {
+        const toast = document.getElementById("toastgameover");
         toast.style.zIndex = 2;
         const toastObj = new bootstrap.Toast(toast);
         toastObj.show();
@@ -298,6 +346,13 @@ const clearValidMoveHighlights = (rank, file) => {
         <div class = "toast-header bg-secondary">
             <strong class = "me-auto">
                 Invalid Move!
+            </strong>
+            <button type = "button" class = "btn-close" data-bs-dismiss = "toast"></button>
+        </div>
+    </div><div class = "toast position-fixed bottom-0 end-0 bg-dark p-2" id = "toastgameover">
+        <div class = "toast-header bg-secondary">
+            <strong class = "me-auto">
+            Game Over!
             </strong>
             <button type = "button" class = "btn-close" data-bs-dismiss = "toast"></button>
         </div>
