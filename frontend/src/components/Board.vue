@@ -236,9 +236,9 @@ const clearValidMoveHighlights = (rank, file) => {
         if(moveStr.slice(-2) === "=R" || moveStr.slice(-2) === "=N" || moveStr.slice(-2) === "=B" || moveStr.slice(-2) === "=Q") {
             moveStr = moveStr.slice(0, -2);
             prom = true;
-            const choice = window.prompt("Promote to (R, N, B, Q)", "Q");
+            const choice = window.prompt("Promote to (R, N, B, Q)", "Q").toUpperCase();
             if (["R", "N", "B", "Q"].includes(choice)) {
-                promPiece = choice.toUpperCase();
+                promPiece = choice;
             } else {
                 promPiece = "Q"; // default to Queen
             }
