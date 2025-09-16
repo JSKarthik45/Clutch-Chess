@@ -107,6 +107,10 @@
                 Number Of Games Played Against Friends: {{ nooffriend }}
                 <br/>
             </p>
+            <br/>
+            <div class = "text-center">
+                <a href="https://www.producthunt.com/products/clutchess?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-clutchess" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1016930&theme=dark&t=1758047801580" alt="CLUTCHESS - Connect&#0044;&#0032;Play&#0044;&#0032;and&#0032;Sharpen&#0032;Your&#0032;Skills | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+            </div>
         </div>
     </div>
 </template>
