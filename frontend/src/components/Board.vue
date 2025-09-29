@@ -9,17 +9,17 @@
         emit("pieceCaptured", piece)
     }
 
-    import { ref, onMounted } from "vue";
+    import { ref, onMounted, nextTick } from "vue";
     import 'bootstrap/dist/css/bootstrap.min.css';
     import Square from "@/components/Square.vue";
 
-    const changeVals = (rank, file) => {
+    const changeVals = async (rank, file) => {
         if (from) {
             setFromLoc(rank, file);
             checkValidityOfFromLoc(rank, file) ? highlightSquare(rank, file) : showToast();
         }
         else {
-            if(checkValidityOfToLoc(rank, file)) {
+            if(await checkValidityOfToLoc(rank, file)) {
                 setToLoc(rank, file)
                 movePiece();
                 dehighlightSquare(rank, file);
@@ -37,7 +37,6 @@
     };
     defineExpose({ changeVals });
 
-
     const props = defineProps({
         files: Array, 
         ranks: Array,
@@ -52,6 +51,8 @@
 
     let prom = false;
     let promPiece = "Q";
+    let promotionChoice = "Q";
+    let promotionResolver = null;
 
     let from = true;
     let fromLoc = ref();
@@ -193,9 +194,6 @@ const clearValidMoveHighlights = (rank, file) => {
         if(toElem && toElem.querySelector('div')) {
             toElem.querySelector('div').style.setProperty('background-color', 'rgb(70, 115, 140)', 'important');
         }
-
-        
-
     };
 
     const checkValidityOfFromLoc = (rank, file) => {
@@ -218,7 +216,7 @@ const clearValidMoveHighlights = (rank, file) => {
     let move = "";
     let toPos = "";
     let piece = "";
-    const checkValidityOfToLoc = (rank, file) => {
+    const checkValidityOfToLoc = async (rank, file) => {
     const rf = `${rank}${file}`;
     if (!fromLoc.value) return false;
     // Prevent moving to a square occupied by own piece
@@ -236,7 +234,6 @@ const clearValidMoveHighlights = (rank, file) => {
         if(moveStr.slice(-2) === "=R" || moveStr.slice(-2) === "=N" || moveStr.slice(-2) === "=B" || moveStr.slice(-2) === "=Q") {
             moveStr = moveStr.slice(0, -2);
             prom = true;
-            promPiece = "Q";
         }
         const destSquare = moveStr.slice(-2);
         if (destSquare === rf) {
@@ -246,19 +243,36 @@ const clearValidMoveHighlights = (rank, file) => {
             }
             possiblecheckmate = false;
             if(prom == true) {
-                const choice = window.prompt("Promote to (R, N, B, Q)", "Q").toUpperCase();
-                if (["R", "N", "B"].includes(choice)) {
-                    promPiece = choice;
-                } else {
-                    promPiece = "Q"; // default to Queen
-                }
+                // Wait for promotion choice
+                const modalEl = document.getElementById('promotionModal');
+                const modalInstance = new bootstrap.Modal(modalEl);
+                modalInstance.show();
+                
+                // Wait for user selection
+                await new Promise((resolve) => {
+                    promotionResolver = resolve;
+                });
+                
+                promPiece = promotionChoice;
             }
             return true; // valid move found, return true early
         }
         prom = false;
-  }
-  return false;
+    }
+    return false;
 };
+
+    const selectPromotion = (piece) => {
+        promotionChoice = piece;
+        const modalEl = document.getElementById('promotionModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        modalInstance.hide();
+        
+        if (promotionResolver) {
+            promotionResolver();
+            promotionResolver = null;
+        }
+    };
 
     const movePiece = () => {
         let s = `${fromLoc.value.rank}${fromLoc.value.file}`;
@@ -275,13 +289,23 @@ const clearValidMoveHighlights = (rank, file) => {
             prom = false;
         }
         if(gameover) {
-            setTimeout(() => {
-                alert(`Game Over! ${win} Wins!`);
-            }, 1000);
+            winnerName.value = win;
             showToastGameOver();
             setTimeout(() => {
-                window.location.reload();
+                // Show modal after toast
+                nextTick(() => {
+                    if (!modalInstance) {
+                        const modalEl = document.getElementById('gameOverModal');
+                        modalInstance = new bootstrap.Modal(modalEl);
+                        // Add event listener to reload on modal close
+                        modalEl.addEventListener('hidden.bs.modal', () => {
+                            window.location.reload();
+                        }, { once: true });
+                    }
+                    modalInstance.show();
+                });
             }, 1001);
+            // Removed auto reload timeout here
         }
         gameover = false;
     }
@@ -315,6 +339,9 @@ const clearValidMoveHighlights = (rank, file) => {
         }, 0
         )
     })
+
+    let winnerName = ref("");
+    let modalInstance = null;
 
 </script>
 
@@ -360,6 +387,40 @@ const clearValidMoveHighlights = (rank, file) => {
             </strong>
             <button type = "button" class = "btn-close" data-bs-dismiss = "toast"></button>
         </div>
+    </div>
+    <!-- Game Over Modal -->
+    <div class="modal fade" id="gameOverModal" tabindex="-1" aria-labelledby="gameOverModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header colour2 text-white">
+            <h5 class="modal-title text-center" id="gameOverModalLabel">Game Over!</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body colour1 text-center">
+            <span style="font-size: 1.0rem;">{{ winnerName }} Wins!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Promotion Modal -->
+    <div class="modal fade" id="promotionModal" tabindex="-1" aria-labelledby="promotionModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header colour2 text-white">
+            <h5 class="modal-title text-center" id="promotionModalLabel">Pawn Promotion</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body colour1 text-center">
+            <span style="font-size: 1.0rem;">Promote to:</span>
+            <div class="d-flex justify-content-center gap-3 mt-3">
+              <button class="btn btn-outline-primary" @click="selectPromotion('Q')">Queen</button>
+              <button class="btn btn-outline-primary" @click="selectPromotion('R')">Rook</button>
+              <button class="btn btn-outline-primary" @click="selectPromotion('B')">Bishop</button>
+              <button class="btn btn-outline-primary" @click="selectPromotion('N')">Knight</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 </template>
 
