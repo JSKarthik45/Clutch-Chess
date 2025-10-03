@@ -4,17 +4,34 @@ import { useRoute } from "vue-router";
 import { useHead } from '@vueuse/head'
 import Navbar from "@/components/Navbar.vue";
 
-const items = ref([
-  { label: "Bot", link: "/bot", active: false },
-  { label: "Friend", link: "/play", active: false },
-  { label: "Practice", link: "/practice", active: false },
-  { label: "Clock", link: "/clock", active: false },
-]);
+
+
+let items = ref([]);
+
 
 const isNavOpen = ref(true);
 
 let route = useRoute();
+let hostname = window.location.hostname;
 
+
+if(hostname === 'localhost' || hostname == 'clutchess') {
+  items.value = [
+    { label: "App", link: "/", active: false },
+    { label: "Dashboard", link: "/dashboard", active: false },
+    { label: "Find", link: "/find", active: false },
+    { label: "Pricing", link: "/pricing", active: false },
+    { label: "SignIn", link: "/signin", active: false },
+  ];
+} 
+else {
+  items.value = [
+    { label: "Bot", link: "/bot", active: false },
+    { label: "Friend", link: "/play", active: false },
+    { label: "Practice", link: "/practice", active: false },
+    { label: "Clock", link: "/clock", active: false },
+  ];
+}
 
 function getMeta() {
   if (route.path === '/bot') {
@@ -64,6 +81,23 @@ watch(() => route.path, (newPath) => {
   for (let i of items.value) {
     i.active = (i.link === newPath);
   }
+  if(hostname === 'localhost' || hostname === 'clutchess') {
+  items.value = [
+    { label: "App", link: "/", active: false },
+    { label: "Dashboard", link: "/dashboard", active: false },
+    { label: "Find", link: "/find", active: false },
+    { label: "Pricing", link: "/pricing", active: false },
+    { label: "SignIn", link: "/signin", active: false },
+  ];
+} 
+else {
+  items.value = [
+    { label: "Bot", link: "/bot", active: false },
+    { label: "Friend", link: "/play", active: false },
+    { label: "Practice", link: "/practice", active: false },
+    { label: "Clock", link: "/clock", active: false },
+  ];
+}
   
   isNavOpen.value = (newPath === "/");
 
@@ -87,7 +121,7 @@ watch(() => route.path, (newPath) => {
     <div>
       <Navbar :items = "items" :t1 = "t1" :key="route.path" :is-nav-open="isNavOpen"/>
     </div>
-    <div class = "container-fluid">
+    <div class = "container-fluid" style = "overflow-x: hidden;">
       <RouterView  :key="route.path" :t1 = "t1"> </RouterView>
     </div>
   </div>
