@@ -12,9 +12,37 @@
             </div>
 		</div>
 		<div class="landing-right">
-			<img src="/images/BotPageImg.png" alt="Chess Board" class="landing-image" ref="image"/>
+			<video
+				src="/images/ClutchessDemo.mp4"
+				alt="Clutchess demo"
+				class="landing-image"
+				ref="image"
+				autoplay
+				muted
+				loop
+				playsinline
+			></video>
 		</div>
 	</div>
+		<!-- Bento Grid Start -->
+		<div class="bento-grid">
+			<div class="bento-row">
+				<div class="bento-item bento-item-large">
+					<img src="/images/BotPageImg.png" alt="Bento 1" />
+				</div>
+				<div class="bento-item bento-item-small">
+					<img src="/images/BotPageImg.png" alt="Bento 2" />
+				</div>
+			</div>
+			<div class="bento-row">
+				<div class="bento-item bento-item-small">
+					<img src="/images/BotPageImg.png" alt="Bento 3" />
+				</div>
+				<div class="bento-item bento-item-large">
+					<img src="/images/BotPageImg.png" alt="Bento 4" />
+				</div>
+			</div>
+		</div>
 </template>
 
 <script setup>
@@ -81,7 +109,7 @@ onMounted(() => {
         opacity: 1,
         duration: 1,
         ease: "circ.in",
-    }, 2.7);
+    }, 1.5);
     props.t1.fromTo(b2.value, {
         opacity: 0,
         x: -400,
@@ -90,11 +118,17 @@ onMounted(() => {
         opacity: 1,
         duration: 1,
         ease: "circ.in",
-    }, 1.7);
+    }, 0.5);
 })
 </script>
 
-
+<style>
+/* Prevent horizontal scroll globally */
+html, body {
+	overflow-x: hidden !important;
+	max-width: 100vw;
+}
+</style>
 
 <style scoped>
 .landing-container {
@@ -106,7 +140,7 @@ onMounted(() => {
 	box-sizing: border-box;
 	gap: 2rem;
 	margin-top: 80px; /* Space for navbar on desktop */
-	overflow-x:hidden;
+	overflow-x: hidden;
 }
 
 .landing-left {
@@ -171,7 +205,7 @@ onMounted(() => {
 .landing-image {
     width: 48vw;
 	height: auto;
-	border-radius: 16px;
+	border-radius: 10px;
 	box-shadow: 0 0 5px rgba(0,0,0,0.10);
 }
 
@@ -225,5 +259,66 @@ button:hover {
 }
 button {
     transition: transform 0.5s ease;
+}
+/* Bento Grid Styles */
+.bento-grid {
+	width: 90%;
+	max-width: 90vw;
+	margin: 0 auto 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	overflow-x: hidden;
+}
+.bento-row {
+	display: flex;
+	gap: 1.5rem;
+	overflow-x: hidden;
+}
+.bento-item {
+	background: #f7f7f7;
+	border-radius: 10px;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.bento-item img {
+	border-radius: 10px;
+	width: 95%;
+	height: 95%;
+	object-fit: cover;
+	display: block;
+}
+.bento-item-large {
+	flex: 2.2;
+	min-height: 220px;
+}
+.bento-item-small {
+	flex: 1;
+	min-height: 220px;
+}
+@media (max-width: 900px) {
+	.bento-grid {
+		gap: 1rem;
+	}
+	.bento-row {
+		gap: 1rem;
+	}
+	.bento-item-large, .bento-item-small {
+		min-height: 120px;
+	}
+}
+@media (max-width: 600px) {
+	.bento-grid {
+		gap: 0.5rem;
+	}
+	.bento-row {
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	.bento-item-large, .bento-item-small {
+		min-height: 80px;
+	}
 }
 </style>
