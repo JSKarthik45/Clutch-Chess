@@ -8,7 +8,7 @@
 			<div class="landing-desc" id = "h2">Find Chess Coaching Classes And Software To Extend Learning Even After Classes.</div>
 			<div class="landing-buttons">
 				<button ref = "b1" class="button-effect px-3 py-2 rounded-1" style = "background-color: rgb(115, 149, 82); color: white;" @click="goToPlay">Play</button>
-				<button ref = "b2" class="button-effect px-3 py-2 rounded-1" style = "background-color: rgb(235, 236, 208);">Find Coaching Classes</button>
+				<button ref = "b2" class="button-effect px-3 py-2 rounded-1" style = "background-color: rgb(235, 236, 208);" @click="goToFind">Find Coaching Classes</button>
             </div>
 		</div>
 		<div class="landing-right">
@@ -31,15 +31,15 @@
 					<img src="/images/BotPageImg.png" alt="Bento 1" />
 				</div>
 				<div class="bento-item bento-item-small">
-					<img src="/images/BotPageImg.png" alt="Bento 2" />
+					<img src="/images/AppPhone.jpg" alt="Bento 2" />
 				</div>
 			</div>
 			<div class="bento-row">
 				<div class="bento-item bento-item-small">
-					<img src="/images/BotPageImg.png" alt="Bento 3" />
+					<img src="/images/ClockPhone.jpg" alt="Bento 3" />
 				</div>
 				<div class="bento-item bento-item-large">
-					<img src="/images/BotPageImg.png" alt="Bento 4" />
+					<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d111907.67443893717!2d80.17666711100043!3d12.986511802368824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1761154095609!5m2!1sen!2sin" width="950" height="100%" style="border-radius: 10px; padding: 5px; border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 				</div>
 			</div>
 		</div>
@@ -51,6 +51,9 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 function goToPlay() {
 	router.push('/app')
+}
+function goToFind() {
+	router.push('/find')
 }
 
 const props = defineProps({
@@ -277,22 +280,24 @@ button {
 	overflow-x: hidden;
 }
 .bento-item {
-	background: #f7f7f7;
+	background: rgba(0, 0, 0, 1);
 	border-radius: 10px;
 	overflow: hidden;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	box-shadow: 2px 0 0 rgba(0, 0, 0, 0.1);
 }
 .bento-item img {
 	border-radius: 10px;
-	width: 95%;
-	height: 95%;
-	object-fit: cover;
+	padding: 5px;
+	width: 100%;
+	height: 100%;
+	object-fit: fill;
 	display: block;
 }
 .bento-item-large {
-	flex: 2.2;
+	flex: 4;
 	min-height: 220px;
 }
 .bento-item-small {

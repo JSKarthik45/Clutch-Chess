@@ -61,11 +61,21 @@
     </button>
 
     <p v-if="error" class="error">{{ error }}</p>
+
+    <!-- revert: details/summary/pre -->
+    <div v-if="user && storedSession" class="mt-2" aria-live="polite">
+      <details>
+        <summary>Profile Details</summary>
+        <pre style="background:#f7f7f7; padding:8px; border-radius:6px;"><strong>Email:</strong> {{ storedSession.email || '—' }}
+<strong>Name:</strong> {{ storedSession.name || '—' }}
+<strong>Role:</strong> {{ (storedSession.role || 'user').toUpperCase() }}</pre>
+      </details>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { supabase } from '../supabase.js'
 
 const loading = ref(false)
@@ -216,6 +226,28 @@ onBeforeUnmount(() => {
     authSubscription.unsubscribe()
   }
 })
+
+const storedSession = computed(() => {
+  // depend on user so it updates after sign-in/out
+  void user.value
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+})
+
+// keep: human-readable timestamp for the details/pre section
+const formattedTimestamp = computed(() => {
+  const ts = storedSession.value?.timestamp
+  if (!ts) return '—'
+  try {
+    return new Date(ts).toLocaleString()
+  } catch {
+    return String(ts)
+  }
+})
 </script>
 
 <style scoped>
@@ -346,6 +378,10 @@ onBeforeUnmount(() => {
 
 /* remove any gap from bootstrap btn group internals */
 .role-toggle .btn { margin: 0; }
+
+/* remove unused profile card styles:
+.profile-card, .profile-header, .profile-list, .profile-row { ... }
+*/
 
 /* small screens adjust sizes */
 @media (max-width: 420px) {
