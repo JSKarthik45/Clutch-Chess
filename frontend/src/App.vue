@@ -1,8 +1,9 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useHead } from '@vueuse/head'
 import Navbar from "@/components/Navbar.vue";
+import ChatBot from "@/components/ChatBot.vue";
 
 
 
@@ -10,6 +11,7 @@ let items = ref([]);
 
 
 const isNavOpen = ref(true);
+const isReady = ref(false);
 
 let route = useRoute();
 function computeItems(path) {
@@ -95,16 +97,24 @@ watch(() => route.path, (newPath) => {
 
   import {gsap} from "gsap";
   let t1 = gsap.timeline();
+
+onMounted(() => {
+  // Simple initial delay to avoid showing unstyled content before animations kick in
+  setTimeout(() => {
+    isReady.value = true
+  }, 1000)
+})
 </script>
 
 <template>
-  <div style = "width: 100vw; height: 100vh;">
+  <div style = "width: 100vw; height: 100vh;" :style="{ visibility: isReady ? 'visible' : 'hidden' }">
     <div>
       <Navbar :items = "items" :t1 = "t1" :key="route.path" :is-nav-open="isNavOpen"/>
     </div>
     <div class = "container-fluid" style = "overflow-x: hidden;">
       <RouterView  :key="route.path" :t1 = "t1"> </RouterView>
     </div>
+    <ChatBot />
   </div>
 </template>
 

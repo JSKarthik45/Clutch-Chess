@@ -1,0 +1,26 @@
+[
+  {
+    "id": "about",
+    "title": "About Clutch Chess",
+    "route": "/about",
+    "content": "Clutch Chess is a chess software designed for players to practice, improve, and enjoy fast online games. Play with friends by joining the same room or challenge yourself against a smart chess bot. Easily import any board position using FEN to continue your practice exactly from where you left off."
+  },
+  {
+    "id": "landing",
+    "title": "Landing Tagline",
+    "route": "/",
+    "content": "Find Chess Coaching Classes And Software To Extend Learning Even After Classes."
+  },
+  {
+    "id": "features-play",
+    "title": "Play Modes",
+    "route": "/app",
+    "content": "Play with friends by joining the same room. Play against a smart chess bot. Practice openings. Use a configurable chess clock. Import FEN positions to start from any board position."
+  },
+  {
+    "id": "navigation",
+    "title": "Navigation & Sections",
+    "route": "/",
+    "content": "Main sections: App, Bot, Play, Practice, Openings, Clock. App is the main play area. Bot lets you play the AI. Play allows joining rooms with friends. Practice supports FEN import for custom positions. Openings lets you select openings. Clock provides a configurable chess clock."
+  }
+]
