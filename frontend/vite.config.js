@@ -15,6 +15,17 @@ export default defineConfig({
       includeAssets: [
         'images/ClutChess.svg',
       ],
+      workbox: {
+        navigateFallback: '/index.html',
+        // Allow SPA fallback for /app and legacy app routes
+        navigateFallbackAllowlist: [
+          /\/app(\/.*)?$/,
+          /^\/bot(\/.*)?$/,
+          /^\/play(\/.*)?$/,
+          /^\/practice(\/.*)?$/,
+          /^\/clock(\/.*)?$/,
+        ],
+      },
       manifest: {
         name: 'CLUTCHESS',
         short_name: 'Clutchess',

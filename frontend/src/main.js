@@ -27,14 +27,15 @@ const appRoutes = [
   { path: '/clock', component: ClockContainer },
 ]
 
-let routeConfig = [...homeRoutes]
-let hostname = window.location.hostname;
-if(hostname === 'localhost' || hostname === 'clutchess') {
-  routeConfig = [...homeRoutes]
-}
-else {
-  routeConfig = [...appRoutes]
-}
+// Create path-prefixed versions of app routes to live under /app
+const appPrefixedRoutes = appRoutes.map(r => ({
+  ...r,
+  path: r.path === '/' ? '/app' : `/app${r.path}`,
+}))
+
+// Serve marketing pages at root and app under /app everywhere.
+// Also include legacy non-prefixed app routes for backward compatibility.
+const routeConfig = [...homeRoutes, ...appPrefixedRoutes, ...appRoutes]
 
 
 const router = createRouter({

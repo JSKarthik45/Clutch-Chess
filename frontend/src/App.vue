@@ -12,47 +12,48 @@ let items = ref([]);
 const isNavOpen = ref(true);
 
 let route = useRoute();
-let hostname = window.location.hostname;
-
-
-if(hostname === 'localhost' || hostname == 'clutchess') {
-  items.value = [
-    { label: "App", link: "/", active: false },
+function computeItems(path) {
+  const isApp = path.startsWith('/app') || path === '/bot' || path === '/play' || path === '/practice' || path === '/clock'
+  if (isApp) {
+    return [
+      { label: "Bot", link: "/app/bot", active: false },
+      { label: "Friend", link: "/app/play", active: false },
+      { label: "Practice", link: "/app/practice", active: false },
+      { label: "Clock", link: "/app/clock", active: false },
+    ]
+  }
+  return [
+    { label: "App", link: "/app", active: false },
     { label: "Dashboard", link: "/dashboard", active: false },
     { label: "Find", link: "/find", active: false },
     { label: "Pricing", link: "/pricing", active: false },
     { label: "SignIn", link: "/signin", active: false },
-  ];
-} 
-else {
-  items.value = [
-    { label: "Bot", link: "/bot", active: false },
-    { label: "Friend", link: "/play", active: false },
-    { label: "Practice", link: "/practice", active: false },
-    { label: "Clock", link: "/clock", active: false },
-  ];
+  ]
 }
 
+items.value = computeItems(route.path)
+
 function getMeta() {
-  if (route.path === '/bot') {
+  const p = route.path
+  if (p === '/bot' || p === '/app/bot') {
     return {
       title: 'Clutch Chess - Play with Bot',
       description: 'Play chess against a powerful bot. Test your skills and improve your game.', 
       keywords: 'chess bot, play against bot, chess AI'
     }
-  } else if (route.path === '/play') {
+  } else if (p === '/play' || p === '/app/play') {
     return {
       title: 'Clutch Chess - Play with Friends',
       description: 'Challenge your friends to a chess match online. Enjoy real-time gameplay.', 
       keywords: 'chess with friends, online chess, multiplayer chess, online'
     }
-  } else if (route.path === '/practice') {
+  } else if (p === '/practice' || p === '/app/practice') {
     return {
       title: 'Clutch Chess - Practice Chess',
       description: 'Practice chess positions by importing FEN, and sharpen your tactics.', 
       keywords: 'chess practice, FEN, chess tactics, import FEN'
     }
-  } else if (route.path === '/clock') {
+  } else if (p === '/clock' || p === '/app/clock') {
     return {
       title: 'Clutch Chess - Chess Clock',
       description: 'Use a chess clock for timed games and tournaments.', 
@@ -67,13 +68,16 @@ function getMeta() {
   }
 }
 
-const meta = getMeta()
-useHead({
-  title: meta.title,
-  meta: [
-    { name: 'description', content: meta.description },
-    { name: 'keywords', content: meta.keywords }
-  ]
+// Make head reactive with route
+useHead(() => {
+  const meta = getMeta()
+  return {
+    title: meta.title,
+    meta: [
+      { name: 'description', content: meta.description },
+      { name: 'keywords', content: meta.keywords }
+    ]
+  }
 })
 
 watch(() => route.path, (newPath) => {
@@ -81,34 +85,11 @@ watch(() => route.path, (newPath) => {
   for (let i of items.value) {
     i.active = (i.link === newPath);
   }
-  if(hostname === 'localhost' || hostname === 'clutchess') {
-  items.value = [
-    { label: "App", link: "/", active: false },
-    { label: "Dashboard", link: "/dashboard", active: false },
-    { label: "Find", link: "/find", active: false },
-    { label: "Pricing", link: "/pricing", active: false },
-    { label: "SignIn", link: "/signin", active: false },
-  ];
-} 
-else {
-  items.value = [
-    { label: "Bot", link: "/bot", active: false },
-    { label: "Friend", link: "/play", active: false },
-    { label: "Practice", link: "/practice", active: false },
-    { label: "Clock", link: "/clock", active: false },
-  ];
-}
+  items.value = computeItems(newPath)
   
   isNavOpen.value = (newPath === "/");
 
-  const meta = getMeta()
-  useHead({
-    title: meta.title,
-    meta: [
-      { name: 'description', content: meta.description },
-      { name: 'keywords', content: meta.keywords }
-    ]
-  })
+  // head is reactive via the function above
 
 });
 

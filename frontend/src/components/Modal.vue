@@ -9,19 +9,28 @@
     }
 
 import { Modal } from "bootstrap";
-    import {computed, onMounted, onBeforeUnmount} from "vue";
-    const modalId = computed(() => {
-  // Return null or empty string if root to avoid DOM element query
-  if (props.route.path === '/') return null; 
-  return props.route.path?.slice(1) || '';
+        import {computed, onMounted, onBeforeUnmount} from "vue";
+        const normalizedPath = computed(() => {
+                // Normalize app-prefixed paths to work with existing logic
+                let p = props.route.path || '/'
+                if (p === '/app') return '/'
+                if (p.startsWith('/app/')) return p.slice(4)
+                return p
+        })
+        const modalId = computed(() => {
+    // No modal on root-equivalent paths
+    const p = normalizedPath.value
+    if (p === '/') return null;
+    // Strip leading '/'
+    return (p.startsWith('/') ? p.slice(1) : p) || '';
 });
     const returnObj = computed(() => {
-        return title[props.route.path]?.[1] || {};
+        return title[normalizedPath.value]?.[1] || {};
     })
 
     const emit = defineEmits(['bot', 'play', 'opening', 'practice', "root"]);
     const emitFn = (action = '') => {
-        if (props.route.path === '/play') {
+        if (normalizedPath.value === '/play') {
             if (action === 'create') {
                 const generateRoomNo = () => {
                     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -64,17 +73,17 @@ onBeforeUnmount(() => {
 
 </script>
 <template>
-    <div class = "modal fade" :id = "modalId" v-if = "props.route.path != '/play' && props.route.path != '/'">
+    <div class = "modal fade" :id = "modalId" v-if = "normalizedPath != '/play' && normalizedPath != '/'">
         <div class = "modal-dialog">
             <div class = "modal-content px-2">
                 <div class = "modal-header">
                     <h5 class="modal-title fs-5">
-                        {{ title[props.route.path][0] }}
+                        {{ title[normalizedPath]?.[0] || 'Settings' }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class = "modal-body">
-                    <div v-if = "props.route.path === '/bot'">
+                    <div v-if = "normalizedPath === '/bot'">
                         <div class = "text-center">
                             <div class = "row">
                                 <div class="col-4">
@@ -148,7 +157,7 @@ onBeforeUnmount(() => {
                             </div>
                         </div>
                     </div>
-                    <div v-else-if = "props.route.path === '/practice'">
+                    <div v-else-if = "normalizedPath === '/practice'">
                         <div class = "text-center">
                             <div class="row">
                                 <div class="col-4">
@@ -174,7 +183,7 @@ onBeforeUnmount(() => {
             </div>
         </div>
     </div>
-    <div class = "modal fade" :id = "modalId" v-if = "props.route.path === '/play'">
+    <div class = "modal fade" :id = "modalId" v-if = "normalizedPath === '/play'">
         <div class = "modal-dialog">
             <div class = "modal-content px-2">
                 <div class = "modal-header">
@@ -196,7 +205,7 @@ onBeforeUnmount(() => {
         </div>
     </div>
 
-    <div v-if = "props.route.path === '/'">
+    <div v-if = "normalizedPath === '/'">
     </div>
 
     <div class = "modal fade" id = "createRoom">

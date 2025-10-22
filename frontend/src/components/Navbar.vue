@@ -1,5 +1,6 @@
 <script setup>
-    import { ref, onMounted, computed } from "vue";
+    import { ref, onMounted, computed, watch } from "vue";
+    import { useRoute } from 'vue-router'
 
     const props = defineProps({
         items: Array,
@@ -22,27 +23,38 @@
         }, 0.5)
     })
 
-    var appnav = ref(false);
-
-    let hostname = window.location.hostname;
+    const route = useRoute()
     const root = document.documentElement
-    let l = 0;
-    if (hostname === 'localhost' || hostname === 'clutchess') {
-        root.style.setProperty('--left', '2vw')
-        root.style.setProperty('--width', '96vw')
-        appnav.value = false;
-    } else {
-        root.style.setProperty('--left', '50vw')
-        root.style.setProperty('--width', '49vw')
-        appnav.value = true;
+    const appnav = ref(false)
+
+    function applyLayout(isApp) {
+        if (isApp) {
+            root.style.setProperty('--left', '50vw')
+            root.style.setProperty('--width', '49vw')
+        } else {
+            root.style.setProperty('--left', '2vw')
+            root.style.setProperty('--width', '96vw')
+        }
+        appnav.value = isApp
     }
+
+    function isAppPath(p){
+        return p.startsWith('/app') || p === '/bot' || p === '/play' || p === '/practice' || p === '/clock'
+    }
+
+    // initialize based on current path
+    applyLayout(isAppPath(route.path))
+
+    // update when route changes
+    watch(() => route.path, (p) => {
+        applyLayout(isAppPath(p))
+    })
 
     // Add computed for boxShadow
     const boxShadow = computed(() => {
-        if (hostname === 'localhost' || hostname === 'clutchess') {
-            return "0 10px 15px rgb(115, 149, 82), 0 10px 30px 0 rgb(235, 236, 208)";
-        }
-        return "0 0 10px black";
+        return appnav.value
+            ? "0 0 10px black"
+            : "0 10px 15px rgb(115, 149, 82), 0 10px 30px 0 rgb(235, 236, 208)";
     });
 </script>
 <template>
@@ -101,7 +113,7 @@
                         </div>
                     </RouterLink>
                     <li class = "nav-item fw-semibold" v-for = "item in props.items">
-                        <a :href="`http://app.localhost:3000${item.link}`" v-if="item.label === 'App'" class = "nav-link">
+                        <a href="/app" v-if="item.label === 'App'" class = "nav-link">
                             <img :src = "`/images/${item.label}.svg`"/>
                             {{ item.label }}
                         </a>

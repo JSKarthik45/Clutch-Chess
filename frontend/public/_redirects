@@ -4,3 +4,8 @@
 https://clutchess.netlify.app/*   https://clutchess.tech/:splat   301!
 
 /* /index.html 200
+\n+# Legacy app routes → new /app paths
+/bot      /app/bot      301!
+/play     /app/play     301!
+/practice /app/practice 301!
+/clock    /app/clock    301!

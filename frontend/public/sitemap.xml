@@ -1,23 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://clutchess.tech/app</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://clutchess.tech/app/bot</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://clutchess.tech/app/play</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://clutchess.tech/app/practice</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://clutchess.tech/app/clock</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://clutchess.tech/</loc>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://clutchess.tech/bot</loc>
-    <priority>0.8</priority>
+    <loc>https://clutchess.tech/dashboard</loc>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://clutchess.tech/play</loc>
-    <priority>0.8</priority>
+    <loc>https://clutchess.tech/find</loc>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://clutchess.tech/practice</loc>
-    <priority>0.8</priority>
+    <loc>https://clutchess.tech/pricing</loc>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://clutchess.tech/clock</loc>
-    <priority>0.8</priority>
+    <loc>https://clutchess.tech/signin</loc>
+    <priority>1.0</priority>
   </url>
 </urlset>

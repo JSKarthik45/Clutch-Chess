@@ -112,7 +112,7 @@
             if(movesArr.value.length != 1) {
                 whiteRemTime.value += increment.value;
             }
-            if(route.path === "/bot" || route.path === "/play") {
+            if(normalizedPath.value === "/bot" || normalizedPath.value === "/play") {
                 blackTimer();
             }
         }
@@ -125,12 +125,12 @@
             }
             currentPlayer.value = "W";
             blackRemTime.value += increment.value;
-            if(route.path === "/bot" || route.path === "/play") {
+            if(normalizedPath.value === "/bot" || normalizedPath.value === "/play") {
                 whiteTimer();
             }
         }
         currentMoveNo.value += 0.5;
-        if(route.path === "/bot") {
+        if(normalizedPath.value === "/bot") {
             if(currentMoveNo.value === 1.5) {
                 isLoading.value = true;
                 showToast();
@@ -141,7 +141,7 @@
                botMove(); 
             }
         }
-        if(route.path === "/play" && channel) {
+        if(normalizedPath.value === "/play" && channel) {
         if (isRemoteMove) {
             return; // Avoid echo loop
         }
@@ -208,6 +208,13 @@
     };
 
     let route = useRoute();
+    import { computed } from 'vue'
+    const normalizedPath = computed(() => {
+        const p = route.path
+        if (p === '/app') return '/'
+        if (p.startsWith('/app/')) return p.slice(4)
+        return p
+    })
 
     import { onMounted, onBeforeUnmount } from 'vue'
 
@@ -742,10 +749,10 @@ window.addEventListener('beforeunload', (event) => {
             <Board ref = "boardFn" :files = "files" :ranks = "ranks" :trackPiecesFromPos = "trackPiecesFromPos" :currentPlayer = "currentPlayer" @pieceMoved = "logAndUpdate" @pieceCaptured = "updateCapturedArr" :t1 = "t1" :isMobile = "isMobile" :fen = "boardToFEN()"/>
         </div>
         <div class = "col-12 col-sm-6 margin-top-desktop">
-            <div v-if = "route.path != '/'">
+            <div v-if = "normalizedPath != '/'">
                 <div v-if = "isMobile">
-                    <Clock v-if = "route.path === '/bot' || route.path === '/play' || route.path === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
-                    <Fen v-else-if = "route.path === '/practice'" :fen = "boardToFEN()" :t1 = "t1"/>
+                    <Clock v-if = "normalizedPath === '/bot' || normalizedPath === '/play' || normalizedPath === '/'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
+                    <Fen v-else-if = "normalizedPath === '/practice'" :fen = "boardToFEN()" :t1 = "t1"/>
                     <!--<Controls v-else :t1 = "t1"/>-->
                     <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
                     <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
@@ -755,8 +762,8 @@ window.addEventListener('beforeunload', (event) => {
                 <div v-if = "!isMobile">
                     <CapturedPieces :capturedPieces = "capturedPieces" player = "B"/>
                     <CapturedPieces :capturedPieces = "capturedPieces" player = "W"/>
-                    <Clock v-if = "route.path === '/bot' || route.path === '/play'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
-                    <Fen v-else-if = "route.path === '/practice'" :fen = "boardToFEN()" :t1 = "t1"/>
+                    <Clock v-if = "normalizedPath === '/bot' || normalizedPath === '/play'" :whiteRemTime = "whiteRemTime" :blackRemTime = "blackRemTime" :currentPlayer = "currentPlayer" :t1 = "t1"/>
+                    <Fen v-else-if = "normalizedPath === '/practice'" :fen = "boardToFEN()" :t1 = "t1"/>
                     <!--<Controls v-else :t1 = "t1"/>-->
                 </div>
             </div>

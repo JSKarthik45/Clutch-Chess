@@ -47,9 +47,10 @@
 
 <script setup>
 import { ref } from 'vue'
-const hostname = "http://app." + window.location.hostname + ":3000"
+import { useRouter } from 'vue-router'
+const router = useRouter()
 function goToPlay() {
-	window.location.href = hostname
+	router.push('/app')
 }
 
 const props = defineProps({
