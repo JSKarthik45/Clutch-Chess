@@ -5,8 +5,9 @@ import { createHead } from '@vueuse/head'
 import App from './App.vue'
 
 import { createWebHistory, createRouter } from 'vue-router'
-import Game from "@/components/Game.vue";
-import ClockContainer from "@/components/Clock/ClockContainer.vue";
+// Lazy-load app components so we can prefetch them after initial render
+const loadGame = () => import("@/components/Game.vue")
+const loadClockContainer = () => import("@/components/Clock/ClockContainer.vue")
 
 import LandingPage from "@/components/LandingPage.vue";
 import SignIn from "@/components/SignIn.vue";
@@ -20,11 +21,11 @@ const homeRoutes = [
 ]
 
 const appRoutes = [
-  { path: '/', component: Game },
-  { path: '/bot', component: Game },
-  { path: '/play', component: Game },
-  { path: '/practice', component: Game },
-  { path: '/clock', component: ClockContainer },
+  { path: '/', component: loadGame },
+  { path: '/bot', component: loadGame },
+  { path: '/play', component: loadGame },
+  { path: '/practice', component: loadGame },
+  { path: '/clock', component: loadClockContainer },
 ]
 
 // Create path-prefixed versions of app routes to live under /app
@@ -51,4 +52,17 @@ const app = createApp(App)
 
 app.use(router)
 app.use(createHead())
+// Prefetch app chunks on idle so /app is instant when clicked
+const prefetchAppChunks = () => { try { loadGame(); loadClockContainer(); } catch (_) {} }
+if (typeof window !== 'undefined') {
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(prefetchAppChunks)
+  } else {
+    setTimeout(prefetchAppChunks, 1200)
+  }
+  // Optional: warm SPA fallback for /app via service worker
+  navigator.serviceWorker?.ready?.then(() => {
+    try { fetch('/app', { mode: 'no-cors' }).catch(() => {}) } catch (_) {}
+  })
+}
 app.mount('#app')
