@@ -3,7 +3,11 @@
 		<div class="landing-left">
 			<h1 class="landing-title">
 				<span class="clutch-text" id = "h1">Clutch</span>
-				<span class="colour2 p-2 rounded-4" style = "color: white;" id = "h1">Chess</span>
+				<span class="colour2 p-2 rounded-4 chess-badge" style = "color: white;" id = "h1">
+					Chess
+					<!-- slide-in icon (no layout shift) -->
+					<img class="chess-icon" src="/images/ClutChess.svg" alt="" aria-hidden="true" />
+				</span>
 			</h1>
 			<div class="landing-desc" id = "h2">Find Chess Coaching Classes And Software To Extend Learning Even After Classes.</div>
 			<div class="landing-buttons">
@@ -43,6 +47,24 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Footer -->
+		<footer class="site-footer">
+			<div class="footer-inner">
+				<div class="brand">
+					<span class="logo-dot" aria-hidden="true"></span>
+					<span class="brand-name">Clutch Chess</span>
+				</div>
+				<nav class="footer-nav" aria-label="Footer">
+					<a href="/" class="f-link">Home</a>
+					<a href="/pricing" class="f-link">Pricing</a>
+					<a href="/find" class="f-link">Find Classes</a>
+					<a href="/app/bot" class="f-link">Play Bot</a>
+					<a href="/app/friend" class="f-link">Play Friend</a>
+				</nav>
+				<div class="legal">© {{ new Date().getFullYear() }} Clutch Chess. All rights reserved.</div>
+			</div>
+		</footer>
 </template>
 
 <script setup>
@@ -266,17 +288,17 @@ button {
 }
 /* Bento Grid Styles */
 .bento-grid {
-	width: 90%;
-	max-width: 90vw;
+	width: 72%;
+	max-width: 72vw;
 	margin: 0 auto 0 auto;
 	display: flex;
 	flex-direction: column;
-	gap: 1.5rem;
+	gap: 1rem;
 	overflow-x: hidden;
 }
 .bento-row {
 	display: flex;
-	gap: 1.5rem;
+	gap: 1rem;
 	overflow-x: hidden;
 }
 .bento-item {
@@ -298,12 +320,19 @@ button {
 }
 .bento-item-large {
 	flex: 4;
-	min-height: 220px;
+	min-height: 180px;
 }
 .bento-item-small {
 	flex: 1;
-	min-height: 220px;
+	min-height: 140px;
 }
+/* ensure iframe scales with the smaller cards */
+.bento-item iframe {
+	width: 100% !important;
+	height: 100%;
+	display: block;
+}
+
 @media (max-width: 900px) {
 	.bento-grid {
 		gap: 1rem;
@@ -312,7 +341,7 @@ button {
 		gap: 1rem;
 	}
 	.bento-item-large, .bento-item-small {
-		min-height: 120px;
+		min-height: 100px;
 	}
 }
 @media (max-width: 600px) {
@@ -324,7 +353,112 @@ button {
 		gap: 0.5rem;
 	}
 	.bento-item-large, .bento-item-small {
-		min-height: 80px;
+		min-height: 64px;
 	}
+}
+
+/* Chess badge styles */
+.chess-badge {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden; /* keep icon inside rounded box */
+}
+
+/* disable previous pseudo-element approach */
+.chess-badge::after { display: none !important; }
+
+/* icon centered and slower animation */
+.chess-icon {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 1.2em;     /* tie to font size for consistent scale */
+	height: 1.2em;
+	transform: translate(-50%, 140%); /* start below center */
+	opacity: 0;
+	pointer-events: none;
+	transition: transform 420ms cubic-bezier(.22,.61,.36,1), opacity 360ms ease; /* slower in/out */
+	filter: drop-shadow(0 2px 2px rgba(0,0,0,0.25));
+	z-index: 1; /* ensure above (transparent) text */
+}
+
+/* hide text and show icon while hovering */
+.chess-badge:hover { color: transparent !important; }
+.chess-badge:hover .chess-icon {
+	transform: translate(-50%, -50%); /* end centered */
+	opacity: 1;
+}
+
+/* Footer */
+.site-footer {
+  margin-top: 48px;
+  background: #ffffff;
+  color: #000000;
+  border-top: 3px solid rgb(115, 149, 82);
+}
+.footer-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 16px 28px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  text-align: center;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.logo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgb(115, 149, 82);
+  box-shadow: 0 0 0 3px rgba(115,149,82,0.15);
+}
+.brand-name { color: #000000; }
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 18px;
+  justify-content: center;
+}
+.f-link {
+  color: #000000;
+  text-decoration: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: color .2s ease, background-color .2s ease, transform .2s ease;
+}
+.f-link:hover,
+.f-link:focus-visible {
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.95);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.legal {
+  color: #000000;
+  font-size: 13px;
+}
+
+/* responsive */
+@media (min-width: 720px) {
+  .footer-inner {
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    text-align: left;
+  }
+  .brand { justify-content: start; }
+  .footer-nav { justify-content: center; }
+  .legal { justify-self: end; }
 }
 </style>

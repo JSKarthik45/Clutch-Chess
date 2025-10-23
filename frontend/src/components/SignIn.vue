@@ -1,5 +1,8 @@
 <template>
   <div class="sign-in">
+    <!-- dynamic title -->
+    <h1 class="title" aria-live="polite">{{ user ? 'Profile Details' : 'Sign in' }}</h1>
+
     <div v-if="user" class="user-panel">
       <img v-if="user.user_metadata?.avatar_url" :src="user.user_metadata.avatar_url" alt="avatar" class="avatar" />
       <div class="user-info">
@@ -65,7 +68,7 @@
     <!-- revert: details/summary/pre -->
     <div v-if="user && storedSession" class="mt-2" aria-live="polite">
       <details>
-        <summary>Profile Details</summary>
+        <summary>View All Details</summary>
         <pre style="background:#f7f7f7; padding:8px; border-radius:6px;"><strong>Email:</strong> {{ storedSession.email || '—' }}
 <strong>Name:</strong> {{ storedSession.name || '—' }}
 <strong>Role:</strong> {{ (storedSession.role || 'user').toUpperCase() }}</pre>
@@ -105,7 +108,36 @@ function saveToStorage(u) {
 }
 
 function clearStorage() {
-  try { localStorage.removeItem(STORAGE_KEY) } catch (e) { /* ignore */ }
+  try {
+    const exactKeys = [
+      STORAGE_KEY,
+      // legacy/possible Supabase keys
+      'supabase.auth.token',
+      'supabase.session'
+    ]
+    const prefixes = [
+      'sb-' // Supabase v2 storage keys: sb-<project-ref>-*
+    ]
+
+    const wipe = (store) => {
+      if (!store) return
+      // remove exact keys
+      for (const k of exactKeys) {
+        try { store.removeItem(k) } catch { /* ignore */ }
+      }
+      // remove any keys by prefix
+      for (let i = store.length - 1; i >= 0; i--) {
+        const key = store.key(i)
+        if (!key) continue
+        if (prefixes.some(p => key.startsWith(p))) {
+          try { store.removeItem(key) } catch { /* ignore */ }
+        }
+      }
+    }
+
+    wipe(localStorage)
+    wipe(sessionStorage)
+  } catch { /* ignore */ }
 }
 
 // Toggle handler: toggles role and persist selection
@@ -256,6 +288,13 @@ const formattedTimestamp = computed(() => {
   flex-direction: column;
   align-items: center;
   margin-top: 120px;
+}
+
+/* add title style similar to Pricing.vue */
+.title {
+  margin: 24px 0 16px;
+  font-size: 28px;
+  font-weight: 700;
 }
 
 .user-panel {

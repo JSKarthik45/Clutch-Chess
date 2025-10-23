@@ -10,13 +10,14 @@ import ClockContainer from "@/components/Clock/ClockContainer.vue";
 
 import LandingPage from "@/components/LandingPage.vue";
 import SignIn from "@/components/SignIn.vue";
+import Pricing from "@/components/Pricing.vue";
 
 const homeRoutes = [
   { path: '/', component: LandingPage },
   { path: '/find', component: LandingPage },
   { path: '/dashboard', component: LandingPage },
   { path: '/signin', component: SignIn },
-  { path: '/pricing', component: LandingPage },
+  { path: '/pricing', component: Pricing },
 ]
 
 const appRoutes = [
