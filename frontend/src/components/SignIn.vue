@@ -65,15 +65,64 @@
 
     <p v-if="error" class="error">{{ error }}</p>
 
-    <!-- revert: details/summary/pre -->
-    <div v-if="user && storedSession" class="mt-2" aria-live="polite">
-      <details>
-        <summary>View All Details</summary>
-        <pre style="background:#f7f7f7; padding:8px; border-radius:6px;"><strong>Email:</strong> {{ storedSession.email || '—' }}
-<strong>Name:</strong> {{ storedSession.name || '—' }}
-<strong>Role:</strong> {{ (storedSession.role || 'user').toUpperCase() }}</pre>
-      </details>
-    </div>
+    <!-- Profile details card -->
+    <section
+      v-if="user && storedSession"
+      class="profile-card"
+      aria-labelledby="profile-card-title"
+      aria-live="polite"
+    >
+      <header class="profile-header">
+        <div class="profile-title-group">
+          <h2 id="profile-card-title" class="profile-title">Account</h2>
+          <p class="profile-subtitle">Signed in via Google</p>
+        </div>
+        <span
+          class="role-badge"
+          :data-variant="(storedSession.role || 'user').toLowerCase()"
+        >{{ (storedSession.role || 'user').toUpperCase() }}</span>
+      </header>
+
+      <div class="profile-meta">
+        <div class="meta-avatar" v-if="user.user_metadata?.avatar_url || storedSession.avatar">
+          <img
+            :src="user.user_metadata?.avatar_url || storedSession.avatar"
+            alt="Profile avatar"
+          />
+        </div>
+        <div class="meta-text">
+          <div class="meta-name">{{ storedSession.name || user.user_metadata?.full_name || '—' }}</div>
+          <div class="meta-email">{{ storedSession.email || user.email || user.user_metadata?.email || '—' }}</div>
+        </div>
+      </div>
+
+      <dl class="profile-list">
+        <div class="profile-row">
+          <dt>Email</dt>
+          <dd>{{ storedSession.email || user.email || user.user_metadata?.email || '—' }}</dd>
+        </div>
+        <div class="profile-row">
+          <dt>Name</dt>
+          <dd>{{ storedSession.name || user.user_metadata?.full_name || user.user_metadata?.name || '—' }}</dd>
+        </div>
+        <div class="profile-row">
+          <dt>Role</dt>
+          <dd>
+            <span class="role-chip" :data-variant="(storedSession.role || 'user').toLowerCase()">
+              {{ (storedSession.role || 'user').toUpperCase() }}
+            </span>
+          </dd>
+        </div>
+        <div class="profile-row">
+          <dt>User ID</dt>
+          <dd class="mono">{{ user.id || '—' }}</dd>
+        </div>
+        <div class="profile-row">
+          <dt>Latest Sign In</dt>
+          <dd>{{ formattedTimestamp }}</dd>
+        </div>
+      </dl>
+    </section>
   </div>
 </template>
 
@@ -421,6 +470,103 @@ const formattedTimestamp = computed(() => {
 /* remove unused profile card styles:
 .profile-card, .profile-header, .profile-list, .profile-row { ... }
 */
+
+/* profile card */
+.profile-card {
+  width: 100%;
+  max-width: 560px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.profile-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.profile-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.role-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .4px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgb(115, 149, 82);
+  color: #fff;
+  border: 1px solid rgb(115, 149, 82);
+}
+.role-badge[data-variant="admin"] {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.profile-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.meta-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.meta-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.meta-name { font-weight: 600; }
+.meta-email { font-size: 12px; color: #555; }
+
+.profile-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 8px 0 0;
+}
+
+.profile-row { display: grid; grid-template-columns: 120px 1fr; align-items: center; }
+.profile-row dt { font-size: 12px; color: #666; }
+.profile-row dd { margin: 0; font-size: 14px; color: #111; }
+.profile-row .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; word-break: break-all; }
+
+.role-chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgb(115, 149, 82);
+  color: #fff;
+  border: 1px solid rgb(115, 149, 82);
+}
+.role-chip[data-variant="admin"] {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+@media (max-width: 480px) {
+  .profile-row { grid-template-columns: 90px 1fr; }
+}
 
 /* small screens adjust sizes */
 @media (max-width: 420px) {

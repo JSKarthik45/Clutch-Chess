@@ -130,15 +130,18 @@
             }
         }
         currentMoveNo.value += 0.5;
-        if(normalizedPath.value === "/bot") {
-            if(currentMoveNo.value === 1.5) {
-                isLoading.value = true;
-                showToast();
+        if (normalizedPath.value === "/bot") {
+            // Only trigger bot when it's actually the bot's turn
+            const isBotsTurn = (ranks.value[0] === "a" && currentPlayer.value === "B") ||
+                               (ranks.value[0] === "h" && currentPlayer.value === "W");
+            if (isBotsTurn) {
+                if (currentMoveNo.value === 1.5) {
+                    // First response move from bot in a new game
+                    localStorage.setItem("bot", Number(localStorage.getItem("bot") || 0) + 1);
+                    showToast();
+                }
+                // Keep toast, remove loading spinner toggles
                 botMove();
-                localStorage.setItem("bot", Number(localStorage.getItem("bot") || 0) + 1);
-            }
-            else {
-               botMove(); 
             }
         }
         if(normalizedPath.value === "/play" && channel) {
@@ -255,8 +258,6 @@
             flip();
         }
         if(obj.colour === "B" && currentPlayer.value === "W") {
-            showToast();
-            isLoading.value = true;
             botMove();
         }
     };
@@ -648,9 +649,9 @@ const setupChannelSubscriptions = (obj) => {
                 //trackPiecesFromPos.value[`${fromTo[2]}${fromTo[3]}`] = newtrack;
                  if (boardFn.value && boardFn.value.changeVals) {
                     boardFn.value.changeVals(fromTo[0],fromTo[1]);
-        boardFn.value.changeVals(fromTo[2],fromTo[3]);
-        isLoading.value = false;
-        hideToast();
+    boardFn.value.changeVals(fromTo[2],fromTo[3]);
+    // Remove loading spinner toggle, keep toast handling
+    hideToast();
     } else {
         console.warn("Board ref or method not ready");
     }
