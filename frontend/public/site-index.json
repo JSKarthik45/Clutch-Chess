@@ -1,26 +1,72 @@
 [
   {
-    "id": "about",
-    "title": "About Clutch Chess",
-    "route": "/about",
-    "content": "Clutch Chess is a chess software designed for players to practice, improve, and enjoy fast online games. Play with friends by joining the same room or challenge yourself against a smart chess bot. Easily import any board position using FEN to continue your practice exactly from where you left off."
-  },
-  {
-    "id": "landing",
-    "title": "Landing Tagline",
+    "id": "home",
+    "title": "Clutch Chess",
     "route": "/",
-    "content": "Find Chess Coaching Classes And Software To Extend Learning Even After Classes."
+    "content": "Find Chess Coaching Classes And Software To Extend Learning Even After Classes.",
+    "keywords": "chess, online chess, play chess, chess app, find coaching, chess classes, chess software, learn chess"
   },
   {
-    "id": "features-play",
-    "title": "Play Modes",
+    "id": "app-home",
+    "title": "Clutch Chess - Play Online Chess",
     "route": "/app",
-    "content": "Play with friends by joining the same room. Play against a smart chess bot. Practice openings. Use a configurable chess clock. Import FEN positions to start from any board position."
+    "content": "Play chess online with friends or bots. Practice and improve your skills.",
+    "keywords": "chess, online chess, play chess, chess app"
   },
   {
-    "id": "navigation",
-    "title": "Navigation & Sections",
-    "route": "/",
-    "content": "Main sections: App, Bot, Play, Practice, Openings, Clock. App is the main play area. Bot lets you play the AI. Play allows joining rooms with friends. Practice supports FEN import for custom positions. Openings lets you select openings. Clock provides a configurable chess clock."
+    "id": "app-bot",
+    "title": "Clutch Chess - Play with Bot",
+    "route": "/app/bot",
+    "content": "Play chess against a powerful bot. Test your skills and improve your game.",
+    "keywords": "chess bot, play against bot, chess AI"
+  },
+  {
+    "id": "app-play",
+    "title": "Clutch Chess - Play with Friends",
+    "route": "/app/play",
+    "content": "Challenge your friends to a chess match online. Enjoy real-time gameplay.",
+    "keywords": "chess with friends, online chess, multiplayer chess, online"
+  },
+  {
+    "id": "app-practice",
+    "title": "Clutch Chess - Practice Chess",
+    "route": "/app/practice",
+    "content": "Practice chess positions by importing FEN, and sharpen your tactics.",
+    "keywords": "chess practice, FEN, chess tactics, import FEN"
+  },
+  {
+    "id": "app-clock",
+    "title": "Clutch Chess - Chess Clock",
+    "route": "/app/clock",
+    "content": "Use a chess clock for timed games and tournaments.",
+    "keywords": "chess clock, timer, chess timer, clock"
+  },
+  {
+    "id": "dashboard",
+    "title": "Clutch Chess - Dashboard",
+    "route": "/dashboard",
+    "content": "View your chess statistics and progress on the dashboard.",
+    "keywords": "chess, dashboard, statistics, progress"
+  },
+  {
+    "id": "find",
+    "title": "Clutch Chess - Find",
+    "route": "/find",
+    "content": "Find chess coaching classes near you.",
+    "keywords": "chess, find coaching, online chess, play chess"
+  },
+  {
+    "id": "pricing",
+    "title": "Clutch Chess - Pricing",
+    "route": "/pricing",
+    "content": "Explore our pricing plans and choose the best option for you.",
+    "keywords": "chess, pricing, plans, subscription"
+  },
+  {
+    "id": "signin",
+    "title": "Clutch Chess - Sign In",
+    "route": "/signin",
+    "content": "Sign in to your Clutch Chess account to access all features.",
+    "keywords": "chess, sign in, login, account"
   }
 ]
