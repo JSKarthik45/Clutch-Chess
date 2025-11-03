@@ -25,6 +25,7 @@
 				muted
 				loop
 				playsinline
+				preload="metadata"
 			></video>
 		</div>
 	</div>
@@ -32,18 +33,18 @@
 		<div class="bento-grid">
 			<div class="bento-row">
 				<div class="bento-item bento-item-large">
-					<img src="/images/BotPageImg.png" alt="Bento 1" />
+					<img src="/images/BotPageImg.png" alt="Bento 1" loading="lazy" />
 				</div>
 				<div class="bento-item bento-item-small">
-					<img src="/images/AppPhone.jpg" alt="Bento 2" />
+					<img src="/images/AppPhone.jpg" alt="Bento 2" loading="lazy" />
 				</div>
 			</div>
 			<div class="bento-row">
 				<div class="bento-item bento-item-small">
-					<img src="/images/ClockPhone.jpg" alt="Bento 3" />
+					<img src="/images/ClockPhone.jpg" alt="Bento 3" loading="lazy" />
 				</div>
 				<div class="bento-item bento-item-large">
-					<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d111907.67443893717!2d80.17666711100043!3d12.986511802368824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1761154095609!5m2!1sen!2sin" width="950" height="100%" style="border-radius: 10px; padding: 5px; border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+					<iframe title="Clutch Chess locations map" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d111907.67443893717!2d80.17666711100043!3d12.986511802368824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1761154095609!5m2!1sen!2sin" width="950" height="100%" style="border-radius: 10px; padding: 5px; border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 				</div>
 			</div>
 		</div>
@@ -253,31 +254,50 @@ html, body {
 		justify-content: center;
 	}
 	.landing-image {
-		max-width: clamp(160px, 80vw, 380px);
+		max-width: clamp(240px, 92vw, 640px);
+		width: 100%;
 	}
 }
 
 @media (max-width: 600px) {
 	.landing-title {
-		font-size: clamp(1rem, 8vw, 1.3rem);
+		/* Larger heading on phones */
+		font-size: clamp(1.8rem, 9vw, 2.4rem);
 	}
 	.landing-subtitle {
 		font-size: 1.1rem;
 	}
 	.landing-desc {
-		font-size: 0.95rem;
+		/* Larger tagline on phones */
+		font-size: 1.2rem;
+		line-height: 1.4;
 	}
 	.landing-image {
-		max-width: clamp(120px, 90vw, 260px);
+		/* Fully visible video on phones without cropping */
+		width: 100%;
+		max-width: 100%;
+		aspect-ratio: 16 / 9;
+		height: auto;
+		object-fit: contain;
+		background: #000; /* letterbox background if needed */
 	}
 	.landing-buttons {
 		flex-direction: column;
 		gap: 0.75rem;
 		width: 100%;
-		align-items: center;
+		align-items: stretch;
 	}
 	.landing-container {
 		margin-top: 0;
+		/* reduce side padding so media can breathe */
+		padding-left: 0;
+		padding-right: 0;
+	}
+	.landing-buttons button {
+		/* Slightly smaller buttons on phones */
+		width: 100%;
+		padding: 0.7rem 0.9rem;
+		font-size: 0.95rem;
 	}
 }
 button:hover {
@@ -285,6 +305,7 @@ button:hover {
 }
 button {
     transition: transform 0.5s ease;
+    touch-action: manipulation;
 }
 /* Bento Grid Styles */
 .bento-grid {
@@ -315,7 +336,7 @@ button {
 	padding: 5px;
 	width: 100%;
 	height: 100%;
-	object-fit: fill;
+	object-fit: cover;
 	display: block;
 }
 .bento-item-large {
@@ -329,7 +350,9 @@ button {
 /* ensure iframe scales with the smaller cards */
 .bento-item iframe {
 	width: 100% !important;
-	height: 100%;
+	height: auto;
+	aspect-ratio: 16 / 9;
+	min-height: 180px;
 	display: block;
 }
 
@@ -347,14 +370,18 @@ button {
 @media (max-width: 600px) {
 	.bento-grid {
 		gap: 0.5rem;
+		/* Smaller bento grid on phones */
+		width: 88%;
+		max-width: 88vw;
 	}
 	.bento-row {
 		flex-direction: column;
 		gap: 0.5rem;
 	}
-	.bento-item-large, .bento-item-small {
-		min-height: 64px;
-	}
+	.bento-item-large { min-height: 120px; }
+	.bento-item-small { min-height: 64px; }
+	.bento-item iframe { min-height: 120px; }
+	.bento-item img { padding: 3px; }
 }
 
 /* Chess badge styles */
@@ -389,6 +416,12 @@ button {
 .chess-badge:hover .chess-icon {
 	transform: translate(-50%, -50%); /* end centered */
 	opacity: 1;
+}
+
+/* Disable hover-dependent effect on touch devices so text doesn't disappear */
+@media (hover: none) {
+  .chess-badge { color: inherit !important; }
+  .chess-badge .chess-icon { opacity: 0; transform: translate(-50%, 140%); }
 }
 
 /* Footer */
