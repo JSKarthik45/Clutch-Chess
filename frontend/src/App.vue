@@ -163,7 +163,7 @@ onMounted(() => {
     <div class = "container-fluid" style = "overflow-x: hidden;">
       <RouterView  :key="route.path" :t1 = "t1"> </RouterView>
     </div>
-    <ChatBot />
+    <!--<ChatBot />-->
   </div>
 </template>
 
