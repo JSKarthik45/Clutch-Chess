@@ -29,7 +29,7 @@ function computeItems(path) {
     { label: "Dashboard", link: "/dashboard", active: false },
     { label: "Find", link: "/find", active: false },
     { label: "Pricing", link: "/pricing", active: false },
-    { label: "SignIn", link: "/signin", active: false },
+    { label: "SignIn", link: "/profile", active: false },
   ]
 }
 
@@ -96,11 +96,11 @@ function getMeta() {
       keywords: 'chess, pricing, plans, subscription'
     }
   }  
-  else if (p === '/signin') {
+  else if (p === '/profile') {
     return {
-      title: 'Clutch Chess - Sign In',
-      description: 'Sign in to your Clutch Chess account to access all features.',
-      keywords: 'chess, sign in, login, account'
+      title: 'Clutch Chess - Profile',
+      description: 'View and edit your Clutch Chess profile information.',
+      keywords: 'chess, profile, user settings, account'
     }
   }
   else if (p === '/') {
@@ -148,24 +148,48 @@ watch(() => route.path, (newPath) => {
   let t1 = gsap.timeline();
 
 onMounted(() => {
-  // Simple initial delay to avoid showing unstyled content before animations kick in
-  setTimeout(() => {
-    isReady.value = true
-  }, 1000)
+  // Show a lightweight splash until the page is fully loaded (first paint + assets)
+  const done = () => { isReady.value = true }
+  if (document.readyState === 'complete') {
+    done()
+  } else {
+    window.addEventListener('load', done, { once: true })
+  }
 })
 </script>
 
 <template>
+  <!-- Splash overlay spinner shown until first load completes -->
+  <div v-if="!isReady" class="splash-overlay">
+    <div class="spinner-border clutch-spinner" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
   <div style = "width: 100vw; height: 100vh;" :style="{ visibility: isReady ? 'visible' : 'hidden' }">
-    <div>
+    <div v-if = "!route.path.startsWith('/dashboard')">
       <Navbar :items = "items" :t1 = "t1" :key="route.path" :is-nav-open="isNavOpen"/>
     </div>
     <div class = "container-fluid" style = "overflow-x: hidden;">
-      <RouterView  :key="route.path" :t1 = "t1"> </RouterView>
+  <RouterView  :key="route.path" :t1 = "t1" :is-ready="isReady"> </RouterView>
     </div>
     <!--<ChatBot />-->
   </div>
 </template>
 
 <style scoped>
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  z-index: 2000;
+}
+.clutch-spinner {
+  width: 3rem;
+  height: 3rem;
+  border-width: .55rem; /* slightly thicker ring */
+  border-radius: 50%; /* ensure fully rounded edges */
+  color: rgb(115,149,82); /* uses currentColor for spinner border */
+}
 </style>

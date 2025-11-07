@@ -268,6 +268,7 @@ export default {
 
 /* responsive tweaks */
 @media (max-width: 480px) {
+  .pricing { margin-top: 0; }
   .title { font-size: 24px; }
   .cards { gap: 14px; }
 }

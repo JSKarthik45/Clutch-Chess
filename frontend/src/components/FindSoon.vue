@@ -67,5 +67,6 @@
 
 @media (max-width: 520px) {
   .title { font-size: 22px; }
+  .soon { margin-top: 0px;}
 }
 </style>

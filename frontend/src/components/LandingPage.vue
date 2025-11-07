@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 function goToPlay() {
@@ -80,7 +80,8 @@ function goToFind() {
 }
 
 const props = defineProps({
-    t1: Object,
+	t1: Object,
+	isReady: { type: Boolean, default: false },
 })
 
 import { onMounted } from 'vue'
@@ -93,59 +94,67 @@ let h2split = null;
 let b1 = ref(null);
 let b2 = ref(null);
 
+let ran = false;
+function runAnimations() {
+	if (ran || !props.t1) return; // ensure it runs only once
+	ran = true;
+	props.t1.restart();
+	props.t1.fromTo(image.value, {
+		scale: 0,
+	}, {
+		scale: 1,
+		duration: 2,
+		ease: "power1.out",
+	}, 1.5);
+	h1split = SplitText.create("#h1", { type: "chars" })
+	props.t1.fromTo(h1split.chars, {
+		opacity: 0,
+		x: -100,
+	}, {
+		x: 0,
+		opacity: 1,
+		duration: 1,
+		ease: "power1.out",
+		stagger: 0.02,
+	}, 0);
+	h2split = SplitText.create("#h2", { type: "words" })
+	props.t1.fromTo(h2split.words, {
+		opacity: 0,
+		y: 100,
+	}, {
+		y: 0,
+		opacity: 1,
+		duration: 1,
+		ease: "power1.out",
+		stagger: 0.02,
+	}, 0.5);
+	props.t1.fromTo(b1.value, {
+		opacity: 0,
+		x: -120,
+	}, {
+		x: 0,
+		opacity: 1,
+		duration: 1,
+		ease: "circ.in",
+	}, 1.5);
+	props.t1.fromTo(b2.value, {
+		opacity: 0,
+		x: -400,
+	}, {
+		x: 0,
+		opacity: 1,
+		duration: 1,
+		ease: "circ.in",
+	}, 0.5);
+}
+
 onMounted(() => {
-    props.t1.restart();
-    props.t1.fromTo(image.value, {
-        scale: 0, 
-    }, {
-        scale: 1, 
-        duration: 2,
-        ease: "power1.out",
-    }, 1.5);
-    h1split = SplitText.create("#h1", {
-        type: "chars"
-    })
-    props.t1.fromTo(h1split.chars, {
-        opacity: 0,
-        x: -100,
-    }, {
-        x: 0,
-        opacity: 1,
-        duration: 1,
-        ease: "power1.out",
-        stagger: 0.02, 
-    }, 0);
-    h2split = SplitText.create("#h2", {
-        type: "words"
-    })
-    props.t1.fromTo(h2split.words, {
-        opacity: 0,
-        y: 100,
-    }, {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        ease: "power1.out",
-        stagger: 0.02, 
-    }, 0.5);
-    props.t1.fromTo(b1.value, {
-        opacity: 0,
-        x: -120,
-    }, {
-        x: 0,
-        opacity: 1,
-        duration: 1,
-        ease: "circ.in",
-    }, 1.5);
-    props.t1.fromTo(b2.value, {
-        opacity: 0,
-        x: -400,
-    }, {
-        x: 0,
-        opacity: 1,
-        duration: 1,
-        ease: "circ.in",
-    }, 0.5);
+	// Run immediately if app is already ready; otherwise wait for isReady flip
+	if (props.isReady) runAnimations();
+})
+
+watch(() => props.isReady, (v) => {
+	if (v) runAnimations();
 })
 </script>
 

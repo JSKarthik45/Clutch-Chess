@@ -14,11 +14,13 @@ import FindSoon from "@/components/FindSoon.vue";
 import SignIn from "@/components/SignIn.vue";
 import Pricing from "@/components/Pricing.vue";
 
+import AdminUserDetailsPage from './components/admin/AdminUserDetailsPage.vue'
+
 const homeRoutes = [
   { path: '/', component: LandingPage },
   { path: '/find', component: FindSoon },
-  { path: '/dashboard', component: DashboardSoon },
-  { path: '/signin', component: SignIn },
+  { path: '/dashboard', component: AdminUserDetailsPage },
+  { path: '/profile', component: SignIn },
   { path: '/pricing', component: Pricing },
 ]
 

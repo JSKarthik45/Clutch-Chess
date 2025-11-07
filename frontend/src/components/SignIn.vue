@@ -566,6 +566,7 @@ const formattedTimestamp = computed(() => {
 
 @media (max-width: 480px) {
   .profile-row { grid-template-columns: 90px 1fr; }
+  .sign-in { margin-top: 0; }
 }
 
 /* small screens adjust sizes */

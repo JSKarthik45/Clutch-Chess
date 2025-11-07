@@ -11,16 +11,23 @@
     let navbar = ref(null);
 
     onMounted(() => {
-        props.t1.restart();
-        props.t1.fromTo(navbar.value, {
-            opacity: 0,
-            y: -100,
-        }, {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power1.out",
-        }, 0.5)
+        // Skip entrance animation for these simple pages
+        const suppress = new Set(['/find', '/pricing', '/dashboard', '/profile'])
+        const currentPath = location?.pathname || ''
+        if (suppress.has(currentPath)) return
+
+        if (props.t1 && navbar.value) {
+            props.t1.restart();
+            props.t1.fromTo(navbar.value, {
+                opacity: 0,
+                y: -100,
+            }, {
+                y: 0,
+                opacity: 1,
+                duration: 1,
+                ease: "power1.out",
+            }, 0.5)
+        }
     })
 
     const route = useRoute()
