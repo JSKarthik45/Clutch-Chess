@@ -130,18 +130,17 @@
             }
         }
         currentMoveNo.value += 0.5;
-        if (normalizedPath.value === "/bot") {
-            // Only trigger bot when it's actually the bot's turn
-            const isBotsTurn = (ranks.value[0] === "a" && currentPlayer.value === "B") ||
-                               (ranks.value[0] === "h" && currentPlayer.value === "W");
-            if (isBotsTurn) {
-                if (currentMoveNo.value === 1.5) {
-                    // First response move from bot in a new game
-                    localStorage.setItem("bot", Number(localStorage.getItem("bot") || 0) + 1);
+        if(normalizedPath.value === "/bot") {
+            if(currentMoveNo.value === 1.5) {
+                if(playerColourAgainstBot.value === "W") {
                     showToast();
+                    isLoading.value = true;
                 }
-                // Keep toast, remove loading spinner toggles
                 botMove();
+                localStorage.setItem("bot", Number(localStorage.getItem("bot") || 0) + 1);
+            }
+            else {
+               botMove(); 
             }
         }
         if(normalizedPath.value === "/play" && channel) {
@@ -237,11 +236,12 @@
     const props = defineProps({
         t1: Object, 
     })
-
+    let playerColourAgainstBot = ref("");
     const handleBot = (obj) => {
         whiteRemTime.value = obj.time * 60;
         blackRemTime.value = obj.time * 60;
         increment.value = obj.increment;
+        playerColourAgainstBot.value = obj.colour;
         if(obj.level === "I") {
             level.value = 10;
         }
@@ -258,6 +258,8 @@
             flip();
         }
         if(obj.colour === "B" && currentPlayer.value === "W") {
+            showToast();
+            isLoading.value = true;
             botMove();
         }
     };
@@ -649,9 +651,9 @@ const setupChannelSubscriptions = (obj) => {
                 //trackPiecesFromPos.value[`${fromTo[2]}${fromTo[3]}`] = newtrack;
                  if (boardFn.value && boardFn.value.changeVals) {
                     boardFn.value.changeVals(fromTo[0],fromTo[1]);
-    boardFn.value.changeVals(fromTo[2],fromTo[3]);
-    // Remove loading spinner toggle, keep toast handling
-    hideToast();
+        boardFn.value.changeVals(fromTo[2],fromTo[3]);
+        isLoading.value = false;
+        hideToast();
     } else {
         console.warn("Board ref or method not ready");
     }
