@@ -20,8 +20,8 @@ import { isMemoSame } from 'vue';
             event.target.style.height = "95%";
             event.target.style.width = "95%";
         } else {
-            event.target.style.height = "80%";
-            event.target.style.width = "80%";
+            event.target.style.height = "95%";
+            event.target.style.width = "95%";
         }
         event.target.parentNode.style.position = "relative"
         event.target.parentNode.style.zIndex = "1";
@@ -34,8 +34,8 @@ import { isMemoSame } from 'vue';
             event.target.style.height = "90%";
             event.target.style.width = "90%";
         } else {
-            event.target.style.height = "75%";
-            event.target.style.width = "75%";   
+            event.target.style.height = "90%";
+            event.target.style.width = "90%";   
         }
         event.target.parentNode.style.boxShadow = "none";
         event.target.parentNode.style.zIndex = "auto";
@@ -63,8 +63,8 @@ import { isMemoSame } from 'vue';
     }
     @media(min-width: 576px) {
         #img {
-            height: 75%;
-            width: 75%;
+            height: 90%;
+            width: 90%;
         }
     }
 </style>

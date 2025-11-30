@@ -12,7 +12,7 @@
     <!-- Plain content section -->
     <div class="container">
       <h2 class="section-title">Try the App in the meantime</h2>
-      <p class="muted">There’s plenty you can do today:</p>
+      <p class="muted">There's plenty you can do today:</p>
       <ul class="features">
         <li>Play a bot or challenge a friend</li>
         <li>Practice openings and positions with FEN</li>
