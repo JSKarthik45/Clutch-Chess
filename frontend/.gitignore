@@ -31,3 +31,4 @@ coverage
 
 # Local environment variables file
 .env
+.env.development.local

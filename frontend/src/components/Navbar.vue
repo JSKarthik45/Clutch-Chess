@@ -1,6 +1,7 @@
 <script setup>
     import { ref, onMounted, computed, watch } from "vue";
     import { useRoute } from 'vue-router'
+    import { useAuth } from '@/composables/useAuth.js'
 
     const props = defineProps({
         items: Array,
@@ -31,6 +32,7 @@
     })
 
     const route = useRoute()
+    const { role } = useAuth()
     const root = document.documentElement
     const appnav = ref(false)
 
@@ -63,6 +65,16 @@
             ? "0 0 10px black"
             : "0 10px 15px rgb(115, 149, 82), 0 10px 30px 0 rgb(235, 236, 208)";
     });
+
+    // Compute link for items; dashboard routes vary by role
+    function linkForItem(item) {
+        if (!item) return '/'
+        const label = String(item.label || '').toLowerCase()
+        if (label === 'dashboard') {
+            return role.value === 'admin' ? '/admin/dashboard' : '/user/dashboard'
+        }
+        return item.link || '/'
+    }
 </script>
 <template>
     <div v-if="appnav">
@@ -81,7 +93,7 @@
             <div :class="['collapse', 'navbar-collapse', { show: props.isNavOpen }]" id="navbarSupportedContent">
                 <ul class = "navbar-nav">
                     <li class = "nav-item fw-semibold" v-for = "item in props.items">
-                        <RouterLink class = "nav-link" :to = "item.link" :class = "{activeBorder: item.active}">
+                        <RouterLink class = "nav-link" :to="linkForItem(item)" :class = "{activeBorder: item.active}">
                             <img :src = "`/images/${item.label}.svg`"/>
                             {{ item.label }}
                         </RouterLink>
@@ -124,7 +136,7 @@
                             <img :src = "`/images/${item.label}.svg`"/>
                             {{ item.label }}
                         </a>
-                        <RouterLink v-else class = "nav-link" :to = "item.link" :class = "{activeBorder: item.active}">
+                        <RouterLink v-else class = "nav-link" :to = "linkForItem(item)" :class = "{activeBorder: item.active}">
                             <img :src = "`/images/${item.label}.svg`"/>
                             {{ item.label }}
                         </RouterLink>

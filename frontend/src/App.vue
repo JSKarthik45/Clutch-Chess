@@ -156,6 +156,13 @@ onMounted(() => {
     window.addEventListener('load', done, { once: true })
   }
 })
+
+// Helper to check if navbar should be hidden (all dashboard routes)
+function shouldHideNavbar(path) {
+  return path.startsWith('/dashboard') || 
+         path.startsWith('/admin/dashboard') || 
+         path.startsWith('/user/dashboard')
+}
 </script>
 
 <template>
@@ -166,7 +173,7 @@ onMounted(() => {
     </div>
   </div>
   <div style = "width: 100vw; height: 100vh;" :style="{ visibility: isReady ? 'visible' : 'hidden' }">
-    <div v-if = "!route.path.startsWith('/dashboard')">
+    <div v-if="!shouldHideNavbar(route.path)">
       <Navbar :items = "items" :t1 = "t1" :key="route.path" :is-nav-open="isNavOpen"/>
     </div>
     <div class = "container-fluid" style = "overflow-x: hidden;">

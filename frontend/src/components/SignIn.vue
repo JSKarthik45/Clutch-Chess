@@ -122,14 +122,24 @@
           <dd>{{ formattedTimestamp }}</dd>
         </div>
       </dl>
+
+      <!-- Dashboard link button -->
+      <div class="profile-actions">
+        <button class="dashboard-btn" @click="redirectToDashboard">
+          Go to Dashboard
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
     </section>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { supabase } from '../supabase.js'
 
+const router = useRouter()
 const loading = ref(false)
 const error = ref('')
 const user = ref(null)
@@ -187,6 +197,12 @@ function clearStorage() {
     wipe(localStorage)
     wipe(sessionStorage)
   } catch { /* ignore */ }
+}
+
+// Redirect to appropriate dashboard based on role
+function redirectToDashboard() {
+  const targetPath = role.value === 'admin' ? '/admin/dashboard' : '/user/dashboard'
+  router.push(targetPath)
 }
 
 // Toggle handler: toggles role and persist selection
@@ -269,6 +285,9 @@ onMounted(async () => {
     }
   } catch (e) { /* ignore parse errors */ }
 
+  // Track if this is a fresh login (OAuth redirect)
+  let isOAuthRedirect = false
+
   // First, process any redirect from the OAuth provider.
   try {
     // Supabase v2: getSessionFromUrl parses the redirect URL and establishes the session.
@@ -279,6 +298,7 @@ onMounted(async () => {
     if (sessionData?.session?.user) {
       user.value = sessionData.session.user
       saveToStorage(user.value)
+      isOAuthRedirect = true
     } else {
       // If not a redirect flow or no session, fetch existing user.
       await fetchUser()
@@ -286,6 +306,12 @@ onMounted(async () => {
   } catch (err) {
     // Not necessarily an error; just continue.
     await fetchUser()
+  }
+
+  // If user just completed OAuth login, redirect to their dashboard
+  if (isOAuthRedirect && user.value) {
+    redirectToDashboard()
+    return
   }
 
   // Subscribe to auth state changes so we can react when the user signs in or out.
@@ -562,6 +588,38 @@ const formattedTimestamp = computed(() => {
   background: #111;
   color: #fff;
   border-color: #111;
+}
+
+.profile-actions {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.dashboard-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 20px;
+  background: rgb(115, 149, 82);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.2s;
+}
+
+.dashboard-btn:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+.btn-arrow {
+  font-size: 16px;
 }
 
 @media (max-width: 480px) {
