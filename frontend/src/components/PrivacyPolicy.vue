@@ -129,7 +129,7 @@
 .privacy-page {
   max-width: 780px;
   margin: 0 auto;
-  padding-top: 2rem;
+  padding-top: 4rem;
 }
 
 .policy-section {
