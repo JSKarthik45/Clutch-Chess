@@ -1,21 +1,10 @@
 <template>
   <div class="privacy-wrapper">
-    <nav class="back-nav">
-      <router-link to="/" class="back-link">← Clutch Chess</router-link>
-    </nav>
-
     <main class="privacy-page">
-      <!-- ───────── Site privacy ───────── -->
-      <section class="policy-section">
-        <h1 class="page-title">Privacy Policy</h1>
-        <p class="last-updated">Last updated: March 1, 2026</p>
-        <p class="intro">
-          This page covers the privacy policy for <strong>Clutch Chess</strong> and
-          our companion mobile app <strong>Chess Screen Time - Puzzles</strong>.
-        </p>
-      </section>
+      <h1 class="page-title">Privacy Policy</h1>
+      <p class="last-updated">Last updated: March 1, 2026</p>
 
-      <!-- ───────── PuzzleScroll App ───────── -->
+      <!-- ───────── App Privacy ───────── -->
       <section class="policy-section app-card">
         <div class="app-header">
           <div class="app-icon">♟</div>
@@ -49,7 +38,7 @@
         <div class="policy-block">
           <h4>What data we collect</h4>
           <p>
-            <strong>We collect no personal data whatsoever.</strong> PuzzleScroll does not ask for your
+            <strong>We collect no personal data whatsoever.</strong> Chess Screen Time - Puzzles does not ask for your
             name, email address, phone number, or any account credentials to function.
           </p>
         </div>
@@ -94,7 +83,7 @@
         <div class="policy-block">
           <h4>Children's privacy</h4>
           <p>
-            Because PuzzleScroll collects no personal information, it is safe for users of all ages.
+            Because Chess Screen Time - Puzzles collects no personal information, it is safe for users of all ages.
             We do not knowingly collect data from children under 13 or under any applicable age threshold
             in your jurisdiction.
           </p>
@@ -118,17 +107,7 @@
         </div>
       </section>
 
-      <!-- ───────── Clutch Chess site ───────── -->
-      <section class="policy-section">
-        <h2>Clutch Chess — Website Privacy</h2>
-        <p>
-          Clutch Chess uses <strong>Supabase</strong> to manage user accounts for coaching academies and
-          students. Account data (email, role, and academy association) is stored securely in Supabase
-          and is never sold or shared with third parties. We use <strong>PostHog</strong> for anonymous
-          product analytics to improve the platform. You can review PostHog's privacy policy at
-          <a href="https://posthog.com/privacy" target="_blank" rel="noopener" class="email-link">posthog.com/privacy</a>.
-        </p>
-      </section>
+
     </main>
   </div>
 </template>
@@ -143,26 +122,7 @@
   background: #0d0d0d;
   color: #e8e8e8;
   font-family: 'Poppins', sans-serif;
-  padding: 0 1rem 4rem;
-}
-
-/* ── back nav ── */
-.back-nav {
-  padding: 1.2rem 0 0;
-  max-width: 780px;
-  margin: 0 auto;
-}
-
-.back-link {
-  color: #a0a0a0;
-  text-decoration: none;
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
-  transition: color 0.2s;
-}
-
-.back-link:hover {
-  color: #fff;
+  padding: 3rem 1rem 4rem;
 }
 
 /* ── layout ── */
@@ -178,22 +138,16 @@
 
 /* ── headings ── */
 .page-title {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.2rem;
   color: #ffffff;
 }
 
 .last-updated {
-  font-size: 0.8rem;
-  color: #666;
-  margin: 0 0 1.2rem;
-}
-
-.intro {
-  font-size: 0.95rem;
-  color: #b0b0b0;
-  line-height: 1.7;
+  font-size: 0.78rem;
+  color: #555;
+  margin: 0 0 1.8rem;
 }
 
 /* ── app card ── */
