@@ -18,9 +18,9 @@
         <div class="policy-block">
           <h4>Introduction</h4>
           <p>
-            This Privacy Policy applies to the <strong>NoScroll — Chess Focus</strong> Android application
-            developed by <strong>Clutch Chess</strong> (contact:
-            <a href="mailto:privacy@clutchchess.com" class="email-link">privacy@clutchchess.com</a>).
+            This Privacy Policy applies to the <strong>NoScroll: Chess Screen Time</strong> Android application
+            developed by <strong>J S Karthik</strong> (contact:
+            <a href="mailto:jskarthik45@gmail.com" class="email-link">jskarthik45@gmail.com</a>).
             This policy is effective as of <strong>March 17, 2026</strong> and governs how the app handles
             your data. By using the app you agree to the practices described here.
           </p>
@@ -236,7 +236,7 @@
             This app is not intended for use by children under 13. We do not knowingly collect data
             from children under 13 (COPPA) or under 16 (GDPR). If you believe a child has provided
             information through this app, please contact us at
-            <a href="mailto:privacy@clutchchess.com" class="email-link">privacy@clutchchess.com</a>
+            <a href="mailto:jskarthik45@gmail.com" class="email-link">jskarthik45@gmail.com</a>
             and we will take appropriate steps.
           </p>
         </div>
@@ -251,7 +251,7 @@
           </p>
           <p class="sublink">
             For any privacy-related requests or questions, contact us at
-            <a href="mailto:privacy@clutchchess.com" class="email-link">privacy@clutchchess.com</a>.
+            <a href="mailto:jskarthik45@gmail.com" class="email-link">jskarthik45@gmail.com</a>.
           </p>
         </div>
 
@@ -269,9 +269,9 @@
         <div class="policy-block">
           <h4>Contact</h4>
           <p>
-            <strong>Developer:</strong> Clutch Chess<br />
+            <strong>Developer:</strong> J S Karthik<br />
             <strong>Email:</strong>
-            <a href="mailto:privacy@clutchchess.com" class="email-link">privacy@clutchchess.com</a><br />
+            <a href="mailto:jskarthik45@gmail.com" class="email-link">jskarthik45@gmail.com</a><br />
             <strong>Website:</strong>
             <a href="https://clutchchess.com" class="email-link" target="_blank" rel="noopener noreferrer">clutchchess.com</a>
           </p>
