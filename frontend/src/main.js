@@ -20,6 +20,7 @@ import UserDashboard from './components/user/UserDashboard.vue'
 import FindAcademy from './components/FindAcademy.vue'
 import PrivacyPolicy from './components/PrivacyPolicy.vue'
 import HuePrivacyPolicy from './components/HuePrivacyPolicy.vue'
+import NoScrollPrivacyPolicy from './components/NoScrollPrivacyPolicy.vue'
 
 // Auth composable for role-based redirects
 import { useAuth } from './composables/useAuth.js'
@@ -30,7 +31,8 @@ const homeRoutes = [
   { path: '/dashboard', component: AdminUserDetailsPage }, // Legacy route
   { path: '/profile', component: SignIn },
   { path: '/pricing', component: Pricing },
-  { path: '/noscroll-privacy', component: PrivacyPolicy },
+  { path: '/chessscreentime-privacy', component: PrivacyPolicy },
+  { path: '/noscroll-privacy', component: NoScrollPrivacyPolicy },
   { path: '/hue-privacy', component: HuePrivacyPolicy },
   
   // Role-based dashboard routes
