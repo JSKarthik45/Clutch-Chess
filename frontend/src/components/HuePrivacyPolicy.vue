@@ -2,7 +2,7 @@
   <div class="privacy-wrapper">
     <main class="privacy-page">
       <h1 class="page-title">Privacy Policy</h1>
-      <p class="last-updated">Last updated: March 1, 2026</p>
+      <p class="last-updated">Last updated: March 27, 2026</p>
 
       <!-- ───────── App Privacy ───────── -->
       <section class="policy-section app-card">
@@ -58,6 +58,17 @@
             All reference data (the list of artificial colors and their regulatory status) is bundled
             within the app itself. There are <strong>no server calls, no cloud storage, and no remote
             databases</strong> involved when you use Hue. Everything runs locally on your device.
+          </p>
+        </div>
+
+        <div class="policy-block">
+          <h4>Data retention and deletion</h4>
+          <p>
+            Hue does not create accounts and does not collect or retain personal data. Barcode and
+            ingredient scans are processed in real time and are not stored after processing completes.
+            Any temporary processing data exists only on your device for the duration of the scan.
+            You can remove all local app data at any time by clearing app storage/cache in your device
+            settings or by uninstalling the app.
           </p>
         </div>
 
