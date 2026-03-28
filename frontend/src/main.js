@@ -21,6 +21,7 @@ import FindAcademy from './components/FindAcademy.vue'
 import PrivacyPolicy from './components/PrivacyPolicy.vue'
 import HuePrivacyPolicy from './components/HuePrivacyPolicy.vue'
 import NoScrollPrivacyPolicy from './components/NoScrollPrivacyPolicy.vue'
+import GwenPrivacyPolicy from './components/GwenPrivacyPolicy.vue'
 
 // Auth composable for role-based redirects
 import { useAuth } from './composables/useAuth.js'
@@ -34,6 +35,7 @@ const homeRoutes = [
   { path: '/chessscreentime-privacy', component: PrivacyPolicy },
   { path: '/noscroll-privacy', component: NoScrollPrivacyPolicy },
   { path: '/hue-privacy', component: HuePrivacyPolicy },
+  { path: '/gwen-privacy', component: GwenPrivacyPolicy },
   
   // Role-based dashboard routes
   { 
