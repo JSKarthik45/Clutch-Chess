@@ -125,8 +125,8 @@
 
       <!-- Dashboard link button -->
       <div class="profile-actions">
-        <button class="dashboard-btn" @click="redirectToDashboard">
-          Go to Dashboard
+        <button class="dashboard-btn" @click="redirectToApp">
+          Go to Chess Tools
           <span class="btn-arrow">→</span>
         </button>
       </div>
@@ -199,10 +199,9 @@ function clearStorage() {
   } catch { /* ignore */ }
 }
 
-// Redirect to appropriate dashboard based on role
-function redirectToDashboard() {
-  const targetPath = role.value === 'admin' ? '/admin/dashboard' : '/user/dashboard'
-  router.push(targetPath)
+// Redirect signed-in users to the app tools experience.
+function redirectToApp() {
+  router.push('/app')
 }
 
 // Toggle handler: toggles role and persist selection
@@ -308,9 +307,9 @@ onMounted(async () => {
     await fetchUser()
   }
 
-  // If user just completed OAuth login, redirect to their dashboard
+  // If user just completed OAuth login, redirect to the app tools.
   if (isOAuthRedirect && user.value) {
-    redirectToDashboard()
+    redirectToApp()
     return
   }
 

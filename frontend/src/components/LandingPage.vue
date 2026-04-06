@@ -9,10 +9,10 @@
 					<img class="chess-icon" src="/images/ClutChess.svg" alt="" aria-hidden="true" />
 				</span>
 			</h1>
-			<div class="landing-desc" id = "h2">Find Chess Coaching Classes And Software To Extend Learning Even After Classes.</div>
+			<div class="landing-desc" id = "h2">A focused suite of chess tools to play, practice, analyze, and train every day.</div>
 			<div class="landing-buttons">
 				<button ref = "b1" class="button-effect px-3 py-2 rounded-1" style = "background-color: rgb(115, 149, 82); color: white;" @click="goToPlay">Play</button>
-				<button ref = "b2" class="button-effect px-3 py-2 rounded-1" style = "background-color: rgb(235, 236, 208);" @click="goToFind">Find Coaching Classes</button>
+				<button ref = "b2" class="button-effect px-3 py-2 rounded-1" style = "background-color: rgb(235, 236, 208);" @click="goToTools">Open Chess Tools</button>
             </div>
 		</div>
 		<div class="landing-right">
@@ -44,7 +44,7 @@
 					<img src="/images/ClockPhone.jpg" alt="Bento 3" loading="lazy" />
 				</div>
 				<div class="bento-item bento-item-large">
-					<iframe title="Clutch Chess locations map" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d111907.67443893717!2d80.17666711100043!3d12.986511802368824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1761154095609!5m2!1sen!2sin" width="950" height="100%" style="border-radius: 10px; padding: 5px; border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+					<img src="/images/ScoreSheet.png" alt="Game notes and score sheet" loading="lazy" />
 				</div>
 			</div>
 		</div>
@@ -58,10 +58,10 @@
 				</div>
 				<nav class="footer-nav" aria-label="Footer">
 					<a href="/" class="f-link">Home</a>
-					<a href="/pricing" class="f-link">Pricing</a>
-					<a href="/find" class="f-link">Find Classes</a>
 					<a href="/app/bot" class="f-link">Play Bot</a>
-					<a href="/app/friend" class="f-link">Play Friend</a>
+					<a href="/app/play" class="f-link">Play Friend</a>
+					<a href="/app/practice" class="f-link">Practice</a>
+					<a href="/app/clock" class="f-link">Clock</a>
 				</nav>
 				<div class="legal">© {{ new Date().getFullYear() }} Clutch Chess. All rights reserved.</div>
 			</div>
@@ -75,8 +75,8 @@ const router = useRouter()
 function goToPlay() {
 	router.push('/app')
 }
-function goToFind() {
-	router.push('/find')
+function goToTools() {
+	router.push('/app')
 }
 
 const props = defineProps({
@@ -86,7 +86,6 @@ const props = defineProps({
 
 import { onMounted } from 'vue'
 import { SplitText } from "gsap/all";
-import { routeLocationKey } from "vue-router";
 
 let image = ref(null);
 let h1split = null;

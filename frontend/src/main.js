@@ -9,15 +9,7 @@ import Game from "@/components/Game.vue";
 import ClockContainer from "@/components/Clock/ClockContainer.vue";
 
 import LandingPage from "@/components/LandingPage.vue";
-import DashboardSoon from "@/components/DashboardSoon.vue";
-import FindSoon from "@/components/FindSoon.vue";
 import SignIn from "@/components/SignIn.vue";
-import Pricing from "@/components/Pricing.vue";
-
-import AdminUserDetailsPage from './components/admin/AdminUserDetailsPage.vue'
-import AdminDashboard from './components/admin/AdminDashboard.vue'
-import UserDashboard from './components/user/UserDashboard.vue'
-import FindAcademy from './components/FindAcademy.vue'
 import PrivacyPolicy from './components/PrivacyPolicy.vue'
 import HuePrivacyPolicy from './components/HuePrivacyPolicy.vue'
 import NoScrollPrivacyPolicy from './components/NoScrollPrivacyPolicy.vue'
@@ -28,26 +20,11 @@ import { useAuth } from './composables/useAuth.js'
 
 const homeRoutes = [
   { path: '/', component: LandingPage },
-  { path: '/find', component: FindAcademy }, // Updated to new FindAcademy page
-  { path: '/dashboard', component: AdminUserDetailsPage }, // Legacy route
   { path: '/profile', component: SignIn },
-  { path: '/pricing', component: Pricing },
   { path: '/chessscreentime-privacy', component: PrivacyPolicy },
   { path: '/noscroll-privacy', component: NoScrollPrivacyPolicy },
   { path: '/hue-privacy', component: HuePrivacyPolicy },
   { path: '/gwen-privacy', component: GwenPrivacyPolicy },
-  
-  // Role-based dashboard routes
-  { 
-    path: '/admin/dashboard', 
-    component: AdminDashboard,
-    meta: { requiresAuth: true, role: 'admin' }
-  },
-  { 
-    path: '/user/dashboard', 
-    component: UserDashboard,
-    meta: { requiresAuth: true, role: 'user' }
-  },
 ]
 
 const appRoutes = [
@@ -80,20 +57,16 @@ const router = createRouter({
 
 // Navigation guard for role-based access and post-login redirects
 router.beforeEach(async (to, from, next) => {
-  const { initAuth, isAuthenticated, role } = useAuth()
+  const { initAuth, isAuthenticated } = useAuth()
   
   // Initialize auth state if not already done
   await initAuth()
   
-  // Handle post-login redirect: if coming from /profile and now authenticated
-  if (from.path === '/profile' && isAuthenticated.value && to.path === '/profile') {
-    // After successful login, redirect based on role
-    const targetDashboard = role.value === 'admin' ? '/admin/dashboard' : '/user/dashboard'
-    return next(targetDashboard)
+  // Keep signed-in users on the app experience instead of the sign-in page.
+  if (to.path === '/profile' && isAuthenticated.value) {
+    return next('/app')
   }
   
-  // For routes with meta.requiresAuth, the ProtectedRoute component handles access control
-  // This guard is mainly for post-login redirects
   next()
 })
 

@@ -17,7 +17,7 @@
       <span class="icon">⛔</span>
       <h2>Access Denied</h2>
       <p>You don't have permission to view this page.</p>
-      <RouterLink :to="redirectPath" class="btn-primary-custom">Go to Your Dashboard</RouterLink>
+      <RouterLink :to="redirectPath" class="btn-primary-custom">Go to App</RouterLink>
     </div>
   </div>
   <slot v-else />
@@ -44,7 +44,7 @@ const hasAccess = computed(() => {
 })
 
 const redirectPath = computed(() => {
-  return role.value === 'admin' ? '/admin/dashboard' : '/user/dashboard'
+  return '/app'
 })
 </script>
 

@@ -1,7 +1,6 @@
 <script setup>
     import { ref, onMounted, computed, watch } from "vue";
     import { useRoute } from 'vue-router'
-    import { useAuth } from '@/composables/useAuth.js'
 
     const props = defineProps({
         items: Array,
@@ -13,7 +12,7 @@
 
     onMounted(() => {
         // Skip entrance animation for these simple pages
-        const suppress = new Set(['/find', '/pricing', '/dashboard', '/profile'])
+        const suppress = new Set(['/profile'])
         const currentPath = location?.pathname || ''
         if (suppress.has(currentPath)) return
 
@@ -32,7 +31,6 @@
     })
 
     const route = useRoute()
-    const { role } = useAuth()
     const root = document.documentElement
     const appnav = ref(false)
 
@@ -69,10 +67,6 @@
     // Compute link for items; dashboard routes vary by role
     function linkForItem(item) {
         if (!item) return '/'
-        const label = String(item.label || '').toLowerCase()
-        if (label === 'dashboard') {
-            return role.value === 'admin' ? '/admin/dashboard' : '/user/dashboard'
-        }
         return item.link || '/'
     }
 </script>

@@ -26,9 +26,6 @@ function computeItems(path) {
   }
   return [
     { label: "App", link: "/app", active: false },
-    { label: "Dashboard", link: "/dashboard", active: false },
-    { label: "Find", link: "/find", active: false },
-    { label: "Pricing", link: "/pricing", active: false },
     { label: "SignIn", link: "/profile", active: false },
   ]
 }
@@ -75,27 +72,6 @@ function getMeta() {
       keywords: 'chess, online chess, play chess, chess app'
     }
   }
-  else if (p === '/dashboard') {
-    return {
-      title: 'Clutch Chess - Dashboard',
-      description: 'View your chess statistics and progress on the dashboard.',
-      keywords: 'chess, dashboard, statistics, progress'
-    }
-  }
-  else if (p === '/find') {
-    return {
-      title: 'Clutch Chess - Find',
-      description: 'Find chess coaching classes near you.',
-      keywords: 'chess, find coaching, online chess, play chess'
-    }
-  }  
-  else if (p === '/pricing') {
-    return {
-      title: 'Clutch Chess - Pricing',
-      description: 'Explore our pricing plans and choose the best option for you.',
-      keywords: 'chess, pricing, plans, subscription'
-    }
-  }  
   else if (p === '/profile') {
     return {
       title: 'Clutch Chess - Profile',
@@ -106,15 +82,15 @@ function getMeta() {
   else if (p === '/') {
     return {
       title: 'Clutch Chess',
-      description: 'Find Chess Coaching Classes And Software To Extend Learning Even After Classes.',
-      keywords: 'chess, online chess, play chess, chess app, find coaching, chess classes, chess software, learn chess'
+      description: 'Play, practice, and train with a complete set of chess tools in one app.',
+      keywords: 'chess tools, online chess, play chess, chess app, chess practice, chess clock, chess bot, fen'
     }
   }
   else {
     return {
       title: 'Clutch Chess',
-      description: 'Find Chess Coaching Classes And Software To Extend Learning Even After Classes.',
-      keywords: 'chess, online chess, play chess, chess app, find coaching, chess classes, chess software, learn chess'
+      description: 'Play, practice, and train with a complete set of chess tools in one app.',
+      keywords: 'chess tools, online chess, play chess, chess app, chess practice, chess clock, chess bot, fen'
     }
   }
 }
@@ -159,9 +135,7 @@ onMounted(() => {
 
 // Helper to check if navbar should be hidden (all dashboard routes)
 function shouldHideNavbar(path) {
-  return path.startsWith('/dashboard') || 
-         path.startsWith('/admin/dashboard') || 
-         path.startsWith('/user/dashboard')
+  return false
 }
 </script>
 

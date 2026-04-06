@@ -7,7 +7,7 @@
     const messages = ref([
         { role: 'assistant', content: 'Hi! How can I help you today?' },
         { role: 'user', content: 'What is Clutch Chess?' },
-        { role: 'assistant', content: 'Find Chess Coaching Classes And Software To Extend Learning Even After Classes.' },
+        { role: 'assistant', content: 'Clutch Chess is a set of chess tools for playing, practicing, and improving your game.' },
     ])
     const newMessage = ref('')
     const inputRef = ref(null)
@@ -39,7 +39,7 @@
             },
             {
                 "role": "system",
-                "content": "Clutch Chess is a software to find chess coaching classes and to extend learning even after classes. It helps players practice, improve, and enjoy online chess games. Import positions using FEN to continue practice from where left off."
+                "content": "Clutch Chess is a chess tools app for play, practice, and training. It helps players improve with bot games, friend games, a chess clock, and FEN-based practice positions."
             },
             ...messages.value.slice(1, messages.value.length - 1)
         ];
