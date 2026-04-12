@@ -2,7 +2,7 @@
   <div class="privacy-wrapper">
     <main class="privacy-page">
       <h1 class="page-title">Privacy Policy</h1>
-      <p class="last-updated">Last updated: March 17, 2026</p>
+      <p class="last-updated">Last updated: April 12, 2026</p>
 
       <section class="policy-section app-card">
         <!-- App Header -->
@@ -19,10 +19,19 @@
           <h4>Introduction</h4>
           <p>
             This Privacy Policy applies to the <strong>NoScroll: Chess Screen Time</strong> Android application
-            developed by <strong>J S Karthik</strong> (contact:
-            <a href="mailto:jskarthik45@gmail.com" class="email-link">jskarthik45@gmail.com</a>).
-            This policy is effective as of <strong>March 17, 2026</strong> and governs how the app handles
-            your data. By using the app you agree to the practices described here.
+            ("the App"), a Digital Wellbeing tool designed to reduce screen time and replace distracting app use
+            with chess puzzle-based interventions, developed by <strong>J S Karthik</strong> ("Developer").
+          </p>
+          <p><strong>Developer Contact:</strong></p>
+          <p>
+            Email: <a href="mailto:jskarthik45@gmail.com" class="email-link">jskarthik45@gmail.com</a><br />
+            Website: <a href="https://clutchchess.com" class="email-link" target="_blank" rel="noopener noreferrer">clutchchess.com</a>
+          </p>
+          <p>
+            This policy is effective as of <strong>April 12, 2026</strong>, and supersedes all prior privacy policies.
+            It describes the App's data practices, permission usage, and your rights under applicable privacy laws including GDPR and COPPA.
+            By downloading, installing, or using this App, you agree to the terms and practices described in this policy.
+            If you do not agree, you must uninstall the App and discontinue use immediately.
           </p>
         </div>
 
@@ -126,66 +135,188 @@
         <h3>Sensitive Permissions</h3>
 
         <div class="policy-block">
-          <h4>PACKAGE_USAGE_STATS — Usage Access</h4>
+          <h4>PACKAGE_USAGE_STATS — Usage Access (High-Risk Permission)</h4>
           <p>
-            <strong>What it does:</strong> Allows the app to read which apps are open or running on the
-            device.<br />
-            <strong>Why it's needed:</strong> The app's core function is to detect when you open a blocked
-            social media app (e.g. Instagram, Facebook, YouTube, Twitter/X, Reddit, WhatsApp, Snapchat)
-            and display a chess puzzle interruption.<br />
-            <strong>What is NOT done:</strong> App usage data is <em>never stored, never transmitted
-            off-device, and never shared with any third party.</em> The app only checks whether the
-            current foreground app is one you have chosen to block.
+            <strong>System Permission:</strong> android.permission.PACKAGE_USAGE_STATS<br />
+            <strong>Requested At:</strong> Onboarding (Phase 3: Core Permissions)<br />
+            <strong>Feature Implemented:</strong> Real-time foreground app monitoring for blocking trigger detection
+          </p>
+          <p>
+            <strong>User-Facing Feature Purpose:</strong><br />
+            The App accesses your device's usage statistics to identify when a user-selected "Blocked App" (such as
+            Instagram, Facebook, YouTube, Twitter/X, Reddit, WhatsApp, Snapchat, TikTok, or any other app you choose
+            to block) enters the foreground. This real-time detection is the technical foundation of the App's core
+            function: when a blocked app is detected in the foreground, the App immediately brings itself to the front
+            and presents a chess puzzle intervention. This is required to prevent access to the blocked application
+            until your configured daily puzzle goal has been completed.
+          </p>
+          <p>
+            <strong>How the Data is Used:</strong><br />
+            The foreground app name is checked against your locally stored list of blocked apps once per second (or on
+            system-defined polling intervals). This comparison is performed exclusively on your device in real-time, in
+            the native ForegroundMonitorService. No record of which apps you open, their names, frequencies, or usage
+            patterns is ever stored, logged, persisted, or transmitted to any external service, server, cloud platform,
+            or third party (including Google, Supabase, or any analytics provider).
+          </p>
+          <p>
+            <strong>Data Retention:</strong><br />
+            App names and usage patterns are processed in-memory only and are discarded immediately after the real-time
+            foreground check completes. No persistent log of your app usage history is maintained.
           </p>
         </div>
 
         <div class="policy-block">
-          <h4>SYSTEM_ALERT_WINDOW — Draw Over Other Apps</h4>
+          <h4>SYSTEM_ALERT_WINDOW — Draw Over Other Apps (High-Risk Permission)</h4>
           <p>
-            Required to display an overlay or interstitial (a chess puzzle prompt) when you open a
-            blocked app. The overlay is shown only to you on your own device and no data is collected
-            through it.
+            <strong>System Permission:</strong> android.permission.SYSTEM_ALERT_WINDOW<br />
+            <strong>Requested At:</strong> Onboarding (Phase 3: Core Permissions)<br />
+            <strong>Feature Implemented:</strong> In-app puzzle interstitial display over blocked applications
+          </p>
+          <p>
+            <strong>User-Facing Feature Purpose:</strong><br />
+            When a blocked application is detected in the foreground (via PACKAGE_USAGE_STATS), the App uses this permission
+            to present a chess puzzle UI window that draws over the blocked app. This "intervention overlay" prevents the user
+            from interacting with the blocked app until the required action is taken (e.g., solving a chess puzzle or completing
+            the daily goal). The overlay is rendered locally on your device only; no data is transmitted or collected through it.
+          </p>
+          <p>
+            <strong>How the Data is Used:</strong><br />
+            The overlay mechanism is a UI rendering function only. It does not capture, record, or transmit any information
+            about what is displayed behind the overlay, your device state, or your interactions. The overlay is an on-device,
+            user-facing interaction surface with no persistent logging or external visibility.
           </p>
         </div>
 
         <div class="policy-block">
-          <h4>FOREGROUND_SERVICE + FOREGROUND_SERVICE_SPECIAL_USE</h4>
+          <h4>FOREGROUND_SERVICE + FOREGROUND_SERVICE_SPECIAL_USE — Background Monitoring Service</h4>
           <p>
-            The app runs a persistent foreground service (ForegroundMonitorService) to continuously
-            monitor app usage in real time. A persistent notification is visible to you while monitoring
-            is active, as required by Android. Declared subtype: <em>"App usage monitoring for digital
-            wellbeing and focus."</em>
+            <strong>System Permissions:</strong> android.permission.FOREGROUND_SERVICE, android.permission.FOREGROUND_SERVICE_SPECIAL_USE<br />
+            <strong>Declared Foreground Service Subtype:</strong> "App usage monitoring for digital wellbeing and focus"<br />
+            <strong>Feature Implemented:</strong> Persistent background monitoring service with system-visible notification
+          </p>
+          <p>
+            <strong>User-Facing Feature Purpose:</strong><br />
+            The App runs a persistent background service (ForegroundMonitorService) that continuously monitors your device's
+            foreground app state. This service is required to maintain the blocking and intervention loop even when:
+            </p>
+            <ul class="permission-sublist">
+              <li>The App's UI is not visibly open</li>
+              <li>Your device enters the background</li>
+              <li>Your device is about to reboot or undergo system updates</li>
+              <li>The system is low on memory and would normally kill background processes</li>
+            </ul>
+          <p>
+            Without this persistent service, the monitoring loop would be terminated by Android's memory management or system lifecycle,
+            leaving blocked apps accessible. The service remains active as long as you have enabled blocking in the App's settings.
+          </p>
+          <p>
+            <strong>Persistent Notification Requirement:</strong><br />
+            Android 8.0+ requires that any app running a foreground service display a persistent, non-dismissible notification.
+            This notification informs you that the ForegroundMonitorService is running and monitoring your device. You can tap the
+            notification to open the App or pause blocking. This notification is a system requirement and cannot be hidden.
+          </p>
+          <p>
+            <strong>System Resource Impact:</strong><br />
+            The foreground service uses minimal system resources and should not significantly impact battery life or device performance:
+            usage queries occur on a default system polling interval (typically 1–5 seconds), and all processing is handle by
+            on-device, low-latency native code rather than cloud requests or network calls.
           </p>
         </div>
 
         <div class="policy-block">
-          <h4>RECEIVE_BOOT_COMPLETED</h4>
+          <h4>RECEIVE_BOOT_COMPLETED — Device Reboot Recovery</h4>
           <p>
-            The app restarts its monitoring service automatically after your device reboots so blocking
-            remains active without you needing to reopen the app.
+            <strong>System Permission:</strong> android.permission.RECEIVE_BOOT_COMPLETED<br />
+            <strong>Feature Implemented:</strong> Automatic monitoring service resumption after device reboot
+          </p>
+          <p>
+            When your device reboots, this permission allows the App to automatically restart the ForegroundMonitorService
+            if blocking was enabled before the reboot. This ensures your configured blocking rules remain active across reboots
+            without requiring you to manually reopen the App. If you manually stopped blocking before reboot, the service will
+            not automatically restart.
           </p>
         </div>
 
         <div class="policy-block">
-          <h4>SCHEDULE_EXACT_ALARM</h4>
+          <h4>SCHEDULE_EXACT_ALARM — Daily Midnight Reset Trigger</h4>
           <p>
-            Used to schedule a daily midnight reset. At 12:00 AM your blocked-app counter and daily
-            puzzle goal are reset for the new day.
+            <strong>System Permission:</strong> android.permission.SCHEDULE_EXACT_ALARM<br />
+            <strong>Feature Implemented:</strong> Time-based local notification and daily counter reset
+          </p>
+          <p>
+            At 12:00 AM (midnight) each day, the App triggers two actions:
+            </p>
+            <ol class="permission-sublist">
+              <li>Your daily puzzle-solve count is reset to 0 for the new day</li>
+              <li>Blocking is automatically re-enabled for the new day (if it was previously enabled)</li>
+            </ol>
+          <p>
+            This ensures your daily puzzle goal resets each calendar day and you are not locked in a blocked state indefinitely.
+            All state changes occur locally on your device; no timestamp or event information is logged externally.
           </p>
         </div>
 
         <div class="policy-block">
-          <h4>POST_NOTIFICATIONS</h4>
+          <h4>POST_NOTIFICATIONS — Local Reminder Notifications</h4>
           <p>
-            Used to send local (on-device) reminder notifications to encourage you to complete your
-            daily chess puzzles. No notification data is sent to any server — all notifications are
-            generated and delivered entirely on-device.
+            <strong>System Permission:</strong> android.permission.POST_NOTIFICATIONS<br />
+            <strong>Feature Implemented:</strong> On-device reminder notifications
+          </p>
+          <p>
+            This permission allows the App to send local, on-device reminder notifications to encourage you to complete your
+            daily chess puzzle goal. These notifications are:
+            </p>
+            <ul class="permission-sublist">
+              <li>Generated entirely on your device, not fetched from a server</li>
+              <li>Based solely on your locally stored puzzle goal and current daily progress</li>
+              <li>Never sent to external services, analytics platforms, or messaging systems</li>
+              <li>Dismissible at any time and respect your device's notification settings</li>
+            </ul>
+          <p>
+            You can enable or disable puzzle reminder notifications at any time from the App's settings without affecting blocking functionality.
           </p>
         </div>
 
         <div class="policy-block">
-          <h4>VIBRATE / WAKE_LOCK</h4>
-          <p>Used solely to support local notification delivery.</p>
+          <h4>VIBRATE / WAKE_LOCK — Notification and Alarm Support</h4>
+          <p>
+            <strong>System Permissions:</strong> android.permission.VIBRATE, android.permission.WAKE_LOCK<br />
+            <strong>Feature Implemented:</strong> Auxiliary support for local notifications and alarms
+          </p>
+          <p>
+            VIBRATE: Allows the device to vibrate when a reminder notification is delivered, enhancing notification perceptibility.<br />
+            WAKE_LOCK: Allows the app to hold a partial wake lock during the midnight reset alarm to ensure the alarm triggers even
+            if your device's screen is off or in deep sleep. Neither permission collects or transmits any data.
+          </p>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 4b. Local Data Processing Guarantee -->
+        <h3>Local Data Processing Guarantee (Google Play Compliance)</h3>
+        <div class="policy-block">
+          <p>
+            <strong>No Data Collection or Transmission:</strong> NoScroll: Chess Screen Time does not collect, log, transmit,
+            store on external servers, or share with any third party your app usage history, the names of other apps you use,
+            your custom blocked-app list, or your daily puzzle progress. All data processing described in this policy occurs
+            <em>exclusively in real-time on your device's local secure storage</em>.
+          </p>
+          <p>
+            <strong>Real-Time Processing Only:</strong> When the ForegroundMonitorService checks whether the current foreground
+            app is in your blocked-app list, this entire operation is performed in-memory on your device. The comparison result
+            ("blocked" or "not blocked") is not persisted, logged, or exposed beyond the immediate trigger decision. Once the
+            check completes, the in-memory state is discarded.
+          </p>
+          <p>
+            <strong>No Persistent App Usage Log:</strong> This App does not maintain any persistent log, cache, or historical
+            record of which apps you have opened or when. Each foreground-app check is independent and stateless; the App has
+            no memory of your app-opening patterns across sessions.
+          </p>
+          <p>
+            <strong>Exception: Supabase Puzzle Data Only:</strong> The only external data transferred is unauthenticated,
+            read-only requests to your Supabase database instance to fetch chess puzzle data (FEN strings, legal moves, ratings).
+            These requests contain no information about your device, your app usage, your preferences, or your identity.
+          </p>
         </div>
 
         <div class="divider"></div>
@@ -245,35 +376,93 @@
         <div class="policy-block">
           <h4>User Rights &amp; Data Deletion</h4>
           <p>
-            Because all data is stored locally on your device and nothing is stored on a server tied to
-            your identity, you can delete all app data at any time by uninstalling the app or clearing
-            app data via Android Settings → Apps → NoScroll → Clear Data.
+            Because all user data is stored locally on your device and nothing is stored on a server tied to
+            your identity, you can delete all App data at any time using either of the following methods:
+          </p>
+          <ol class="permission-sublist">
+            <li><strong>Uninstall the App:</strong> Uninstalling the App from your device automatically deletes all
+            locally stored preferences, progress, and configuration from your device's storage.</li>
+            <li><strong>Clear App Data via Settings:</strong> On your device, open Settings → Apps → NoScroll: Chess Screen Time →
+            Storage → Clear Data. This will immediately delete all locally stored puzzles progress, blocked-app list, theme preferences,
+            and any other App-related data from your device.</li>
+          </ol>
+          <p>
+            <strong>Right to Be Forgotten (GDPR):</strong> Since all your data is stored locally on your device and not on
+            external servers, your right to be forgotten is automatically satisfied by uninstalling the App or clearing data.
+            No external data deletion request to Supabase is required (as no personally identifiable information is ever stored there).
+          </p>
+          <p>
+            <strong>Data Access Requests:</strong> If you want to verify what data the App has stored about you, all such data is
+            accessible directly in your device's storage via the App's Settings screen (theme, blocked apps, puzzle goal, etc.) or
+            via Android Settings → Apps → NoScroll → Storage & Cache.
           </p>
           <p class="sublink">
-            For any privacy-related requests or questions, contact us at
+            For any privacy-related requests, GDPR data subject access requests, or questions, contact the Developer at
             <a href="mailto:jskarthik45@gmail.com" class="email-link">jskarthik45@gmail.com</a>.
+            Responses to legitimate privacy requests will be provided within 30 days.
           </p>
         </div>
 
-        <!-- 10. Changes -->
+        <!-- 10. Data Safety Form Alignment -->
+        <div class="policy-block">
+          <h4>Google Play Data Safety Form Alignment</h4>
+          <p>
+            This Privacy Policy is aligned with the Data Safety form submitted to Google Play Console and Google Play's
+            2026 "Technical Truth" verification requirements. The following statements are sworn truths:
+          </p>
+          <ul class="permission-sublist">
+            <li><strong>Data Collection:</strong> No personal data, financial data, device identifiers, or PII is collected.
+            Only app usage state is processed in real-time and locally on-device (not collected or stored).</li>
+            <li><strong>Data Sharing:</strong> No user data is shared with third parties, advertisers, or data brokers.
+            Supabase receives only anonymous puzzle-fetch queries. chess.com receives only optional user-initiated API requests.</li>
+            <li><strong>Data Deletion:</strong> All data is stored locally and can be deleted immediately by uninstalling the App
+            or clearing App data in Settings. No server-side deletion request is required.</li>
+            <li><strong>Encryption in Transit:</strong> The Supabase authentication token is encrypted with AES-256 (key stored in
+            Android Keystore). All communication with Supabase uses HTTPS.</li>
+            <li><strong>User Transparency:</strong> This privacy policy comprehensively lists all permissions requested and explains
+            each one's purpose with reference to user-facing features.</li>
+          </ul>
+        </div>
+
+        <!-- 11. Changes -->
         <div class="policy-block">
           <h4>Changes to This Policy</h4>
           <p>
-            We may update this Privacy Policy from time to time. Any changes will be reflected by an
-            updated "Last updated" date at the top of this page. Continued use of the app after changes
-            are posted constitutes your acceptance of the revised policy.
+            We may update this Privacy Policy from time to time to reflect changes in privacy law, user feedback, or App functionality.
+            Any material changes will be reflected by an updated "Last updated" date at the top of this page. Minor clarifications
+            that do not reduce user privacy may be updated without notice.
+          </p>
+          <p>
+            We recommend reviewing this policy periodically. <strong>Continued use of the App after changes are posted constitutes
+            your acceptance of the revised policy.</strong> If you disagree with any changes, you must uninstall the App and
+            discontinue use immediately.
           </p>
         </div>
 
-        <!-- 11. Contact -->
+        <!-- 12. Contact & Support -->
         <div class="policy-block">
-          <h4>Contact</h4>
+          <h4>Contact & Support</h4>
           <p>
-            <strong>Developer:</strong> J S Karthik<br />
-            <strong>Email:</strong>
+            <strong>Developer Name:</strong> J S Karthik<br />
+            <strong>Developer Email (Privacy & Support):</strong>
             <a href="mailto:jskarthik45@gmail.com" class="email-link">jskarthik45@gmail.com</a><br />
             <strong>Website:</strong>
             <a href="https://clutchchess.com" class="email-link" target="_blank" rel="noopener noreferrer">clutchchess.com</a>
+          </p>
+          <p>
+            If you have questions about this Privacy Policy, concerns about your privacy, requests to access or delete your data,
+            or complaints about the App's privacy practices, please contact the Developer at the email address above.
+            Privacy requests will be responded to within 30 calendar days.
+          </p>
+          <p>
+            <strong>GDPR Compliance:</strong> If you are a resident of the European Union, European Economic Area, or another
+            jurisdiction with data protection laws, you have the right to request access to, correction of, or deletion of your
+            personal data. Contact the Developer to exercise these rights.
+          </p>
+          <p>
+            <strong>COPPA Compliance:</strong> This App is not intended for users under 13 years old. We do not knowingly collect
+            or use data from children under 13. If you believe a child under 13 has used this App or provided information, please
+            contact us immediately and we will take appropriate steps to investigate and comply with COPPA.
           </p>
         </div>
       </section>
@@ -486,5 +675,24 @@
 
 .email-link:hover {
   text-decoration: underline;
+}
+
+/* Permission sublist styling */
+.permission-sublist {
+  margin: 0.75rem 0 0;
+  margin-left: 1.5rem;
+  font-size: 0.86rem;
+  color: #888;
+  line-height: 1.7;
+}
+
+.permission-sublist li,
+.permission-sublist ol {
+  margin: 0.35rem 0;
+  color: #888;
+}
+
+.permission-sublist li {
+  color: #888;
 }
 </style>
